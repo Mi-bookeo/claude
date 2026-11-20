@@ -130,16 +130,11 @@ function ground(y0, off, o = {}) {
 }
 
 /* ---------- logo (PNG del repositorio) ---------- */
-// La placa usa logo_blanco.png recortado a su contenido (fondo azul marino del propio PNG).
-function logoBadge(cx, cy, size, rot = 0, sc = 1) {
-  const h = size / 2, r = size * 0.14, id = 'lc' + (uid++), d = Math.max(10, size * 0.035);
-  const inner = `
-    <rect x="${f(-h + d)}" y="${f(-h + d)}" width="${f(size)}" height="${f(size)}" rx="${f(r)}" fill="${INK}"/>
-    <clipPath id="${id}"><rect x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" rx="${f(r)}"/></clipPath>
-    <g clip-path="url(#${id})"><rect x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" fill="#113179"/>
-      <svg x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" viewBox="115 120 770 770"><use href="#logoW"/></svg></g>
-    <rect x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" rx="${f(r)}" fill="none" stroke="${INK}" stroke-width="${f(SW * 1.2)}"/>`;
-  return at(cx, cy, sc, inner, rot);
+// Logos PNG transparentes del repositorio: logo_blanco.png (fondos rojos), logo_rojo.png (fondos claros).
+// size = lado del cuadro que ocupa el contenido del logo.
+function logoBadge(cx, cy, size, rot = 0, sc = 1, which = 'logoW') {
+  const h = size / 2;
+  return at(cx, cy, sc, `<svg x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" viewBox="72 74 356 356"><use href="#${which}"/></svg>`, rot);
 }
 
 /* ---------- zapatillas (idénticas en móvil, escaparate y tarjetas) ---------- */
@@ -614,7 +609,7 @@ S[6] = (t, T) => {
     });
   }
   const sq = 1 + 0.08 * (t > 0.3 ? damp(t - 0.3, 18, 6) : 0);
-  s += `<g transform="translate(540 ${f(y)}) scale(${f(1 / sq)} ${f(sq)})">${logoBadge(0, 0, 600)}</g>`;
+  s += `<g transform="translate(540 ${f(y)}) scale(${f(1 / sq)} ${f(sq)})">${logoBadge(0, 0, 680)}</g>`;
   const l1 = 'Ya no se', l2 = 'te escapan';
   s += at(540, 1145, pop(t, 0.85, 0.5), text(l1, 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }), -3);
   s += at(540, 1315, pop(t, 1.15, 0.5), text(l2, 0, 0, { size: fit(l2, 170, 960), sw: SW * 2.4, sd: 9 }), -3);
@@ -635,8 +630,8 @@ S[7] = (t, T) => {
   let sc = `<rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" fill="${C.cream}"/>`;
   // franja roja superior con el logo
   sc += `<rect x="${sx}" y="${sy}" width="${sw_}" height="220" fill="${C.red}"/><line x1="${sx}" y1="${sy + 220}" x2="${sx + sw_}" y2="${sy + 220}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  sc += logoBadge(sx + 118, sy + 118, 165, 0, pop(t, 0.3, 0.45));
-  sc += at(sx + 230, sy + 118, pop(t, 0.4, 0.45), text('Ofertas, novedades', 0, -34, { size: fit('Ofertas, novedades', 50, 450), anchor: 'start', sw: SW * 1.5, sd: 4 }) + text('y eventos', 0, 34, { size: 50, anchor: 'start', sw: SW * 1.5, sd: 4 }));
+  sc += logoBadge(sx + 118, sy + 112, 190, 0, pop(t, 0.3, 0.45));
+  sc += at(sx + 230, sy + 118, pop(t, 0.4, 0.45), text('Ofertas, novedades', 0, -34, { size: fit('Ofertas, novedades', 50, 440), anchor: 'start', sw: SW * 1.5, sd: 4 }) + text('y eventos', 0, 34, { size: 50, anchor: 'start', sw: SW * 1.5, sd: 4 }));
   const cards = [
     { title: 'Zapatería', sub: 'zapatos -30%', icon: 'shoe', badge: 'pct' },
     { title: 'Panadería', sub: '2x1 en pasteles', icon: 'cupcake', badge: 'pct' },
@@ -739,7 +734,7 @@ S[9] = (t, T, sc) => {
   }
   const u = t - cut;
   let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640, 16, t * 8, C.dred);
-  s += logoBadge(540, 640, 580, 0, pop(u, 0, 0.45));
+  s += logoBadge(540, 620, 660, 0, pop(u, 0, 0.45));
   s += at(540, 1065, pop(u, 0.1, 0.45), text('Escaparate', 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }));
   s += at(540, 1215, pop(u, 0.18, 0.45), text('de Tudela', 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }));
   const url = 'escaparatetudela.es', us = fit(url, 76, 700);
@@ -761,7 +756,7 @@ window.init = async function (cfg, fonts, logos) {
   for (const [id, url] of logos) {
     const img = new Image(); img.src = url; await img.decode();
     const el = document.createElementNS(ns, 'image');
-    el.setAttribute('id', id); el.setAttribute('width', '1000'); el.setAttribute('height', '1000');
+    el.setAttribute('id', id); el.setAttribute('width', '500'); el.setAttribute('height', '500');
     el.setAttribute('href', url);
     defs.appendChild(el);
   }
