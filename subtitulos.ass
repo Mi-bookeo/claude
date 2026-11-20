@@ -15,11 +15,11 @@ Style: Panadera,Baloo 2 ExtraBold,88,&H00F2E3BF,&H00F2E3BF,&H001A1A1E,&H001A1A1E
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: 0,0:00:00.10,0:00:01.98,Narradora,,0,0,0,,{\fad(60,60)}Sábado lluvioso…
-Dialogue: 0,0:00:02.03,0:00:03.95,Narradora,,0,0,0,,{\fad(60,60)}y a Marta le apetece un postre.
-Dialogue: 0,0:00:04.00,0:00:05.90,Narradora,,0,0,0,,{\fad(60,60)}Pero ahora está dentro del canal
-Dialogue: 0,0:00:05.95,0:00:07.25,Narradora,,0,0,0,,{\fad(60,60)}de Escaparate de Tudela.
-Dialogue: 0,0:00:07.30,0:00:08.98,Marta,,0,0,0,,{\fad(60,60)}¿Dos por uno en pasteles?
-Dialogue: 0,0:00:09.03,0:00:10.03,Marta,,0,0,0,,{\fad(60,60)}¡Corro!
+Dialogue: 0,0:00:02.03,0:00:04.07,Narradora,,0,0,0,,{\fad(60,60)}y a Marta le apetece un postre.
+Dialogue: 0,0:00:04.12,0:00:06.02,Narradora,,0,0,0,,{\fad(60,60)}Pero ahora está dentro del canal
+Dialogue: 0,0:00:06.07,0:00:07.35,Narradora,,0,0,0,,{\fad(60,60)}de Escaparate de Tudela.
+Dialogue: 0,0:00:07.40,0:00:09.08,Marta,,0,0,0,,{\fad(60,60)}¿Dos por uno en pasteles?
+Dialogue: 0,0:00:09.13,0:00:10.13,Marta,,0,0,0,,{\fad(60,60)}¡Corro!
 Dialogue: 0,0:00:14.45,0:00:15.45,Marta,,0,0,0,,{\fad(60,60)}¡Llego!
 Dialogue: 0,0:00:17.45,0:00:19.64,Panadera,,0,0,0,,{\fad(60,60)}Justo los últimos, guapa.
 Dialogue: 0,0:00:21.05,0:00:22.04,Lucia,,0,0,0,,{\fad(60,60)}Vaya…
