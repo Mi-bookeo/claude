@@ -1,83 +1,20 @@
 {
-  "title": "Marta y el último 2x1",
-  "output": "marta_y_el_ultimo_2x1.mp4",
+  "title": "Rosa y la cola de pasteles",
+  "output": "rosa_y_la_cola_de_pasteles.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
-  "encoder": {
-    "codec": "libx264",
-    "crf": 18,
-    "preset": "medium",
-    "pix_fmt": "yuv420p"
-  },
+  "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
   "scenes": [
-    {
-      "id": 1,
-      "name": "Salón: Marta aburrida, «Sábado»",
-      "duration": 3.0,
-      "still": 1.5
-    },
-    {
-      "id": 2,
-      "name": "Vibra el móvil: notificación",
-      "duration": 3.9,
-      "still": 2.0
-    },
-    {
-      "id": 3,
-      "name": "Ojos brillantes, 13:45, «Quedan 15 minutos», salto",
-      "duration": 3.0,
-      "still": 1.2,
-      "cut": 1.5
-    },
-    {
-      "id": 4,
-      "name": "Carrera bajo la lluvia, reloj 13:45 -> 14:00",
-      "duration": 3.6,
-      "still": 2.3
-    },
-    {
-      "id": 5,
-      "name": "Derrape ante la panadería: ABIERTO · 2x1 en pasteles",
-      "duration": 3.0,
-      "still": 1.75
-    },
-    {
-      "id": 6,
-      "name": "Sale con la caja, sale el sol, «Últimos 2x1», CERRADO",
-      "duration": 3.0,
-      "still": 2.7
-    },
-    {
-      "id": 7,
-      "name": "Lucía ante CERRADO · AGOTADO; Marta aparece",
-      "duration": 3.0,
-      "still": 2.75
-    },
-    {
-      "id": 8,
-      "name": "Marta le ofrece un pastel; Lucía «?»",
-      "duration": 5.0,
-      "still": 4.4
-    },
-    {
-      "id": 9,
-      "name": "Marta pillina + nube con el icono del canal; Lucía «!»",
-      "duration": 4.0,
-      "still": 3.3
-    },
-    {
-      "id": 10,
-      "name": "El canal en el móvil, «Tu canal de promociones»",
-      "duration": 4.0,
-      "still": 3.0
-    },
-    {
-      "id": 11,
-      "name": "Comenta INSTANTE + web + canal; tarjeta final",
-      "duration": 6.5,
-      "still": 4.0,
-      "cut": 4.5
-    }
+    { "id": 1, "name": "Fachada a mediodía, reloj por la puerta, «12:00»", "duration": 3.0, "still": 1.3 },
+    { "id": 2, "name": "Rosa mira el reloj, preocupada, «Cierra a las 14:00»", "duration": 3.0, "still": 1.7 },
+    { "id": 3, "name": "Bombilla de idea, móvil y «2x1» con destello", "duration": 3.0, "still": 2.0 },
+    { "id": 4, "name": "Rosa teclea; tarjeta de oferta; Publicar -> Publicada", "duration": 4.0, "still": 3.2, "cut": 1.1 },
+    { "id": 5, "name": "Calle: vibran los móviles, «Y la gente se entera al momento»", "duration": 3.0, "still": 1.8 },
+    { "id": 6, "name": "Todos corren; la cola dobla la esquina; reloj 12:05-12:30, «¡Cola en la puerta!»", "duration": 4.0, "still": 3.7 },
+    { "id": 7, "name": "Rosa despacha a toda velocidad; la vitrina se vacía, «¡Siguiente!»", "duration": 5.0, "still": 3.45 },
+    { "id": 8, "name": "13:50: Marta se lleva la última caja; Rosa gira el cartel a AGOTADO", "duration": 4.0, "still": 2.75 },
+    { "id": 9, "name": "Vitrina vacía, Rosa agotada y feliz, monedas y confeti", "duration": 3.0, "still": 1.8 },
+    { "id": 10, "name": "Llamada a la acción con pájaros + tarjeta final", "duration": 8.0, "still": 4.0, "cut": 6.0 }
   ]
 }

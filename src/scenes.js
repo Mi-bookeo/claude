@@ -1,769 +1,475 @@
-/* Vídeo 02 — «Marta y el último 2x1».
-   Escenas nuevas sobre la biblioteca común (src/lib.js). Todo se calcula a partir de (t local, T global). */
+/* Vídeo 03 — «Rosa y la cola de pasteles». Escenas sobre lib.js + series.js + rosa.js.
+   Todo se calcula a partir de (t local de la escena, T global). Zona de subtítulos (y > 1500) libre. */
 'use strict';
 
-const SKY_RAIN = '#C9D6DF', CLOUD_G = '#AEBBC6', DOT = '#F2B5AD', RAIN = '#7FA9C9';
-const SC = 5.2, FOOT = 1446; // escala y línea de pies de los personajes en la calle
-SHOP_TYPES[1] = SHOE_SHOP;    // la zapatería «TUS PIES» del vídeo 01 aparece en la calle
+const S = {};
+const big = (str, x, y, size, k, rot = 0, o = {}) => at(x, y, k, text(str, 0, 0, Object.assign({ size: fit(str, size, o.maxW || 980, o.font || 'B'), sw: SW * 2.3, sd: 9 }, o)), rot);
+const TM = { s1: 720, s2: 720, s3: 720, s4: 720, s8: 830, s9: 830 }; // horas (minutos del día)
 
-/* ---------- utilidades de cámara y marcas ---------- */
-function cam(z, cx, cy, inner, dx = 0, dy = 0) {
-  if (Math.abs(z - 1) < 1e-4 && !dx && !dy) return inner;
-  return `<g transform="translate(${f(cx + dx)} ${f(cy + dy)}) scale(${f(z)}) translate(${f(-cx)} ${f(-cy)})">${inner}</g>`;
-}
-const zoomIn = (t, t0 = 0, from = 1.12, d = 0.22) => lerp(from, 1, easeOut((t - t0) / d));
-function mark(ch, x, y, k, rot, size = 190, fill = C.red) {
-  return at(x, y, k, text(ch, 0, 0, { size, font: 'G', fill, sw: SW * 2.2, sd: 9 }), rot);
-}
-function shadowEll(x, y, rx) { return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(rx * 0.13)}" fill="${INK}" opacity="0.18"/>`; }
-function puff(x, y, r, k) {
-  if (k <= 0.01) return '';
-  return at(x, y, k, `<circle r="${f(r)}" fill="${C.cream}" stroke="${INK}" stroke-width="${f(SW)}"/><circle cx="${f(-r * 0.25)}" cy="${f(-r * 0.25)}" r="${f(r * 0.28)}" fill="#FFFFFF"/>`);
-}
-function logoIcon(cx, cy, size, which = 'logoR') {
-  const h = size / 2; // recorte del icono (móvil + toldo + etiqueta %) del PNG del logo
-  return `<svg x="${f(cx - h)}" y="${f(cy - h)}" width="${f(size)}" height="${f(size)}" viewBox="150 72 200 200"><use href="#${which}"/></svg>`;
-}
-
-/* ---------- cielo con lluvia ---------- */
-const GRAY_CLOUDS = [
-  { x0: 120, y: 250, s: 1.25, v: 22 }, { x0: 700, y: 330, s: 1.55, v: 30 },
-  { x0: 420, y: 470, s: 1.05, v: 16 }, { x0: 1050, y: 200, s: 1.1, v: 26 }, { x0: 1500, y: 430, s: 1.3, v: 19 }
-];
-function grayClouds(T, yOff = 0, spread = 0) {
-  let s = '';
-  const span = W + 900;
-  GRAY_CLOUDS.forEach(c => {
-    let x = (((c.x0 - c.v * T) % span) + span) % span - 420;
-    const cxp = x + 64 * c.s;
-    x += (cxp < W / 2 ? -1 : 1) * spread;
-    s += cloud(x, c.y + yOff, c.s, CLOUD_G);
-  });
+/* ---------- 1) Fachada a mediodía, calle casi vacía. Reloj por la puerta: 12:00 ---------- */
+const BK1 = bakeryGeo(140, 1330, 800, 960);
+S[1] = (t, T) => {
+  let w = skyClear(T, { band: 860, tm: TM.s1, sx: 935, sy: 250, sr: 56 });
+  w += bakeryStreet(BK1, { doorClock: TM.s1, window: 'full', bell: 0 });
+  w += ground(1330, 0, { sp: 230 });
+  // un único peatón a lo lejos (calle casi vacía)
+  const px = lerp(1180, 860, t / 3);
+  w += shadowEll(px, 1420, 70) + placeFolk(7, px, 1420, 2.6, Object.assign(walkPose(2 * PI * t / 0.8, 0.8), { flip: true, expr: 'happy', handF: phoneInHand(-14) }));
+  const zz = easeOut((t - 1.55) / 0.18), g = BK1.glass;
+  let s = cam(zoomIn(t, 0, 1.12, 0.22) * lerp(1, 1.5, zz), lerp(540, g.x + g.w / 2, zz), lerp(1000, g.y + g.h / 2, zz), w);
+  s += big('12:00', 540, 270, 200, pop(t, 0.25, 0.55), lerp(-8, -3, pop(t, 0.25, 0.55)), { font: 'G', sw: SW * 2.6, sd: 11 });
   return s;
-}
-function rain(T, x, y, w, h, n, o = {}) {
-  const len = o.len || 54, v = o.v || 1700, sl = 0.22, amt = o.amount === undefined ? 1 : o.amount;
-  let s = '';
-  for (let i = 0; i < n; i++) {
-    if (hash(i * 9.13 + 1) > amt) continue;
-    const sp = v * (0.85 + 0.3 * hash(i * 5.3)), L = h + len * 2;
-    const yy = y - len + ((((hash(i * 2.9) * L + sp * T) % L) + L) % L);
-    const xx = x + hash(i * 1.7) * (w + 120) - (yy - y) * sl;
-    s += `<line x1="${f(xx)}" y1="${f(yy)}" x2="${f(xx - len * sl)}" y2="${f(yy + len)}"/>`;
-  }
-  return `<g stroke="${o.col || RAIN}" stroke-width="${f(o.sw || SW * 0.55)}" stroke-linecap="round">${s}</g>`;
-}
-function skyRain(T, o = {}) {
-  return `<rect width="${W}" height="${H}" fill="${SKY_RAIN}"/>` + grayClouds(T, o.yOff || 0);
-}
-/* ---------- cielo despejado ---------- */
-function sun(x, y, r, rot, k = 1) {
-  let rays_ = '';
-  for (let i = 0; i < 12; i++) {
-    const a = (rot + i * 30) * PI / 180, a1 = a - 0.11, a2 = a + 0.11;
-    const r1 = r * 1.18, r2 = r * (i % 2 ? 1.55 : 1.75);
-    rays_ += `<path d="M${f(Math.cos(a1) * r1)} ${f(Math.sin(a1) * r1)} L${f(Math.cos(a) * r2)} ${f(Math.sin(a) * r2)} L${f(Math.cos(a2) * r1)} ${f(Math.sin(a2) * r1)}Z"/>`;
-  }
-  return at(x, y, k, `<g fill="${C.yel || '#F2C12E'}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round">${rays_}</g>
-    <circle cx="8" cy="8" r="${r}" fill="${INK}"/><circle r="${r}" fill="#F2C12E" stroke="${INK}" stroke-width="${f(SW)}"/>
-    <path d="M${f(-r * 0.55)} ${f(-r * 0.2)} A${f(r * 0.6)} ${f(r * 0.6)} 0 0 1 ${f(-r * 0.15)} ${f(-r * 0.58)}" stroke="#FFFFFF" stroke-width="${f(SW * 1.1)}" fill="none" stroke-linecap="round"/>`);
-}
-const WHITE_CLOUDS = [
-  { x0: 80, y: 250, s: 0.8, v: 14 }, { x0: 560, y: 400, s: 1.0, v: 24 }, { x0: 980, y: 300, s: 0.65, v: 9 },
-  { x0: 1350, y: 460, s: 0.9, v: 18 }, { x0: 1700, y: 220, s: 0.7, v: 12 }
-];
-function whiteClouds(T, list = WHITE_CLOUDS) {
-  let s = '';
-  const span = W + 900;
-  list.forEach(c => { const x = (((c.x0 - c.v * T) % span) + span) % span - 420; s += cloud(x, c.y, c.s); });
-  return s;
-}
-function skyClear(T, o = {}) {
-  let s = `<rect width="${W}" height="${H}" fill="${C.sky}"/><rect y="${o.band || 400}" width="${W}" height="${H}" fill="${C.skyL}"/>`;
-  if (o.sun !== false) s += sun(o.sx || 905, o.sy || 300, o.sr || 72, T * 12);
-  s += whiteClouds(T, o.clouds);
-  return s;
-}
-
-/* ---------- suelo mojado ---------- */
-function groundWet(y0, off, o = {}) {
-  let s = ground(y0, off, { sp: 220, curb: 1600 });
-  const sp = 760, start = -(((off % sp) + sp) % sp);
-  for (let x = start - sp; x < W + sp; x += sp) {
-    // charcos planos con reflejo
-    s += `<ellipse cx="${f(x + 240)}" cy="1528" rx="150" ry="26" fill="${C.glass}" stroke="${INK}" stroke-width="${f(SW * 0.7)}"/>`;
-    s += `<path d="M${f(x + 160)} 1524 H${f(x + 230)} M${f(x + 260)} 1532 H${f(x + 300)}" stroke="#FFFFFF" stroke-width="${f(SW * 0.8)}" stroke-linecap="round"/>`;
-    s += `<ellipse cx="${f(x + 600)}" cy="1380" rx="95" ry="16" fill="${C.glass}" stroke="${INK}" stroke-width="${f(SW * 0.6)}"/>`;
-    s += `<path d="M${f(x + 555)} 1378 H${f(x + 610)}" stroke="#FFFFFF" stroke-width="${f(SW * 0.7)}" stroke-linecap="round"/>`;
-  }
-  // reflejos planos (rayas claras)
-  const sp2 = 300, st2 = -(((off * 1.0 % sp2) + sp2) % sp2);
-  for (let x = st2 - sp2; x < W + sp2; x += sp2) {
-    s += `<path d="M${f(x)} ${y0 + 34} H${f(x + 120)} M${f(x + 60)} ${y0 + 70} H${f(x + 150)}" stroke="#FFFFFF" stroke-width="${f(SW * 0.9)}" stroke-linecap="round" opacity="${o.dry ? 0.35 : 0.7}"/>`;
-  }
-  return s;
-}
-
-/* ---------- salón (escenas 1-3) ---------- */
-const WIN = { x: 170, y: 330, w: 740, h: 640 };
-function room(T, o = {}) {
-  const id = 'dots' + (uid++), cid = 'win' + (uid++);
-  let s = `<defs><pattern id="${id}" width="${f(10 * W / 380)}" height="${f(10 * W / 380)}" patternUnits="userSpaceOnUse"><circle cx="${f(5 * W / 380)}" cy="${f(5 * W / 380)}" r="${f(1.4 * W / 380)}" fill="${DOT}"/></pattern></defs>`;
-  s += `<rect width="${W}" height="${H}" fill="${C.cream}"/><rect width="${W}" height="${H}" fill="url(#${id})"/>`;
-  const { x, y, w, h } = WIN;
-  // ventana: marco, cielo gris, nubes y lluvia
-  s += `<rect x="${x - 26 + 12}" y="${y - 26 + 12}" width="${w + 52}" height="${h + 52}" rx="18" fill="${INK}"/>`;
-  s += `<rect x="${x - 26}" y="${y - 26}" width="${w + 52}" height="${h + 52}" rx="18" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  s += `<clipPath id="${cid}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8"/></clipPath>`;
-  s += `<g clip-path="url(#${cid})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${SKY_RAIN}"/>`;
-  s += `<g transform="translate(${x} ${y + 40}) scale(0.72)">${grayClouds(T)}</g>`;
-  // tejados lejanos
-  s += `<path d="M${x} ${y + h - 120} h140 v-60 h120 v80 h150 v-110 h130 v90 h200 V${y + h} H${x}Z" fill="${CLOUD_G}" stroke="${INK}" stroke-width="${f(SW * 0.6)}" stroke-linejoin="round"/>`;
-  s += rain(T, x - 60, y - 20, w + 60, h + 40, 46, { len: 46 });
-  s += `</g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="none" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  s += `<rect x="${x + w / 2 - 12}" y="${y}" width="24" height="${h}" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;
-  s += `<rect x="${x}" y="${y + h * 0.42 - 12}" width="${w}" height="24" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;
-  s += `<rect x="${x - 50}" y="${y + h + 18}" width="${w + 100}" height="38" rx="10" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  // cortinas y barra
-  const curtain = (x0, dir) => {
-    const x1 = x0 + 150 * dir;
-    let c = `<path d="M${x0} 300 L${x1} 300 Q${x1 - 30 * dir} 700 ${x1 - 10 * dir} 1040 Q${x0 + 110 * dir} 1060 ${x0 + 75 * dir} 1040 Q${x0 + 40 * dir} 1062 ${x0} 1040 Z" fill="${C.red}"/>`;
-    c += `<path d="M${x0 + 45 * dir} 300 L${x0 + 72 * dir} 300 L${x0 + 66 * dir} 1048 L${x0 + 40 * dir} 1046Z" fill="#A32323"/>`;
-    c += `<path d="M${x0} 300 L${x1} 300 Q${x1 - 30 * dir} 700 ${x1 - 10 * dir} 1040 Q${x0 + 110 * dir} 1060 ${x0 + 75 * dir} 1040 Q${x0 + 40 * dir} 1062 ${x0} 1040 Z" fill="none" stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round"/>`;
-    return c;
-  };
-  s += curtain(95, 1) + curtain(985, -1);
-  s += `<rect x="70" y="280" width="940" height="22" rx="11" fill="${C.navy}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  s += `<circle cx="70" cy="291" r="20" fill="${C.navy}" stroke="${INK}" stroke-width="${f(SW)}"/><circle cx="1010" cy="291" r="20" fill="${C.navy}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  // suelo
-  s += `<rect x="-20" y="1480" width="${W + 40}" height="${H - 1460}" fill="${C.skinS}"/>`;
-  for (let i = 0; i < 6; i++) s += `<line x1="${-40 + i * 230}" y1="1480" x2="${-160 + i * 230}" y2="${H}" stroke="${INK}" stroke-width="${f(SW * 0.5)}"/>`;
-  s += `<line x1="-20" y1="1480" x2="${W + 20}" y2="1480" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  s += sofa();
-  return s;
-}
-function sofa() {
-  const st = `stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round"`;
-  let s = '';
-  s += `<rect x="190" y="1430" width="26" height="54" rx="6" fill="${INK}"/><rect x="866" y="1430" width="26" height="54" rx="6" fill="${INK}"/>`;
-  s += `<rect x="122" y="972" width="860" height="300" rx="70" fill="${INK}"/>`;
-  s += `<rect x="110" y="960" width="860" height="300" rx="70" fill="${C.red}" ${st}/>`;
-  [[150, 1000], [550, 1000]].forEach(([x, y]) => {
-    s += `<rect x="${x}" y="${y}" width="380" height="230" rx="46" fill="${C.red}" ${st}/>`;
-    s += `<path d="M${x + 10} ${y + 40} Q${x + 8} ${y + 120} ${x + 14} ${y + 200} L${x + 40} ${y + 210} Q${x + 30} ${y + 120} ${x + 36} ${y + 30}Z" fill="#A32323"/>`;
-  });
-  s += `<rect x="130" y="1280" width="820" height="160" rx="26" fill="#A32323" ${st}/>`;
-  s += `<rect x="150" y="1200" width="780" height="96" rx="32" fill="${C.red}" ${st}/>`;
-  s += `<line x1="540" y1="1206" x2="540" y2="1290" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;
-  [[52, 1], [888, -1]].forEach(([x]) => {
-    s += `<rect x="${x + 10}" y="1112" width="140" height="340" rx="60" fill="${INK}"/>`;
-    s += `<rect x="${x}" y="1100" width="140" height="340" rx="60" fill="${C.red}" ${st}/>`;
-    s += `<rect x="${x + 14}" y="1180" width="26" height="240" rx="13" fill="#A32323"/>`;
-  });
-  return s;
-}
-// Marta sentada (sc 4.6, suelo del salón y=1480)
-const SIT = { x: 470, y: 1480, sc: 4.6 };
-function phoneInHand(rot = -18, shake = 0) {
-  return w => `<g transform="translate(${f(shake)} 0) rotate(${f(rot)} 206 133)"><rect x="199" y="119" width="14" height="24" rx="3" fill="${INK}" stroke="${INK}" stroke-width="${w(2)}"/><rect x="201" y="121.6" width="10" height="18.4" rx="1.5" fill="${C.glass}"/></g>` + hand(202.5, 140, w);
-}
-
-/* ---------- reloj (analógico + digital) ---------- */
-function clockFace(r, min, red) {
-  let s = `<circle cx="${-r * 0.62}" cy="${-r * 0.86}" r="${f(r * 0.3)}" fill="${C.yel}" stroke="${INK}" stroke-width="${f(SW)}"/>
-    <circle cx="${r * 0.62}" cy="${-r * 0.86}" r="${f(r * 0.3)}" fill="${C.yel}" stroke="${INK}" stroke-width="${f(SW)}"/>
-    <path d="M${f(-r * 0.6)} ${f(r * 0.8)} L${f(-r * 0.8)} ${f(r * 1.08)} M${f(r * 0.6)} ${f(r * 0.8)} L${f(r * 0.8)} ${f(r * 1.08)}" stroke="${INK}" stroke-width="${f(SW * 1.4)}" stroke-linecap="round"/>
-    <circle cx="9" cy="9" r="${r}" fill="${INK}"/>
-    <circle r="${r}" fill="${red ? C.red : C.cream}" stroke="${INK}" stroke-width="${f(SW)}"/>
-    <circle r="${f(r * 0.8)}" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW * 0.7)}"/>`;
-  for (let i = 0; i < 12; i++) {
-    const a = i * PI / 6, r1 = r * (i % 3 ? 0.68 : 0.6), r2 = r * 0.74;
-    s += `<line x1="${f(Math.sin(a) * r1)}" y1="${f(-Math.cos(a) * r1)}" x2="${f(Math.sin(a) * r2)}" y2="${f(-Math.cos(a) * r2)}" stroke="${INK}" stroke-width="${f(SW * (i % 3 ? 0.6 : 1))}" stroke-linecap="round"/>`;
-  }
-  const am = min / 60 * 2 * PI, ah = (1 + min / 60) / 12 * 2 * PI;
-  s += `<line x1="0" y1="0" x2="${f(Math.sin(ah) * r * 0.4)}" y2="${f(-Math.cos(ah) * r * 0.4)}" stroke="${INK}" stroke-width="${f(SW * 1.5)}" stroke-linecap="round"/>`;
-  s += `<line x1="0" y1="0" x2="${f(Math.sin(am) * r * 0.62)}" y2="${f(-Math.cos(am) * r * 0.62)}" stroke="${C.red}" stroke-width="${f(SW * 1.1)}" stroke-linecap="round"/>`;
-  s += `<circle r="${f(r * 0.08)}" fill="${INK}"/>`;
-  return s;
-}
-function timeStr(min) { const m = Math.min(60, Math.floor(min + 1e-6)); return m >= 60 ? '14:00' : '13:' + String(m).padStart(2, '0'); }
-function digital(w, h, min, red) {
-  return panel(-w / 2, -h / 2, w, h, h * 0.3, INK, 9) +
-    text(timeStr(min), 0, h * 0.04, { size: h * 0.8, font: 'G', fill: red ? C.red : '#FFFFFF', stroke: red ? '#FFFFFF' : null, sw: SW * 0.8, shadow: false, ls: 2 });
-}
-C.yel = '#F2C12E';
-
-/* ---------- tarjeta de notificación ---------- */
-function notifCard(w, h) {
-  let s = panel(-w / 2, -h / 2, w, h, 44, '#FFFFFF', 12);
-  const ix = -w / 2 + 30, isz = h - 60;
-  s += `<rect x="${f(ix)}" y="${f(-isz / 2)}" width="${f(isz)}" height="${f(isz)}" rx="34" fill="${C.cream}" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;
-  s += logoIcon(ix + isz / 2, 0, isz * 0.92);
-  const tx = ix + isz + 30, tw = w / 2 - tx - 30;
-  s += text('Escaparate de Tudela', tx, -h * 0.27, { size: fit('Escaparate de Tudela', 50, tw), anchor: 'start', fill: INK, stroke: null });
-  s += text('¡Termina hoy!', tx, h * 0.03, { size: fit('¡Termina hoy!', 60, tw), anchor: 'start', fill: C.red, stroke: null });
-  s += text('2x1 en pasteles', tx, h * 0.29, { size: fit('2x1 en pasteles', 58, tw), anchor: 'start', fill: INK, stroke: null });
-  return s;
-}
-
-/* ---------- panadería ---------- */
-const PITEMS = {
-  cake: sw => `<rect x="18" y="56" width="64" height="36" rx="5" fill="${C.pink}" stroke="${INK}" stroke-width="${sw}"/>
-    <rect x="18" y="70" width="64" height="7" fill="${C.cream}" stroke="${INK}" stroke-width="${sw * 0.6}"/>
-    <path d="M14 58 Q14 44 30 44 H70 Q86 44 86 58 Q78 64 70 58 Q62 66 54 58 Q46 66 38 58 Q30 66 22 58 Q18 62 14 58Z" fill="${C.cream}" stroke="${INK}" stroke-width="${sw}" stroke-linejoin="round"/>
-    <circle cx="50" cy="36" r="8" fill="${C.red}" stroke="${INK}" stroke-width="${sw}"/><path d="M50 28 Q54 20 60 18" stroke="${INK}" stroke-width="${sw * 0.7}" fill="none" stroke-linecap="round"/>
-    <path d="M6 94 H94" stroke="${INK}" stroke-width="${sw}" stroke-linecap="round"/>`,
-  cupcake: sw => ICONS.cupcake(sw) + `<path d="M10 92 H90" stroke="${INK}" stroke-width="${sw}" stroke-linecap="round"/>`,
-  croissant: sw => `<path d="M8 74 Q20 44 50 42 Q80 44 92 74 Q80 70 74 78 Q62 64 50 66 Q38 64 26 78 Q20 70 8 74Z" fill="${C.skinS}" stroke="${INK}" stroke-width="${sw}" stroke-linejoin="round"/>
-    <path d="M30 52 Q36 62 34 72 M50 44 V64 M70 52 Q64 62 66 72" stroke="${INK}" stroke-width="${sw * 0.7}" fill="none" stroke-linecap="round"/>
-    <path d="M6 92 H94" stroke="${INK}" stroke-width="${sw}" stroke-linecap="round"/>`
 };
-function bakeryGeo(x, base, w, h) {
-  const top = base - h, ay = top + 0.2 * h, ah = 0.15 * h;
-  const wy = ay + ah + (w * 1.06 / 8) / 2 + 0.035 * h;
-  const door = { x: x + 0.56 * w, w: 0.34 * w, y: wy - 0.01 * h };
-  const sw = 0.47 * w, sh = sw * 0.6;
-  const sign = { cx: door.x + door.w / 2, cy: wy + 0.33 * (base - wy), w: sw, h: sh };
-  return { x, w, h, base, top, ay, ah, wy, door, sign };
-}
-function doorSign(sw, sh, flip, shake = 0) {
-  const sx = Math.max(0.02, Math.abs(Math.cos(PI * clamp(flip))));
-  const closed = flip >= 0.5;
-  let c = `<rect x="${f(-sw / 2 + 8)}" y="${f(-sh / 2 + 8)}" width="${f(sw)}" height="${f(sh)}" rx="18" fill="${INK}"/>`;
-  c += `<rect x="${f(-sw / 2)}" y="${f(-sh / 2)}" width="${f(sw)}" height="${f(sh)}" rx="18" fill="${closed ? C.red : C.cream}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  c += `<circle cx="0" cy="${f(-sh / 2 + 16)}" r="7" fill="${INK}"/>`;
-  if (!closed) {
-    c += text('ABIERTO', 0, -sh * 0.15, { size: fit('ABIERTO', sh * 0.42, sw * 0.86), fill: C.green, sw: SW * 1.5, sd: 4 });
-    c += `<line x1="${f(-sw * 0.38)}" y1="${f(sh * 0.1)}" x2="${f(sw * 0.38)}" y2="${f(sh * 0.1)}" stroke="${INK}" stroke-width="${f(SW * 0.5)}" stroke-dasharray="10 9" stroke-linecap="round"/>`;
-    c += text('2x1 en pasteles', 0, sh * 0.29, { size: fit('2x1 en pasteles', sh * 0.27, sw * 0.88), fill: C.red, stroke: null });
-  } else {
-    c += text('CERRADO', 0, -sh * 0.15, { size: fit('CERRADO', sh * 0.42, sw * 0.86), fill: '#FFFFFF', sw: SW * 1.5, sd: 4 });
-    c += `<rect x="${f(-sw * 0.4)}" y="${f(sh * 0.1)}" width="${f(sw * 0.8)}" height="${f(sh * 0.32)}" rx="10" fill="${C.yel}" stroke="${INK}" stroke-width="${f(SW * 0.8)}" transform="rotate(-3)"/>`;
-    c += text('AGOTADO', 0, sh * 0.265, { size: fit('AGOTADO', sh * 0.26, sw * 0.7), fill: INK, stroke: null, font: 'G', ls: 2 });
-  }
-  return `<g transform="rotate(${f(shake)} 0 ${f(-sh / 2 - 46)}) scale(${f(sx)} 1)">${c}</g>`;
-}
-function bakery(g, o = {}) {
-  const { x, w, h, base, top, ay, ah, wy, door } = g;
-  const st = (v = 1) => `stroke="${INK}" stroke-width="${f(SW * v)}"`;
-  let s = '';
-  s += `<rect x="${f(x)}" y="${f(top)}" width="${f(w)}" height="${f(h + 30)}" rx="${f(w * 0.02)}" fill="${C.cream}"/>`;
-  s += `<rect x="${f(x + w * 0.9)}" y="${f(top + w * 0.02)}" width="${f(w * 0.1)}" height="${f(h + 30)}" fill="${INK}" opacity="0.16"/>`;
-  s += `<rect x="${f(x)}" y="${f(top)}" width="${f(w)}" height="${f(h + 30)}" rx="${f(w * 0.02)}" fill="none" ${st()}/>`;
-  // rótulo PANADERÍA (letras crema sobre rojo oscuro)
-  const py = top + h * 0.04, ph = h * 0.125, pw = w * 0.84;
-  s += `<rect x="${f(x + (w - pw) / 2 + 9)}" y="${f(py + 9)}" width="${f(pw)}" height="${f(ph)}" rx="${f(ph * 0.25)}" fill="${INK}"/>`;
-  s += `<rect x="${f(x + (w - pw) / 2)}" y="${f(py)}" width="${f(pw)}" height="${f(ph)}" rx="${f(ph * 0.25)}" fill="${C.dred}" ${st()}/>`;
-  s += text('PANADERÍA', x + w / 2, py + ph * 0.56, { size: fit('PANADERÍA', ph * 0.72, pw * 0.86), fill: C.cream, sw: SW * 1.4, sd: 4, ls: 3 });
-  s += awning(x + w * 0.04, x + w * 0.96, x - w * 0.03, x + w * 1.03, ay, ah, 8);
-  // escaparate con pasteles
-  const wx = x + w * 0.05, ww = w * 0.44, wh = base - h * 0.09 - wy;
-  s += glassWindow(wx, wy, ww, wh, (X, Y, Wd, Hd) => {
-    let it = `<line x1="${f(X)}" y1="${f(Y + Hd * 0.5)}" x2="${f(X + Wd)}" y2="${f(Y + Hd * 0.5)}" ${st(0.8)}/>`;
-    it += unitBox(X + Wd * 0.02, Y + Hd * 0.06, Wd * 0.5, Hd * 0.44, PITEMS.cake, 0.95);
-    it += unitBox(X + Wd * 0.5, Y + Hd * 0.1, Wd * 0.46, Hd * 0.4, PITEMS.cupcake, 0.95);
-    it += unitBox(X + Wd * 0.02, Y + Hd * 0.56, Wd * 0.34, Hd * 0.42, PITEMS.croissant, 0.95);
-    it += unitBox(X + Wd * 0.34, Y + Hd * 0.56, Wd * 0.32, Hd * 0.42, PITEMS.cupcake, 0.9);
-    it += unitBox(X + Wd * 0.64, Y + Hd * 0.56, Wd * 0.34, Hd * 0.42, PITEMS.croissant, 0.95);
-    return it;
+
+/* ---------- 2) Interior: Rosa mira el reloj, preocupada. «Cierra a las 14:00» ---------- */
+S[2] = (t, T) => {
+  const lk = easeOut((t - 0.35) / 0.25);
+  const wob = t > 0.6 ? 7 * damp(t - 0.6, 20, 2.5) : 0;
+  let w = interiorBack(T, { tm: TM.s2, clockWob: wob, clockK: 1 + 0.08 * Math.max(0, damp(t - 0.6, 16, 5)) });
+  w += rosaInt(T, { expr: t < 0.55 ? 'happy' : 'worried', look: [lerp(0, 0.9, lk), lerp(0, -1.6, lk)], head: lerp(0, -12, lk), armF: -28, armB: -22 });
+  w += vitrina() + counterTop();
+  if (t > 0.65) w += mark('!', 470, 560, pop(t, 0.65, 0.35), -12, 150);
+  const zz = easeOut((t - 1.3) / 0.16);
+  let s = cam(zoomIn(t, 0, 1.12, 0.2) * lerp(1, 1.18, zz), 480, 760, w);
+  const l = 'Cierra a las 14:00';
+  s += big(l, 540, 280, 125, pop(t, 0.9, 0.55), lerp(-6, -2, pop(t, 0.9, 0.55)));
+  return s;
+};
+
+/* ---------- 3) Bombilla de idea; mira el móvil; «2x1» con destello ---------- */
+S[3] = (t, T) => {
+  const up = easeOut((t - 0.8) / 0.25);
+  let w = interiorBack(T, { tm: TM.s3 });
+  const expr = t < 0.3 ? 'worried' : (t < 1.35 ? 'idea' : 'sparkle');
+  w += rosaInt(T, {
+    expr, look: up > 0.5 ? [0.9, 1.4] : [0.3, -0.8], head: lerp(-4, 8, up),
+    armF: lerp(-28, -42, up), armB: lerp(-22, -85, up) + (up > 0.9 ? 4 * Math.sin(t * 30) : 0), handF: up > 0.25 ? rosaPhone(-6, true) : null
   });
-  s += `<rect x="${f(wx - w * 0.02)}" y="${f(wy + wh)}" width="${f(ww + w * 0.04)}" height="${f(h * 0.03)}" rx="4" fill="#FFFFFF" ${st()}/>`;
-  // puerta (con apertura opcional)
-  const open = clamp(o.open || 0);
-  const dh = base - door.y + 10;
-  if (open > 0) {
-    s += `<rect x="${f(door.x)}" y="${f(door.y)}" width="${f(door.w)}" height="${f(dh)}" rx="${f(door.w * 0.06)}" fill="${C.dred}" ${st()}/>`;
-    s += `<rect x="${f(door.x + door.w * 0.1)}" y="${f(door.y + dh * 0.62)}" width="${f(door.w * 0.8)}" height="${f(dh * 0.12)}" fill="#A32323"/>`;
-  }
-  const lw = door.w * (1 - 0.82 * open);
-  s += `<path d="M${f(door.x)} ${f(door.y)} L${f(door.x + lw)} ${f(door.y + 18 * open)} L${f(door.x + lw)} ${f(door.y + dh - 18 * open)} L${f(door.x)} ${f(door.y + dh)}Z" fill="${C.navy}" ${st()} stroke-linejoin="round"/>`;
-  s += `<rect x="${f(door.x + lw * 0.14)}" y="${f(door.y + door.w * 0.14)}" width="${f(lw * 0.72)}" height="${f(dh * 0.5)}" rx="${f(door.w * 0.05)}" fill="${C.glass}" ${st(0.8)}/>`;
-  s += `<circle cx="${f(door.x + lw * 0.86)}" cy="${f(door.y + dh * 0.62)}" r="${f(door.w * 0.045)}" fill="${C.yel}" ${st(0.7)}/>`;
-  // campanilla
-  const bx = door.x + door.w * 0.86, by = door.y - 4, br = w * 0.034;
-  s += `<path d="M${f(bx - 30)} ${f(by - 14)} H${f(bx)} V${f(by)}" fill="none" ${st(0.9)} stroke-linecap="round"/>`;
-  s += `<g transform="translate(${f(bx)} ${f(by)}) rotate(${f(o.bell || 0)})"><circle cx="0" cy="${f(br * 1.55)}" r="${f(br * 0.32)}" fill="${C.dred}" ${st(0.6)}/><path d="M${f(-br)} ${f(br * 1.35)} Q${f(-br)} 0 0 0 Q${f(br)} 0 ${f(br)} ${f(br * 1.35)} Z" fill="${C.yel}" ${st(0.8)} stroke-linejoin="round"/></g>`;
-  // cartel de dos caras colgado en el cristal
-  if (open < 0.3) {
-    const sg = g.sign;
-    const nailY = sg.cy - sg.h / 2 - 46;
-    s += `<circle cx="${f(sg.cx)}" cy="${f(nailY)}" r="7" fill="${INK}"/>`;
-    const sxs = Math.max(0.02, Math.abs(Math.cos(PI * clamp(o.flip || 0))));
-    s += `<path d="M${f(sg.cx - sg.w * 0.3 * sxs)} ${f(sg.cy - sg.h / 2 + 4)} L${f(sg.cx)} ${f(nailY)} L${f(sg.cx + sg.w * 0.3 * sxs)} ${f(sg.cy - sg.h / 2 + 4)}" fill="none" ${st(0.6)}/>`;
-    s += `<g transform="translate(${f(sg.cx)} ${f(sg.cy)})">${doorSign(sg.w, sg.h, o.flip || 0, o.signShake || 0)}</g>`;
+  w += vitrina() + counterTop();
+  const [hx, hy] = rosaToWorld(192, 40);
+  w += bulb(hx + 10, hy - 85, 50, pop(t, 0.3, 0.45), t);
+  let s = cam(1.28 * zoomIn(t, 0, 1.12, 0.2), 690, 860, w);
+  // «2x1» enorme con destello
+  const k = pop(t, 1.35, 0.5);
+  if (k > 0) {
+    const fl = clamp(1 - (t - 1.35) / 0.12);
+    if (fl > 0) s += `<rect width="${W}" height="${H}" fill="#FFFFFF" opacity="${f(0.85 * fl)}"/>`;
+    let g = burst(0, 0, 250, t * 25, C.yel);
+    g += text('2x1', 0, 4, { size: 250, font: 'B', fill: C.red, sw: SW * 2.8, sd: 12 });
+    s += at(330, 560, k, g, lerp(-20, -8, k));
+    s += sparkle(115, 360, 44, pop(t, 1.5, 0.4) * (1 + 0.2 * Math.sin(t * 18)));
+    s += sparkle(560, 360, 32, pop(t, 1.6, 0.4) * (1 + 0.2 * Math.sin(t * 15 + 1)));
+    s += sparkle(130, 800, 30, pop(t, 1.7, 0.4));
   }
   return s;
-}
-// calle con panadería: tiendas genéricas a los lados (mundo desplazado dx)
-function bakeryStreet(g, dx, o = {}) {
-  let s = '';
-  const sw = 440, gap = 50, sh = 780;
-  for (let i = 1; i <= 4; i++) s += shop(g.x - i * (sw + gap) + dx, g.base, sw, sh, SHOP_TYPES[(i + 1) % 4]);
-  s += shop(g.x + g.w + gap + dx, g.base, sw, sh, SHOP_TYPES[0]);
-  const gg = Object.assign({}, g, { x: g.x + dx, door: Object.assign({}, g.door, { x: g.door.x + dx }), sign: Object.assign({}, g.sign, { cx: g.sign.cx + dx }) });
-  s += bakery(gg, o);
-  return s;
-}
+};
 
-/* ---------- nubecita gris, nube de pensamiento ---------- */
-function sadCloud(x, y, k, t) {
-  if (k <= 0.01) return '';
-  let s = cloud(-64, 0, 0.62, CLOUD_G);
-  for (let i = 0; i < 4; i++) {
-    const u = ((t * 1.6 + i * 0.25) % 1);
-    const xx = -20 + i * 40, yy = 40 + u * 110;
-    s += `<path d="M${xx} ${f(yy)} q7 12 0 18 q-7 -6 0 -18z" fill="${C.glass}" stroke="${INK}" stroke-width="${f(SW * 0.6)}" opacity="${f(1 - u * 0.6)}"/>`;
-  }
-  return at(x, y, k, s);
-}
-function thoughtCloud(cx, cy, rw, rh, k) {
-  if (k <= 0.01) return '';
-  const N = 11;
-  let a = '', b = '';
-  for (let i = 0; i < N; i++) {
-    const ang = i / N * 2 * PI, r = 0.3 * Math.min(rw, rh) + 10 * (i % 2);
-    const x = Math.cos(ang) * rw * 0.82, y = Math.sin(ang) * rh * 0.8;
-    a += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}"/>`;
-  }
-  b = `<ellipse rx="${f(rw * 0.86)}" ry="${f(rh * 0.84)}"/>`;
-  const shape = a + b;
-  return at(cx, cy, k, `<g transform="translate(10 10)" fill="${INK}" stroke="${INK}" stroke-width="${f(SW * 2)}">${shape}</g><g fill="${INK}" stroke="${INK}" stroke-width="${f(SW * 2)}">${shape}</g><g fill="#FFFFFF">${shape}</g>`);
-}
-
-/* ---------- pantalla del canal (móvil grande) ---------- */
-function channelPhone(X, Y, PW, PH, t) {
-  const R = 64, b = 22, sx = X + b, sy = Y + b, sw_ = PW - 2 * b, sh = PH - 2 * b;
-  const id = 'ch' + (uid++);
-  let g = `<rect x="${X + 18}" y="${Y + 18}" width="${PW}" height="${PH}" rx="${R}" fill="${C.blueS}"/>`;
-  g += `<rect x="${X}" y="${Y}" width="${PW}" height="${PH}" rx="${R}" fill="${INK}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+/* ---------- 4) Rosa teclea concentrada; pantalla con la oferta; «Publicar» -> tic verde «Publicada» ---------- */
+function offerPhone(X, Y, PW, PH, u) {
+  const R = 70, b = 24, sx = X + b, sy = Y + b, sw_ = PW - 2 * b, sh = PH - 2 * b;
+  const id = 'op' + (uid++), st = (v = 1) => `stroke="${INK}" stroke-width="${f(SW * v)}" stroke-linejoin="round"`;
+  let g = `<rect x="${X + 18}" y="${Y + 18}" width="${PW}" height="${PH}" rx="${R}" fill="${INK}"/>`;
+  g += `<rect x="${X}" y="${Y}" width="${PW}" height="${PH}" rx="${R}" fill="${INK}" ${st()}/>`;
   g += `<clipPath id="${id}"><rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" rx="${R - b}"/></clipPath>`;
   let sc = `<rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" fill="${C.cream}"/>`;
-  const hh = 170;
-  sc += `<rect x="${sx}" y="${sy}" width="${sw_}" height="${hh}" fill="${C.red}"/><line x1="${sx}" y1="${sy + hh}" x2="${sx + sw_}" y2="${sy + hh}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-  sc += `<circle cx="${sx + 82}" cy="${sy + hh / 2 + 4}" r="58" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>` + logoIcon(sx + 82, sy + hh / 2 + 6, 104);
-  const tw = sw_ - 170;
-  sc += text('Escaparate', sx + 158, sy + hh / 2 - 22, { size: fit('Escaparate', 52, tw), anchor: 'start', sw: SW * 1.4, sd: 4 });
-  sc += text('de Tudela', sx + 158, sy + hh / 2 + 34, { size: fit('Escaparate', 52, tw), anchor: 'start', sw: SW * 1.4, sd: 4 });
-  const msgs = [['¡Termina hoy!', '2x1 en pasteles'], ['Ofertas flash', 'de tus tiendas'], ['Novedades', 'y eventos']];
-  const mh = 168, gap = 26, my0 = sy + hh + 34;
-  msgs.forEach((m, i) => {
-    const k = pop(t, 0.55 + i * 0.4, 0.5);
-    if (k <= 0) return;
-    const yy = my0 + i * (mh + gap) + (1 - k) * 500;
-    let cd = panel(sx + 18, yy, sw_ - 36, mh, 30, '#FFFFFF', 9);
-    cd += sealPct(sx + 82, yy + mh / 2, 44, pop(t, 0.75 + i * 0.4, 0.45));
-    const tx = sx + 146, mw = sw_ - 36 - 146;
-    cd += text(m[0], tx, yy + mh * 0.32, { size: fit(m[0], 46, mw), anchor: 'start', fill: INK, stroke: null });
-    cd += text(m[1], tx, yy + mh * 0.7, { size: fit(m[1], 42, mw), anchor: 'start', fill: C.red, stroke: null });
-    sc += cd;
-  });
+  // franja roja con el logo
+  const hh = 190;
+  sc += `<rect x="${sx}" y="${sy}" width="${sw_}" height="${hh}" fill="${C.red}"/><line x1="${sx}" y1="${sy + hh}" x2="${sx + sw_}" y2="${sy + hh}" ${st()}/>`;
+  sc += `<circle cx="${sx + 96}" cy="${sy + hh / 2 + 6}" r="66" fill="#FFFFFF" ${st(0.8)}/>` + logoIcon(sx + 96, sy + hh / 2 + 8, 118);
+  const tw = sw_ - 200;
+  sc += text('Escaparate', sx + 182, sy + hh / 2 - 22, { size: fit('Escaparate', 58, tw), anchor: 'start', sw: SW * 1.4, sd: 4 });
+  sc += text('de Tudela', sx + 182, sy + hh / 2 + 38, { size: fit('Escaparate', 58, tw), anchor: 'start', sw: SW * 1.4, sd: 4 });
+  // tarjeta de la oferta
+  const cx0 = sx + 28, cy0 = sy + hh + 32, cw = sw_ - 56, ch = 690, kc = pop(u, 0.05, 0.45);
+  let cd = panel(cx0, cy0, cw, ch, 36, '#FFFFFF', 10);
+  const ix = cx0 + 22, iy = cy0 + 22, iw = cw - 44, ih = 300;
+  cd += `<rect x="${ix}" y="${iy}" width="${iw}" height="${ih}" rx="26" fill="${C.glass}" ${st(0.8)}/>`;
+  for (let yy = iy + 22; yy < iy + ih - 10; yy += 30) for (let xx = ix + 22; xx < ix + iw - 10; xx += 30) cd += `<circle cx="${xx}" cy="${yy}" r="3.5" fill="#FFFFFF"/>`;
+  cd += `<rect x="${ix + 40}" y="${iy + ih - 62}" width="${iw - 80}" height="22" rx="11" fill="${C.navy}" ${st(0.8)}/>`;
+  const kp = pop(u, 0.15, 0.4);
+  cd += at(ix + iw * 0.24, iy + ih - 62, kp, pastry('tarta', 0, 0, 3.6));
+  cd += at(ix + iw * 0.47, iy + ih - 62, pop(u, 0.22, 0.4), pastry('cupcake', 0, 0, 3.6));
+  cd += at(ix + iw * 0.7, iy + ih - 62, pop(u, 0.29, 0.4), pastry('palmera', 0, 0, 3.4));
+  // sello rojo 2x1
+  cd += at(cx0 + cw - 92, cy0 + 90, pop(u, 0.35, 0.45), burst(0, 0, 86, 0, C.red) + text('2x1', 0, 2, { size: 76, font: 'B', sw: SW * 1.8, sd: 5 }), -12);
+  // etiqueta «Oferta flash · termina hoy»
+  const ly = cy0 + 352, kl = pop(u, 0.45, 0.4);
+  const lab = 'Oferta flash · termina hoy';
+  cd += at(cx0 + cw / 2, ly + 38, kl, `<rect x="${f(-iw / 2)}" y="-38" width="${iw}" height="76" rx="22" fill="${C.yel}" ${st(0.9)}/>` +
+    `<path d="M${f(-iw / 2 + 30)} -22 l-14 26 h14 l-8 22 l24 -32 h-14 l10 -16z" fill="${C.red}" ${st(0.6)}/>` +
+    text(lab, 18, 2, { size: fit(lab, 46, iw - 90), fill: INK, stroke: null }));
+  // «Hasta las 14:00» tecleado
+  const full = 'Hasta las 14:00', n = Math.floor(clamp((u - 0.55) / 0.5) * full.length + 1e-6);
+  const typed = full.slice(0, n), ts = 76;
+  if (n > 0) cd += text(typed, cx0 + 44, cy0 + 480, { size: ts, fill: INK, stroke: null, anchor: 'start' });
+  if (u < 1.2 && Math.floor(u * 4) % 2 === 0) cd += `<rect x="${f(cx0 + 50 + measure(typed, ts))}" y="${cy0 + 445}" width="7" height="70" fill="${C.red}"/>`;
+  // botones genéricos «Llamar» y «WhatsApp»
+  const by = cy0 + 560, bw = (cw - 66) / 2, bh = 96, kbt = pop(u, 0.8, 0.4);
+  const btn = (x, label, fill, fg, icon) => at(x + bw / 2, by + bh / 2, kbt, `<rect x="${f(-bw / 2 + 6)}" y="${f(-bh / 2 + 6)}" width="${f(bw)}" height="${bh}" rx="${bh / 2}" fill="${INK}"/><rect x="${f(-bw / 2)}" y="${f(-bh / 2)}" width="${f(bw)}" height="${bh}" rx="${bh / 2}" fill="${fill}" ${st(0.9)}/>` + icon(-bw / 2 + 52) +
+    text(label, 26, 2, { size: fit(label, 46, bw - 110), fill: fg, stroke: fg === '#FFFFFF' ? INK : null, sw: SW, sd: fg === '#FFFFFF' ? 3 : 0, shadow: fg === '#FFFFFF' }));
+  const handset = x => `<path d="M${x - 16} -16 q-6 18 10 32 q14 12 24 6 l4 -10 l-12 -8 l-6 6 q-10 -6 -14 -16 l6 -6 l-6 -12z" fill="${INK}"/>`;
+  const chatB = x => `<path d="M${x - 20} -16 h40 q8 0 8 8 v18 q0 8 -8 8 h-24 l-14 12 v-12 q-10 0 -10 -8 v-18 q0 -8 8 -8z" fill="#FFFFFF" ${st(0.7)}/><circle cx="${x - 10}" cy="-2" r="3" fill="${INK}"/><circle cx="${x}" cy="-2" r="3" fill="${INK}"/><circle cx="${x + 10}" cy="-2" r="3" fill="${INK}"/>`;
+  cd += btn(cx0 + 22, 'Llamar', '#FFFFFF', INK, handset);
+  cd += btn(cx0 + 44 + bw, 'WhatsApp', C.green, '#FFFFFF', chatB);
+  sc += at(cx0 + cw / 2, cy0 + ch / 2, kc, `<g transform="translate(${f(-(cx0 + cw / 2))} ${f(-(cy0 + ch / 2))})">${cd}</g>`);
+  // botón Publicar -> Publicada
+  const px0 = sx + 28, py0 = cy0 + ch + 34, pw = sw_ - 56, ph = 150;
+  const press = u > 1.32 && u < 1.48 ? 0.93 : 1, done = u >= 1.45, kpb = pop(u, 0.95, 0.45) * press * (done ? 1 + 0.08 * Math.max(0, damp(u - 1.45, 14, 5)) : 1);
+  let pb = `<rect x="${f(-pw / 2 + 10)}" y="${f(-ph / 2 + 10)}" width="${pw}" height="${ph}" rx="${ph / 2}" fill="${INK}"/>`;
+  pb += `<rect x="${f(-pw / 2)}" y="${f(-ph / 2)}" width="${pw}" height="${ph}" rx="${ph / 2}" fill="${done ? C.green : C.red}" ${st()}/>`;
+  if (!done) pb += text('Publicar', 0, 2, { size: 82, sw: SW * 1.9, sd: 5 });
+  else pb += checkCircle(-pw / 2 + 92, 0, 50, pop(u, 1.45, 0.4)) + text('Publicada', 44, 2, { size: 82, sw: SW * 1.9, sd: 5 });
+  sc += at(px0 + pw / 2, py0 + ph / 2, kpb, pb);
   g += `<g clip-path="url(#${id})">${sc}</g>`;
-  g += `<rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" rx="${R - b}" fill="none" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;
-  g += `<rect x="${X + PW / 2 - 50}" y="${Y + 8}" width="100" height="10" rx="5" fill="#3A3434"/>`;
-  return g;
+  g += `<rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" rx="${R - b}" fill="none" ${st(0.8)}/>`;
+  g += `<rect x="${X + PW / 2 - 60}" y="${Y + 8}" width="120" height="11" rx="5" fill="#3A3434"/>`;
+  return { svg: g, btn: [px0 + pw / 2, py0 + ph / 2, pw, ph], done };
 }
-
-/* =================== ESCENAS =================== */
-const S = {};
-
-// 1) Salón: Marta aburrida en el sofá, lluvia en la ventana. «Sábado»
-S[1] = (t, T) => {
-  let w = room(T);
-  const breathe = Math.sin(t * 2.2);
-  w += placeMarta(SIT.x, SIT.y, 190, 200, SIT.sc, {
-    sit: true, expr: 'bored', look: [0.8, 1.3], head: 6 + 2 * breathe, armF: -70, armB: -30, pony: 4 * breathe,
-    bob: 0.6 * breathe, handF: phoneInHand(-18)
-  });
-  let s = cam(zoomIn(t, 0, 1.1, 0.25), 540, 1000, w);
-  s += at(540, 300, pop(t, 0.25, 0.55), text('Sábado', 0, 0, { size: 175, sw: SW * 2.4, sd: 10 }), lerp(-8, -3, pop(t, 0.25, 0.55)));
-  return s;
-};
-
-// 2) Vibra el móvil y salta la notificación; Marta levanta la vista
-S[2] = (t, T) => {
-  const z = lerp(1, 1.32, easeOut(t / 0.22)), cx = 600, cy = 1150;
-  let w = room(T);
-  const vib = t > 0.2 && t < 1.25 ? 1 : 0;
-  const shake = vib * 1.4 * Math.sin(t * 95);
-  const up = easeOut((t - 1.0) / 0.18);
-  w += placeMarta(SIT.x, SIT.y, 190, 200, SIT.sc, {
-    sit: true, expr: t < 1.0 ? 'bored' : 'surprise', look: t < 1.0 ? [0.8, 1.3] : [0.9, -1.6], head: lerp(6, -12, up),
-    armF: -70, armB: -30, handF: phoneInHand(-18 + vib * 7 * Math.sin(t * 70), shake)
-  });
-  // vibración del móvil
-  const [hx, hy] = toWorld(SIT.x, SIT.y, 190, 200, SIT.sc, 232, 112);
-  if (vib) for (let i = 0; i < 2; i++) {
-    const r = 70 + i * 34, on = (Math.floor(t * 12) + i) % 2;
-    if (on) w += `<path d="M${f(hx + r * 0.8)} ${f(hy - r * 0.55)} A${r} ${r} 0 0 1 ${f(hx + r * 0.8)} ${f(hy + r * 0.55)} M${f(hx - r * 0.8)} ${f(hy - r * 0.55)} A${r} ${r} 0 0 0 ${f(hx - r * 0.8)} ${f(hy + r * 0.55)}" fill="none" stroke="${INK}" stroke-width="${f(SW * 0.8)}" stroke-linecap="round"/>`;
-  }
-  let s = cam(z, cx, cy, w);
-  // tarjeta de notificación sobre el móvil, con rebote
-  const k = pop(t, 0.5, 0.55);
-  const px = cx + (hx - cx) * z, py = cy + (hy - 30 - cy) * z;
-  const ccx = 540, ccy = 560, cw = 900, ch = 330;
-  if (k > 0) {
-    let tail = `<path d="M${f(40)} ${f(ch / 2 - 10)} L${f(px - ccx)} ${f(py - 70 - ccy)} L${f(150)} ${f(ch / 2 - 10)}Z" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round"/>`;
-    let inner = tail + notifCard(cw, ch) + `<path d="M${f(46)} ${f(ch / 2 - 14)} L${f(px - ccx - 2)} ${f(py - 76 - ccy)} L${f(144)} ${f(ch / 2 - 14)}Z" fill="#FFFFFF"/>`;
-    s += at(ccx, ccy, k, inner, lerp(-5, 0, k) + 1.2 * Math.sin(t * 6));
-  }
-  s += mark('!', 905, 330, pop(t, 1.05, 0.4), 14, 170);
-  return s;
-};
-
-// 3) Primer plano con ojos brillantes, reloj 13:45 y salto del sofá
-S[3] = (t, T, sc) => {
-  const cut = (sc && sc.cut) || 1.5;
-  let s = '';
-  if (t < cut) {
-    s += `<rect width="${W}" height="${H}" fill="${C.cream}"/>` + rays(540, 960, 18, t * 14, '#F7D3CC');
-    let g = placeMarta(470, 930, 190, 78, 9.5, {
-      sw: SW * 1.3, expr: 'sparkle', noLegs: true, armF: -150 + 8 * Math.sin(t * 18), armB: 150 - 8 * Math.sin(t * 18),
-      pony: -14 + 8 * Math.sin(t * 12), handF: phoneInHand(-160)
-    });
-    g += sparkle(250, 760, 50, pop(t, 0.2, 0.4) * (1 + 0.15 * Math.sin(t * 14)));
-    g += sparkle(720, 720, 34, pop(t, 0.35, 0.4) * (1 + 0.15 * Math.sin(t * 16 + 1)));
-    g += sparkle(200, 1060, 28, pop(t, 0.5, 0.4));
-    s += cam(zoomIn(t, 0, 1.25, 0.2), 470, 930, g);
-  } else {
-    const u = t - cut;
-    let w = room(T);
-    const tL = 0.25, tA = 0.6; // despegue y duración del salto
-    if (u < tL) {
-      const q = Math.sin(clamp(u / tL) * PI / 2);
-      w += placeMarta(SIT.x, SIT.y, 190, 200, SIT.sc, { sit: true, expr: 'sparkle', armF: -40, armB: -20, squash: [1 + 0.1 * q, 1 - 0.12 * q], handF: phoneInHand(-18) });
-    } else {
-      const a = clamp((u - tL) / tA), air = u - tL < tA;
-      const fx = lerp(560, 650, a), fy = lerp(1330, SIT.y, a) - 420 * 4 * a * (1 - a);
-      let sq;
-      if (air) { const st = 1 - a; sq = [1 - 0.12 * st, 1 + 0.18 * st]; } else {
-        const d = damp(u - tL - tA, 16, 6); sq = [1 + 0.16 * d, 1 - 0.16 * d];
-      }
-      const o = air
-        ? { expr: 'sparkle', legF: -24, legB: 28, armF: -155, armB: 150, pony: -40 + 60 * a, handF: phoneInHand(-160) }
-        : { expr: 'smile', legF: -20, legB: 22, armF: -40, armB: 40, pony: 30, lean: 8, handF: phoneInHand(-40) };
-      o.squash = sq;
-      if (!air) {
-        const lu = u - tL - tA;
-        for (let i = 0; i < 3; i++) w += puff(fx - 110 + i * 110, SIT.y - 20, 34 - i * 4, pop(lu, i * 0.05, 0.3) * clamp(1 - (lu - 0.3) / 0.3));
-      }
-      w += shadowEll(fx, SIT.y, 110 * (air ? 0.6 + 0.4 * (1 - Math.sin(a * PI)) : 1));
-      w += placeMarta(fx, fy, 190, 204, SIT.sc, o);
-      if (air && a < 0.6) for (let i = 0; i < 3; i++) w += `<line x1="${f(fx - 90 + i * 90)}" y1="${f(fy + 60)}" x2="${f(fx - 90 + i * 90)}" y2="${f(fy + 60 + 160 * (1 - a))}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round"/>`;
-    }
-    s += cam(zoomIn(u, 0, 1.08, 0.15), 540, 1100, w);
-  }
-  // reloj grande y texto (fijos en pantalla)
-  const kc = pop(t, 0.1, 0.5);
-  const wob = 4 * Math.sin(t * 22) * (t > 0.6 ? 1 : 0);
-  s += at(290, 420, kc, clockFace(140, 45, false), wob);
-  s += at(745, 420, pop(t, 0.25, 0.5), digital(380, 170, 45, false), -3);
-  const l = 'Quedan 15 minutos';
-  s += at(540, 1355, pop(t, 0.5, 0.5), text(l, 0, 0, { size: fit(l, 125, 990), sw: SW * 2.3, sd: 9 }), -2);
-  return s;
-};
-
-// 4) Carrera de cómic bajo la lluvia, reloj 13:45 -> 14:00
+function finger(x, y, rot = -8) { // dedo índice que llega desde la derecha y pulsa
+  const st = `stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round"`;
+  return at(x, y, 1, `<path d="M0 -26 Q-34 -26 -34 0 Q-34 26 0 26 H120 Q150 26 170 50 L420 60 V-90 L170 -60 Q150 -26 120 -26Z" fill="${C.skin}" ${st}/>
+    <path d="M-20 -14 Q-28 0 -20 14 L-4 14 Q2 0 -4 -14Z" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW * 0.6)}"/>
+    <path d="M70 -26 Q76 0 70 26 M150 -40 Q140 0 156 40" fill="none" stroke="${INK}" stroke-width="${f(SW * 0.6)}" stroke-linecap="round"/>
+    <path d="M170 50 L420 60 V-90 L170 -60" fill="${C.red}" ${st}/>`, rot);
+}
 S[4] = (t, T, sc) => {
-  const v = 1500, off = 400 + v * t;
-  const amp = 5 * Math.sin(t * 47), amp2 = 4 * Math.cos(t * 39);
-  let w = skyRain(T);
-  w += street(off, { w: 440, h: 780, g: 50, base: 1300 });
-  w += groundWet(1300, off);
-  // líneas de velocidad
-  for (let i = 0; i < 14; i++) {
-    const y = 560 + hash(i * 3.3) * 880, len = 220 + hash(i * 7.7) * 260;
-    const sp = 2600 + hash(i * 1.9) * 1200, L = W + len + 200;
-    const x = W + 100 - ((hash(i * 4.1) * L + sp * t) % L);
-    w += `<line x1="${f(x)}" y1="${f(y)}" x2="${f(x + len)}" y2="${f(y)}" stroke="#FFFFFF" stroke-width="${f(SW * 1.1)}" stroke-linecap="round"/>`;
+  const cut = (sc && sc.cut) || 1.1;
+  if (t < cut) {
+    const ty = 5 * Math.sin(t * 38), ty2 = 5 * Math.sin(t * 38 + PI);
+    let w = interiorBack(T, { tm: TM.s4 });
+    w += rosaInt(T, { expr: 'focus', look: [1, 1.5], head: 9, armF: -40 + ty, armB: -88 + ty2, handF: rosaPhone(-4, true) });
+    w += vitrina() + counterTop();
+    // marcas de tecleo
+    const [px, py] = rosaToWorld(222, 120);
+    for (let i = 0; i < 3; i++) if ((Math.floor(t * 10) + i) % 2) w += `<line x1="${f(px - 40 - i * 34)}" y1="${f(py - 90 - (i % 2) * 20)}" x2="${f(px - 62 - i * 40)}" y2="${f(py - 125 - (i % 2) * 20)}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round"/>`;
+    return cam(1.4 * zoomIn(t, 0, 1.1, 0.2), 600, 900, w);
   }
-  const mx = 470, p = runPose(t);
-  // nubecitas de polvo/agua detrás
-  for (let i = 0; i < 5; i++) {
-    const ph = ((t / 0.2) + i / 5) % 1, base0 = Math.floor(t / 0.2 + i / 5);
-    const x = mx - 90 - ph * 420, y = FOOT - 24 - ph * 40 - hash(base0 + i) * 20;
-    w += puff(x, y, 34 * (1 - ph * 0.6), clamp(Math.sin(ph * PI) * 1.4));
+  const u = t - cut;
+  let s = `<rect width="${W}" height="${H}" fill="${C.cream}"/>` + rays(540, 880, 18, t * 10, '#F7D3CC');
+  const kph = pop(u, 0, 0.35);
+  const op = offerPhone(150, 245, 720, 1230, u);
+  s += at(510, 860, kph, `<g transform="translate(-510 -860) rotate(-2 510 860)">${op.svg}</g>`);
+  // destellos al publicar
+  if (op.done) {
+    const k = pop(u, 1.45, 0.4);
+    const [bx, by] = op.btn;
+    [[-410, -30], [410, -40], [-330, 120], [330, 125], [-60, 135], [150, 140]].forEach(([dx, dy], i) => {
+      s += sparkle(bx + dx, by + dy, 26 + 8 * (i % 2), k * (1 + 0.2 * Math.sin(t * 15 + i)));
+    });
   }
-  w += shadowEll(mx, FOOT, 120);
-  w += placeMarta(mx, FOOT, 190, 204, SC, Object.assign({ expr: 'smile' }, p));
-  // líneas de movimiento junto a Marta
-  for (let i = 0; i < 3; i++) w += `<line x1="${f(mx - 260 - 40 * i)}" y1="${880 + i * 120}" x2="${f(mx - 130 - 20 * i)}" y2="${880 + i * 120}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round"/>`;
-  w += rain(T, -100, 0, W + 100, 1500, 70);
-  let s = cam(zoomIn(t, 0, 1.14, 0.22), 540, 1000, w, amp, amp2);
-  // reloj en la esquina: avanza de 13:45 a 14:00 y pulsa en rojo
-  const dur = (sc && sc.duration) || 4;
-  const min = 45 + 15 * clamp(t / (dur - 0.45));
-  const beat = 0.5 + 0.5 * Math.sin(t * 2 * PI / (t > dur * 0.6 ? 0.3 : 0.5));
-  const red = beat > 0.5;
-  const kc = pop(t, 0.05, 0.45) * (1 + 0.09 * beat);
-  s += at(865, 300, kc, clockFace(96, min, red), 6 * Math.sin(t * 30));
-  s += at(865, 462, kc, digital(250, 104, min, red), -3);
+  // dedo que pulsa «Publicar»
+  const fin = easeOut((u - 1.05) / 0.25), fout = easeInOut((u - 1.6) / 0.25);
+  if (fin > 0 && fout < 1) {
+    const [bx, by] = op.btn, tx = bx + 120, ty = by + 6;
+    const push = u > 1.3 && u < 1.48 ? 14 : 0;
+    s += finger(lerp(1250, tx, fin) + lerp(0, 700, fout) - push, ty + push * 0.5);
+  }
+  // viñeta redonda con Rosa: concentrada y luego satisfecha
+  const ki = pop(u, 0.15, 0.45);
+  if (ki > 0) {
+    const cid = 'in' + (uid++), cx = 880, cy = 330, r = 150;
+    let inner = `<circle cx="${cx + 10}" cy="${cy + 10}" r="${r}" fill="${INK}"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFFFFF"/>`;
+    inner += `<clipPath id="${cid}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath><g clip-path="url(#${cid})">${rays(cx, cy, 12, t * 20, C.glass)}`;
+    const done = u > 1.5;
+    inner += placeRosa(cx + 5, cy + 40, 190, 100, 4.5, {
+      flip: true, expr: done ? (u > 2.3 && u < 2.45 ? 'wink' : 'smile') : 'focus', look: done ? [0.6, -0.4] : [1, 1.5], head: done ? -4 : 8, blink: blinkAt(T), noLegs: true,
+      bob: breath(T), armF: done ? -150 : -40, handF: done ? thumbUp : rosaPhone(-4, true), armB: -80
+    });
+    inner += `</g><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${INK}" stroke-width="${f(SW * 1.1)}"/>`;
+    s += at(cx, cy, ki, `<g transform="translate(${-cx} ${-cy})">${inner}</g>`, lerp(8, 0, ki));
+  }
+  return cam(zoomIn(u, 0, 1.15, 0.2), 540, 860, s);
+};
+
+/* ---------- 5) Calle: los móviles vibran a la vez; todos los miran con ojos brillantes ---------- */
+const S5 = { foot: 1440, sc: 4.15, xs: [150, 405, 660, 920], who: [0, 1, 2, 3] };
+S[5] = (t, T) => {
+  let s = skyClear(T, { band: 860, tm: 724, sx: 950, sy: 225, sr: 50 });
+  s += street(260, { w: 440, h: 760, g: 50, base: 1300 });
+  s += ground(1300, 260, { sp: 220 });
+  let w = '';
+  S5.xs.forEach((x, i) => {
+    const dt = i * 0.03, vib = t > 0.3 + dt && t < 0.95 + dt, up = easeOut((t - 0.95 - dt) / 0.22);
+    const shake = vib ? 1.6 * Math.sin(t * 90 + i) : 0;
+    const p = FOLK[S5.who[i]];
+    const flip = i >= 2;
+    const o = {
+      flip, expr: up > 0.4 ? 'sparkle' : (vib ? 'surprise' : 'happy'), look: up > 0.4 ? [1, 1.4] : [0.4, 0], head: lerp(0, 10, up),
+      armF: lerp(-22, -95, up) + (vib ? 4 * Math.sin(t * 70 + i) : 0), handF: phoneInHand(lerp(-14, -8, up), shake, up > 0.3),
+      bob: up > 0 ? -3 * Math.max(0, damp(t - 0.95 - dt, 14, 5)) : 0
+    };
+    if (p.cart) o.armB = 26;
+    w += shadowEll(x, S5.foot, 90) + placeFolk(S5.who[i], x, S5.foot, S5.sc, o);
+    // posición del móvil en el mundo
+    const sc = S5.sc * (p.scale || 1);
+    const [hx, hy] = handAt([202, 108], o.armF);
+    const [mx, my] = toWorld(x, S5.foot, 190, 204, sc, hx + 2, hy - 8, flip);
+    if (vib) {
+      w += vibeRings(mx, my, t, 34);
+      for (let j = 0; j < 2; j++) if ((Math.floor(t * 14) + j) % 2) w += `<path d="M${f(mx - 70 - j * 14)} ${f(my - 26)} l-14 -14 M${f(mx + 70 + j * 14)} ${f(my - 26)} l14 -14" stroke="${INK}" stroke-width="${f(SW * 0.9)}" stroke-linecap="round"/>`;
+    }
+    if (up > 0.4) {
+      const [ex, ey] = toWorld(x, S5.foot, 190, 204, sc, 212, 60, flip);
+      w += sparkle(ex, ey - 30, 24, pop(t, 1.15 + dt, 0.35) * (1 + 0.2 * Math.sin(t * 16 + i)));
+    }
+  });
+  s += w;
+  s = cam(zoomIn(t, 0, 1.12, 0.2), 540, 1100, s);
+  const k1 = pop(t, 0.5, 0.5), k2 = pop(t, 0.7, 0.5);
+  s += big('Y la gente se entera', 540, 330, 120, k1, lerp(-6, -2, k1));
+  s += big('al momento', 540, 470, 140, k2, lerp(6, 2, k2));
   return s;
 };
 
-// 5) Llega a la panadería y derrapa. Cartel ABIERTO · 2x1 en pasteles; la panadera se prepara
-const BK5 = bakeryGeo(260, 1300, 660, 780);
-S[5] = (t, T) => {
-  const v0 = 1500, tb = 0.42, d = 0.42, ts = tb + d;
-  const pos = tt => tt < tb ? v0 * tt : (tt < ts ? v0 * tb + v0 * ((tt - tb) - (tt - tb) * (tt - tb) / (2 * d)) : v0 * tb + v0 * d / 2);
-  const total = pos(10), R = total - pos(t);
-  let w = skyRain(T);
-  w += bakeryStreet(BK5, R, { flip: 0 });
-  w += groundWet(1300, -R);
-  const mx = 330;
-  let o;
-  if (t < tb) o = Object.assign({ expr: 'smile' }, runPose(t));
+/* ---------- 6) Todos corren a la panadería; la cola crece y dobla la esquina; reloj 12:05 -> 12:30 ---------- */
+const BK6 = bakeryGeo(470, 1240, 580, 760);
+const SLOTS6 = [];
+[745, 660, 575, 490, 405, 320, 235, 150].forEach(x => SLOTS6.push({ x, y: 1262, sc: 3.2, flip: false }));
+SLOTS6.push({ x: 82, y: 1340, sc: 3.45, flip: false }, { x: 198, y: 1414, sc: 3.7, flip: true }, { x: 345, y: 1470, sc: 3.95, flip: true }, { x: 500, y: 1498, sc: 4.1, flip: true });
+const WHO6 = [3, 1, 2, 0, 4, 6, 5, 8, 9, 7, 10, 11];
+S[6] = (t, T, sc) => {
+  const dur = (sc && sc.duration) || 4;
+  const tm = t < dur * 0.33 ? 725 : (t < dur * 0.66 ? 735 : 750);
+  const tChange = t < dur * 0.33 ? 0 : (t < dur * 0.66 ? dur * 0.33 : dur * 0.66);
+  let s = skyClear(T, { band: 820, tm, sx: 940, sy: 230, sr: 52 });
+  // edificios lejanos en la calle lateral (la esquina)
+  s += `<path d="M-20 1240 V900 H120 V840 H260 V960 H380 V880 H470 V1240Z" fill="#D7E9F1" stroke="${INK}" stroke-width="${f(SW * 0.7)}" stroke-linejoin="round"/>`;
+  s += bakeryStreet(BK6, { left: false, doorClock: undefined, bell: 18 * Math.sin(t * 14) });
+  s += ground(1240, 0, { sp: 240 });
+  s += poleClock(400, 1250, 600, 78, tm, 1 + 0.25 * Math.max(0, damp(t - tChange, 16, 6)) * (tChange > 0 ? 1 : 0), tChange > 0 ? 8 * damp(t - tChange, 18, 4) : 0);
+  // personas: llegadas corriendo y colocadas en su hueco
+  const ppl = [];
+  SLOTS6.forEach((sl, j) => {
+    const tj = j === 0 ? -1 : 0.12 + (j - 1) * 0.27, d = 0.62;
+    if (t < tj) return;
+    const fromLeft = j % 2 === 1, x0 = fromLeft ? -170 : 1250;
+    const u = clamp((t - tj) / d);
+    const x = lerp(x0, sl.x, easeOut(u)), y = sl.y + (j < 8 ? 0 : 0);
+    let o;
+    if (u < 1) {
+      o = Object.assign(runPose(t + j * 0.13), { flip: !fromLeft, expr: 'sparkle', handF: phoneInHand(-10, 0, true) });
+      if (!fromLeft) o.lean = 10;
+    } else {
+      const dm = damp(t - tj - d, 14, 5);
+      o = { flip: sl.flip, expr: (Math.floor(T * 0.7 + j) % 3) ? 'happy' : 'smile', armF: -24 + 10 * dm, handF: phoneInHand(-14, 0, true), bob: -4 * Math.max(0, dm), head: 2 * Math.sin(T * 2 + j) };
+    }
+    if (FOLK[WHO6[j]].cart) o.armB = 26;
+    ppl.push({ y, x, sc: sl.sc, o, j, run: u < 1, fromLeft });
+  });
+  ppl.sort((a, b) => a.y - b.y || a.j - b.j);
+  ppl.forEach(p => {
+    if (p.run) for (let i = 0; i < 3; i++) {
+      const yy = p.y - 300 * p.sc / 3.2 + i * 70, len = 150 - 40 * (i % 2), dir = p.fromLeft ? -1 : 1, x0 = p.x + dir * 80;
+      s += `<line x1="${f(x0)}" y1="${f(yy)}" x2="${f(x0 + dir * len)}" y2="${f(yy)}" stroke="${INK}" stroke-width="${f(SW * 0.9)}" stroke-linecap="round"/>`;
+    }
+    s += shadowEll(p.x, p.y, 70 * p.sc / 3.2) + placeFolk(WHO6[p.j], p.x, p.y, p.sc, p.o);
+    if (p.run) s += puff(p.fromLeft ? p.x - 90 : p.x + 90, p.y - 20, 26, clamp(Math.sin(((t * 5 + p.j) % 1) * PI) * 1.3));
+  });
+  s = cam(zoomIn(t, 0, 1.12, 0.2), 540, 1100, s);
+  const k = pop(t, 0.45, 0.55);
+  s += big('¡Cola en la puerta!', 540, 390, 135, k * (1 + 0.04 * Math.sin(t * 6)), lerp(-8, -3, k));
+  return s;
+};
+
+/* ---------- 7) Rosa despacha a toda velocidad; la vitrina se vacía; «¡Siguiente!» ---------- */
+const P7 = 0.92, T07 = 0.25;
+const Q7 = [{ x: 255, y: 1470 }, { x: 115, y: 1470 }, { x: -25, y: 1470 }];
+const cust7 = n => (n + 4) % FOLK.length;
+const GONE7 = (() => { const a = {}; let k = 0; for (let i = 0; i < 15; i++) if (i !== 7) a[i] = 0.35 + (k++) * 0.31; return a; })();
+S[7] = (t, T, sc) => {
+  const n = Math.floor((t - T07) / P7), u = (t - T07 - n * P7) / P7, cs = T07 + n * P7;
+  const tm = 750 + 30 * clamp(t / 4.6);
+  let w = interiorBack(T, { tm, bell: t > T07 ? 16 * damp(t - cs - 0.3, 18, 4) : 0 });
+  // bandejas que vuelan desde el estante
+  const sw = Math.sin(2 * PI * t / 0.5);
+  const armF = -100 + 48 * sw, armB = -100 - 48 * sw, lean = 4 * Math.sin(2 * PI * t / 0.5 + 0.8);
+  w += rosaInt(T, { expr: (Math.floor(t * 2) % 3) ? 'smile' : 'focus', look: [0.8, 0.6], lean, armF, armB, head: 3 * sw, handF: sw > 0.3 ? (ww => cakeBoxL(208, 150, 0.55, ww)) : null });
+  // líneas de velocidad alrededor de los brazos
+  const [ax, ay] = rosaToWorld(215, 110);
+  for (let i = 0; i < 3; i++) w += `<path d="M${f(ax - 40 - i * 30)} ${f(ay - 120 + i * 26)} q-60 60 0 140" fill="none" stroke="${INK}" stroke-width="${f(SW * 0.9)}" stroke-linecap="round"/>`;
+  w += vitrina({ gone: i => i === 7 ? 0 : clamp((t - GONE7[i]) / 0.45) });
+  w += counterTop({ drawer: n >= 0 ? Math.sin(clamp((u - 0.12) / 0.4) * PI) : 0, boxes: 2, coins: true });
+  [[0.55, 0], [2.35, 1], [3.95, 2]].forEach(([t0, i]) => {
+    const v = (t - t0) / 0.42;
+    if (v < 0 || v > 1) return;
+    const x = lerp(1010, 720, v), y = lerp(560, 1040, v) - 260 * 4 * v * (1 - v);
+    w += speedLinesH(x + 210, y - 40, 120, 3, 28, SW * 0.8) + tray(x, y, 1.15, lerp(-20, 0, v), i % 2 ? ['magdalena', 'tarta', 'bollo'] : ['bollo', 'palmera', 'cupcake']);
+  });
+  // clientes: el primero recibe su caja volando, se va; la cola avanza
+  const ppl = [];
+  if (n < 0) { for (let k = 0; k < 3; k++) ppl.push({ i: cust7(k), x: Q7[k].x, y: Q7[k].y, o: { expr: 'happy', armF: -20, handF: phoneInHand(-14) } }); }
   else {
-    const u = clamp((t - tb) / d), rp = runPose(tb);
-    if (t < ts) o = { legF: lerp(rp.legF, -34, u), legB: lerp(rp.legB, 22, u), armF: lerp(rp.armF, -50, u), armB: lerp(rp.armB, -40, u), pony: lerp(70, -10, u), lean: lerp(10, -14, u) };
-    else { const dm = damp(t - ts, 10, 4.5); o = { legF: -34 * dm, legB: 22 * dm, armF: -50 * dm, armB: -40 * dm, pony: -10 + 20 * damp(t - ts, 8, 3), lean: -14 * dm }; }
-    o.expr = t < 1.15 ? 'surprise' : 'sparkle';
-    o.look = t > 1.15 ? [1.2, -0.6] : [0, 0];
-  }
-  if (t > tb) {
-    const len = clamp((t - tb) / d) * 260, fade = clamp(1 - (t - ts - 0.5) / 0.3);
-    if (fade > 0) for (let i = 0; i < 2; i++) w += `<line x1="${f(mx + 40 - len * fade)}" y1="${FOOT - 6 + i * 16}" x2="${mx + 40}" y2="${FOOT - 6 + i * 16}" stroke="${INK}" stroke-width="${f(SW * 0.7)}" stroke-linecap="round"/>`;
-    for (let i = 0; i < 4; i++) {
-      const st = tb + 0.05 + i * 0.08, k = pop(t, st, 0.35) * clamp(1 - (t - st - 0.6) / 0.35);
-      w += puff(mx - 60 - i * 85, FOOT - 26 - i * 14, 44 - i * 5, k);
+    const shift = easeInOut((u - 0.3) / 0.35);
+    // el que se va, con su caja
+    if (u >= 0.3) {
+      const v = (u - 0.3) / 0.7;
+      ppl.push({ i: cust7(n), x: lerp(Q7[0].x, -320, easeInOut(v)), y: 1494, sc: 4.5, o: Object.assign(walkPose(2 * PI * t / 0.45, 1), { flip: true, expr: 'smile', armF: -32, armB: -26, front: ww => cakeBoxL(226, 146, 1.05, ww) }) });
+    } else ppl.push({ i: cust7(n), x: Q7[0].x, y: Q7[0].y, o: { expr: u > 0.22 ? 'wow' : 'sparkle', armF: lerp(-60, -95, clamp(u / 0.2)), armB: -40 } });
+    for (let k = 1; k <= 3; k++) {
+      const from = Q7[k] || { x: -170, y: 1470 }, to = Q7[k - 1];
+      const moving = shift > 0 && shift < 1;
+      const o = Object.assign(moving ? walkPose(2 * PI * t / 0.5, 0.9) : {}, { expr: 'happy', armF: -20, handF: phoneInHand(-14, 0, true) });
+      if (k === 3 && shift <= 0) continue;
+      ppl.push({ i: cust7(n + k), x: lerp(from.x, to.x, shift), y: 1470, o });
     }
   }
-  w += shadowEll(mx, FOOT, 120);
-  w += placeMarta(mx, FOOT, 190, 204, SC, o);
-  // panadera en la puerta, preparándose para girar el cartel
-  const bx = 1010 + R, reach = easeOut((t - 1.55) / 0.3);
-  w += shadowEll(bx, FOOT - 60, 110);
-  w += place(bx, FOOT - 60, 190, 204, SC * 1.03, { who: 'baker', flip: true, expr: t < 1.7 ? 'happy' : 'cheeky', armF: lerp(-8, -78, reach), armB: 6, head: -4 * reach });
-  w += rain(T, -100, 0, W + 100, 1500, 60);
-  let s = w;
-  // zoom rápido tipo cómic al cartel
-  const zt = easeOut((t - 1.85) / 0.16);
-  if (t > 1.85) s = cam(lerp(1, 1.3, zt), BK5.sign.cx, BK5.sign.cy + 80, w);
+  ppl.sort((a, b) => a.y - b.y).forEach(p => {
+    const pp = FOLK[p.i]; if (pp.cart) p.o.armB = 26;
+    w += shadowEll(p.x, p.y, 92) + placeFolk(p.i, p.x, p.y, p.sc || 4.3, p.o);
+  });
+  // caja que vuela de Rosa al cliente
+  if (n >= 0 && u < 0.3) {
+    const v = u / 0.3, x = lerp(560, 445, v), y = lerp(930, 1010, v) - 200 * 4 * v * (1 - v);
+    w += speedLinesH(x + 150, y - 70, 110, 3, 30, SW * 0.8) + worldBox(x, y, 3.0, lerp(-25, 0, v));
+  }
+  let s = cam(zoomIn(t, 0, 1.1, 0.2), 540, 900, w, 3 * Math.sin(t * 41), 2 * Math.cos(t * 37));
+  const kk = pop(t, 0.15, 0.5) * (1 + 0.12 * (n >= 0 ? Math.max(0, damp(t - cs, 18, 7)) : 0));
+  s += big('¡Siguiente!', 540, 290, 165, kk, -4 + 3 * Math.sin(t * 5), { fill: '#FFFFFF' });
   return s;
 };
 
-// 6) Marta sale con la caja; para la lluvia y sale el sol. «Últimos 2x1». La panadera gira el cartel
-const BK6 = BK5;
-S[6] = (t, T) => {
-  const e = easeInOut((t - 0.55) / 1.0); // apertura de las nubes
-  let s = skyClear(T, { band: 420, sx: 905, sy: 300, sr: 70, sun: false });
-  s += sun(905, 300, 70, T * 12, pop(t, 1.05, 0.5));
-  // capa gris que se abre desde el centro
-  if (e < 1) {
-    const rx = lerp(0, 1500, e), ry = rx * 0.55;
-    s += `<path d="M-10 -10 H${W + 10} V${H} H-10Z M${f(540 - rx)} 330 A${f(rx)} ${f(ry)} 0 1 0 ${f(540 + rx)} 330 A${f(rx)} ${f(ry)} 0 1 0 ${f(540 - rx)} 330Z" fill="${SKY_RAIN}" fill-rule="evenodd"/>`;
-    s += grayClouds(T, 0, 900 * e);
-  }
-  const open = t < 0.75 ? 1 : clamp(1 - (t - 0.75) / 0.12);
-  const flipU = clamp((t - 2.0) / 0.4);
-  s += bakeryStreet(BK6, 0, { open, flip: easeInOut(flipU), bell: 18 * damp(t, 14, 3) + (t > 0.75 ? 14 * damp(t - 0.75, 14, 4) : 0), signShake: t > 2.4 ? 6 * damp(t - 2.4, 14, 5) : 0 });
-  s += groundWet(1300, 0, { dry: true });
-  // Marta sale con la caja
-  const a = clamp(t / 0.95);
-  const mx = lerp(BK6.door.x + BK6.door.w / 2, 300, easeInOut(a)), my = lerp(1350, FOOT, a), msc = lerp(4.6, SC, a);
-  const wp = walkPose(2 * PI * t / STEP, a < 1 ? 1 : 0);
-  const hop = t > 1.3 ? Math.abs(Math.sin((t - 1.3) * PI / 0.45)) * 40 * clamp(1 - (t - 2.6)) : 0;
-  s += shadowEll(mx, my, 110);
-  s += place(mx, my - hop, 190, 204, msc, Object.assign({}, wp, {
-    who: 'marta', flip: t < 1.0, expr: t < 1.0 ? 'happy' : 'smile', armF: -32, armB: -26, pony: wp.pony + (hop ? 10 * Math.sin(t * 14) : 0),
-    front: w => cakeBoxL(226, 146, 1.05, w)
-  }));
-  if (t > 1.0) {
-    const [bx, by] = toWorld(mx, my - hop, 190, 204, msc, 226, 118, false);
-    s += sparkle(bx - 90, by - 40, 30, pop(t, 1.1, 0.4) * (1 + 0.2 * Math.sin(t * 16)));
-    s += sparkle(bx + 100, by - 10, 22, pop(t, 1.2, 0.4));
-  }
-  // panadera gira el cartel
-  const reach = t < 1.9 ? 0.6 : 1;
-  s += shadowEll(1010, FOOT - 60, 110);
-  s += place(1010, FOOT - 60, 190, 204, SC * 1.03, { who: 'baker', flip: true, expr: t < 2.2 ? 'happy' : 'wink', armF: lerp(-8, -80, reach) + (flipU > 0 && flipU < 1 ? 10 * Math.sin(flipU * PI) : 0), armB: 6 });
-  if (flipU > 0 && flipU < 1) {
-    const sg = BK6.sign;
-    s += `<path d="M${f(sg.cx - sg.w * 0.62)} ${f(sg.cy - 40)} A${f(sg.w * 0.62)} ${f(sg.w * 0.3)} 0 0 0 ${f(sg.cx + sg.w * 0.62)} ${f(sg.cy - 40)}" fill="none" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round" stroke-dasharray="26 20"/>`;
-  }
-  s += rain(T, -100, 0, W + 100, 1500, 60, { amount: clamp(1 - (t - 0.4) / 0.4) });
-  // texto
-  const l = 'Últimos 2x1';
-  s += at(410, 300, pop(t, 1.3, 0.55), text(l, 0, 0, { size: fit(l, 150, 690), sw: SW * 2.4, sd: 10, fill: '#FFFFFF' }), -4);
-  return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
-};
-
-// 7) Lucía llega andando y se para en seco ante el cartel CERRADO · AGOTADO; Marta aparece con la caja
-const BK7 = bakeryGeo(380, 1300, 660, 900);
-S[7] = (t, T) => {
-  let s = skyClear(T, { band: 420, sx: 170, sy: 300, sr: 66 });
-  s += bakeryStreet(BK7, 0, { flip: 1 });
-  s += groundWet(1300, 0, { dry: true });
-  // Lucía
-  const tStop = 1.45, lx0 = -180, lx1 = 600;
-  const lx = t < tStop ? lerp(lx0, lx1, t / tStop) : lx1;
-  let lo;
-  if (t < tStop) lo = Object.assign(walkPose(2 * PI * t / 0.8, 0.85), { head: 9, expr: 'happy', look: [0, 1] });
-  else {
-    const dm = damp(t - tStop, 14, 5);
-    lo = { legF: -10 * dm, legB: 10 * dm, armF: 20 * dm, armB: -20 * dm, lean: 7 * dm, head: lerp(9, 18, easeOut((t - 1.7) / 0.25)), expr: t < 1.7 ? 'surprise' : 'sad', look: [0.8, 1] };
-  }
-  lo.who = 'lucia'; delete lo.pony;
-  s += shadowEll(lx, FOOT, 115);
-  s += place(lx, FOOT, 190, 204, SC, lo);
-  if (t > tStop && t < tStop + 0.5) s += mark('!', lx + 60, 610, pop(t, tStop, 0.3) * clamp(1 - (t - tStop - 0.3) / 0.2), 10, 150);
-  s += sadCloud(lx - 30, 628, 0.75 * pop(t, 1.85, 0.5), t);
-  // Marta entra por un lado con la caja
-  const km = pop(t, 2.05, 0.5);
-  if (km > 0) {
-    const mx = lerp(-260, 165, km);
-    s += shadowEll(mx, FOOT, 110);
-    s += placeMarta(mx, FOOT, 190, 204, SC, { expr: 'happy', armF: -32, armB: -26, pony: 10 * Math.sin(t * 9), front: w => cakeBoxL(226, 146, 1.05, w) });
-  }
-  return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
-};
-
-// fondo de plano medio (escenas 8-10): panadería cerrada y cielo
-function midBg(T, sunOn = true, z = 1.3) {
-  let s = skyClear(T, { band: 380, sx: 150, sy: 280, sr: 60, clouds: WHITE_CLOUDS, sun: sunOn });
-  let w = bakeryStreet(BK7, 0, { flip: 1 }) + groundWet(1300, 0, { dry: true });
-  return s + cam(z, 760, 1300, w);
-}
-const M8 = { mx: 290, lx: 800, y: 1565, sc: 6.3 };
-
-// 8) Marta le ofrece un pastel; Lucía levanta la vista con «?»
+/* ---------- 8) 13:50. Queda una caja; Marta llega corriendo, derrapa, se la lleva. Rosa gira el cartel: AGOTADO ---------- */
+const BK8 = bakeryGeo(240, 1300, 700, 860);
+const FOOT8 = 1440;
 S[8] = (t, T) => {
-  let s = midBg(T);
-  const ext = easeOut((t - 0.15) / 0.3);
-  s += shadowEll(M8.mx, M8.y, 130);
-  s += placeMarta(M8.mx, M8.y, 190, 204, M8.sc, {
-    expr: 'smile', armF: lerp(-10, -86, ext), armB: 12, pony: 5 * Math.sin(t * 4),
-    behind: w => cakeBoxL(166, 156, 1.0, w), handF: w => cupcakeL(203, 138, 1.2, w) + hand(202.5, 140, w)
+  const D = BK8.door, dcx = D.x + D.w / 2;
+  const doorOpen = t < 0.9 ? 0 : (t < 2.3 ? clamp((t - 0.9) / 0.12) : clamp(1 - (t - 2.3) / 0.15));
+  const boxGone = t > 1.35;
+  const flipU = easeInOut((t - 2.55) / 0.4);
+  let s = skyClear(T, { band: 860, tm: TM.s8, sx: 945, sy: 235, sr: 52 });
+  s += bakeryStreet(BK8, {
+    window: boxGone ? 'none' : 'one', open: doorOpen, doorClock: TM.s8, flip: flipU,
+    bell: (t > 0.9 ? 16 * damp(t - 0.9, 16, 3) : 0) + (t > 2.3 ? 14 * damp(t - 2.3, 16, 4) : 0), signShake: t > 2.95 ? 7 * damp(t - 2.95, 14, 4) : 0,
+    inDoor: (d, dh) => (t > 1.15 && t < 1.62) ? speedLinesH(d.x + d.w * 0.8, d.y + dh * 0.4, d.w * 0.6, 3, 40, SW * 0.8) : ''
   });
-  const [cx, cy] = toWorld(M8.mx, M8.y, 190, 204, M8.sc, 206, 120, false);
-  s += sparkle(cx + 20 + (ext * 0), cy - 100, 30, pop(t, 0.55, 0.4) * (1 + 0.2 * Math.sin(t * 15)));
-  const lift = easeOut((t - 1.0) / 0.25);
-  s += shadowEll(M8.lx, M8.y, 125);
-  s += place(M8.lx, M8.y, 190, 204, M8.sc, {
-    who: 'lucia', flip: true, expr: t < 1.0 ? 'sad' : 'doubt', head: lerp(16, -2, lift), look: t < 1.0 ? [0.6, 1] : [0.8, 0.4],
-    armF: lerp(4, -20, lift), armB: -6
-  });
-  s += sadCloud(M8.lx - 10, 470, (1 - easeOut((t - 0.95) / 0.25)) * (t < 1.2 ? 1 : 0) * pop(t, -1, 0.3), t);
-  s += mark('?', M8.lx + 165, 620, pop(t, 4.2, 0.5), 12 + 5 * Math.sin(t * 5), 210, '#FFFFFF');
-  return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
-};
-
-// 9) Marta pillina con un dedo levantado y nube de pensamiento con el icono del canal; Lucía «!»
-S[9] = (t, T) => {
-  let s = midBg(T);
-  const up = easeOut((t - 0.1) / 0.25);
-  s += shadowEll(M8.mx, M8.y, 130);
-  s += placeMarta(M8.mx, M8.y, 190, 204, M8.sc, {
-    expr: 'cheeky', armF: lerp(-10, -168, up) + 4 * Math.sin(t * 6), armB: 12, point: true, head: -3, pony: 4 * Math.sin(t * 4),
-    behind: w => cakeBoxL(166, 156, 1.0, w)
-  });
-  // nube de pensamiento con el icono del canal
-  const kc = pop(t, 0.55, 0.55);
-  s += at(210, 640, pop(t, 0.35, 0.35), `<circle r="20" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>`);
-  s += at(250, 560, pop(t, 0.45, 0.35), `<circle r="30" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>`);
-  s += thoughtCloud(370, 395, 250, 165, kc);
-  s += at(370, 395, kc * (1 + 0.05 * Math.sin(t * 7)), logoIcon(0, 0, 270));
-  // Lucía con el pastel: abre mucho los ojos
-  const wow = t > 2.95;
-  const jump = wow ? Math.max(0, Math.sin(clamp((t - 2.95) / 0.35) * PI)) * 45 : 0;
-  s += shadowEll(M8.lx, M8.y, 125);
-  s += place(M8.lx, M8.y - jump, 190, 204, M8.sc, {
-    who: 'lucia', flip: true, expr: wow ? 'wow' : 'doubt', look: wow ? [0.4, -0.3] : [0.8, 0.4], head: wow ? -6 : -2,
-    armF: -42, armB: wow ? -30 : -6, legF: wow ? -10 : 0, legB: wow ? 12 : 0,
-    handF: w => cupcakeL(203, 138, 1.2, w) + hand(202.5, 140, w)
-  });
-  s += mark('!', M8.lx + 170, 600, pop(t, 3.0, 0.45), -8 + 4 * Math.sin(t * 6), 230);
-  return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
-};
-
-// 10) Marta enseña su móvil con el canal; Lucía sonríe y saca su móvil. «Tu canal de promociones»
-S[10] = (t, T) => {
-  let s = midBg(T, false, 1.0);
-  const mx = 175, lx = 945, y = 1565, sc = 5.7;
-  s += shadowEll(mx, y, 120);
-  s += placeMarta(mx, y, 190, 204, sc, { expr: t < 2.3 ? 'smile' : 'wink', armF: -36, armB: 12, pony: 4 * Math.sin(t * 4), behind: w => cakeBoxL(166, 156, 1.0, w) });
-  // Lucía: sonríe y saca su propio móvil
-  const out = easeOut((t - 1.5) / 0.3);
-  s += shadowEll(lx, y, 115);
-  s += place(lx, y, 190, 204, sc, {
-    who: 'lucia', flip: true, expr: t < 1.5 ? 'happy' : 'smile', armF: lerp(4, -16, out), armB: -6, head: 4,
-    handF: out > 0 ? (w => `<g transform="translate(202.5 140) scale(1.2) translate(-202.5 -140)">${phoneInHand(-24)(w)}</g>`) : null, look: [0.6, 1.4]
-  });
-  if (out > 0.5) {
-    const [px, py] = toWorld(lx, y, 190, 204, sc, 212, 125, true);
-    s += sparkle(px - 40, py - 80, 26, pop(t, 1.75, 0.4) * (1 + 0.2 * Math.sin(t * 15)));
+  s += ground(1300, 0, { sp: 230 });
+  // la última caja desaparece del escaparate con un «pop»
+  if (t > 1.35 && t < 1.8) s += burst(BK8.x + BK8.w * 0.27, BK8.wy + 250, 70 * Math.sin(clamp((t - 1.35) / 0.45) * PI), t * 90, C.yel);
+  s += poleClock(120, 1300, 560, 92, TM.s8, pop(t, 0.05, 0.45) * (1 + 0.06 * Math.sin(t * 12)), 5 * Math.sin(t * 20));
+  // Rosa sale y gira el cartel
+  if (t > 1.95) {
+    const a = easeOut((t - 1.95) / 0.35);
+    const rx = lerp(dcx, 985, a), rsc = lerp(4.0, 4.4, a);
+    const reach = easeOut((t - 2.35) / 0.2);
+    s += shadowEll(rx, FOOT8, 100);
+    s += placeRosa(rx, FOOT8, 190, 208, rsc, {
+      flip: true, bob: breath(T), blink: blinkAt(T), expr: t < 3.0 ? 'happy' : 'smile', look: [0.4, 0.6],
+      armF: lerp(-10, -38, reach) + (flipU > 0 && flipU < 1 ? -12 * Math.sin(flipU * PI) : 0) + (t > 3.1 ? -112 * easeOut((t - 3.1) / 0.2) : 0),
+      handF: t > 3.1 ? thumbUp : null, armB: 6
+    });
+    if (flipU > 0 && flipU < 1) {
+      const sg = BK8.sign;
+      s += `<path d="M${f(sg.cx - sg.w * 0.62)} ${f(sg.cy - 30)} A${f(sg.w * 0.62)} ${f(sg.w * 0.3)} 0 0 0 ${f(sg.cx + sg.w * 0.62)} ${f(sg.cy - 30)}" fill="none" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round" stroke-dasharray="26 20"/>`;
+    }
+    if (t > 2.95) { const sg = BK8.sign; s += sparkle(sg.cx - sg.w * 0.62, sg.cy - 60, 26, pop(t, 2.95, 0.35)); s += sparkle(sg.cx + sg.w * 0.6, sg.cy + 50, 20, pop(t, 3.05, 0.35)); }
   }
-  // móvil grande hacia cámara
-  const kp = pop(t, 0.1, 0.5);
-  const PX = 250, PY = 430, PW = 470, PH = 820;
-  s += at(300, 1180, kp, `<g transform="translate(-300 -1180) rotate(-3 485 840)">${channelPhone(PX, PY, PW, PH, t)}</g>`);
-  // mano de Marta sujetando el móvil
-  if (kp > 0.5) s += `<g transform="rotate(-3 485 840)"><ellipse cx="${PX + 16}" cy="1150" rx="34" ry="46" fill="${C.skin}" stroke="${INK}" stroke-width="${f(SW)}"/><path d="M${PX + 10} 1128 q24 -6 36 8" stroke="${INK}" stroke-width="${f(SW * 0.7)}" fill="none" stroke-linecap="round"/></g>`;
-  const l = 'Tu canal de promociones';
-  s += at(540, 285, pop(t, 0.3, 0.5), text(l, 0, 0, { size: fit(l, 115, 990), sw: SW * 2.2, sd: 9 }), -2);
-  return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
+  // Marta: carrera, derrape, entra; sale con la caja y se va corriendo
+  const MSC = 4.6;
+  let mo = null, mx = 0, msc = MSC;
+  if (t < 0.55) { mx = lerp(-220, 470, t / 0.55); mo = Object.assign(runPose(t), { expr: 'sparkle' }); }
+  else if (t < 0.92) {
+    const u = (t - 0.55) / 0.37; mx = lerp(470, 590, easeOut(u)); const rp = runPose(0.55);
+    mo = { legF: lerp(rp.legF, -34, u), legB: lerp(rp.legB, 22, u), armF: lerp(rp.armF, -50, u), armB: lerp(rp.armB, -40, u), pony: lerp(70, -10, u), lean: lerp(10, -14, u), expr: 'surprise' };
+    const len = u * 240;
+    for (let i = 0; i < 2; i++) s += `<line x1="${f(mx + 40 - len)}" y1="${FOOT8 - 6 + i * 16}" x2="${f(mx + 40)}" y2="${FOOT8 - 6 + i * 16}" stroke="${INK}" stroke-width="${f(SW * 0.7)}" stroke-linecap="round"/>`;
+    for (let i = 0; i < 4; i++) s += puff(mx - 60 - i * 80, FOOT8 - 26 - i * 14, 42 - i * 5, pop(t, 0.6 + i * 0.06, 0.3));
+  } else if (t < 1.15) {
+    const u = easeIn((t - 0.92) / 0.23); mx = lerp(590, dcx, u); msc = lerp(MSC, 3.9, u);
+    mo = Object.assign(runPose(t), { expr: 'sparkle' });
+  } else if (t < 1.62) { mo = null; }
+  else if (t < 2.05) {
+    const u = easeOut((t - 1.62) / 0.2); mx = lerp(dcx, 600, u); msc = lerp(3.9, MSC, u);
+    const hop = Math.abs(Math.sin((t - 1.62) * PI / 0.22)) * 30;
+    mo = { expr: 'smile', armF: -32, armB: -26, front: ww => cakeBoxL(226, 146, 1.05, ww), pony: 10 * Math.sin(t * 14), bob: -hop };
+  } else {
+    const u = (t - 2.05) / 1.35; mx = lerp(600, -260, u);
+    mo = Object.assign(runPose(t), { flip: true, expr: 'smile', armF: -32, armB: -26, front: ww => cakeBoxL(226, 146, 1.05, ww) });
+  }
+  if (mo && mx > -300) {
+    if (mo.flip || t > 2.05) for (let i = 0; i < 3; i++) s += `<line x1="${f(mx + 140 + 30 * i)}" y1="${980 + i * 110}" x2="${f(mx + 270 + 40 * i)}" y2="${980 + i * 110}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round"/>`;
+    else if (t < 0.55) for (let i = 0; i < 3; i++) s += `<line x1="${f(mx - 260 - 40 * i)}" y1="${980 + i * 110}" x2="${f(mx - 130 - 20 * i)}" y2="${980 + i * 110}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round"/>`;
+    s += shadowEll(mx, FOOT8, 110 * msc / MSC);
+    s += placeMarta(mx, FOOT8, 190, 204, msc, mo);
+    if (t > 1.62 && t < 2.6) {
+      const [bx, by] = toWorld(mx, FOOT8, 190, 204, msc, 226, 118, !!mo.flip);
+      s += sparkle(bx - 80, by - 50, 28, pop(t, 1.7, 0.35) * (1 + 0.2 * Math.sin(t * 16)));
+      s += sparkle(bx + 90, by - 20, 20, pop(t, 1.78, 0.35));
+    }
+  }
+  return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1050, s);
+};
+function easeIn(u) { u = clamp(u); return u * u * u; }
+
+/* ---------- 9) Vitrina vacía, Rosa agotada y feliz, pulgar arriba; lluvia de monedas y confeti ---------- */
+S[9] = (t, T) => {
+  let w = interiorBack(T, { emptyShelf: true });
+  const up = easeOut((t - 0.2) / 0.25);
+  w += rosaInt(T, { expr: 'tired', look: [0, 0], lean: 7, armB: -42, armF: lerp(-30, -128, up), handF: up > 0.5 ? thumbUp : null, head: -4, bob: breath(T) * 1.5 });
+  w += vitrina({ gone: () => 1 });
+  w += counterTop({ boxes: 0, bags: false, drawer: 1, coins: true });
+  // lluvia de monedas y confeti (por encima de y=1500)
+  const cid = 'rain' + (uid++);
+  let r = '';
+  for (let i = 0; i < 30; i++) {
+    const t0 = 0.15 + hash(i * 3.1) * 1.6, v = 900 + hash(i * 7.7) * 500;
+    const y = -60 + (t - t0) * v;
+    if (y < -60 || y > 1560) continue;
+    const x = 40 + hash(i * 1.9) * 1000 + 30 * Math.sin(t * 3 + i);
+    r += i % 3 === 0 ? confetti(x, y, i, t) : coin(x, y, 30 + 8 * hash(i * 5.1), t * 9 + i);
+  }
+  for (let i = 0; i < 24; i++) {
+    const t0 = 0.1 + hash(i * 9.3 + 2) * 1.9, v = 380 + hash(i * 4.4) * 260;
+    const y = -40 + (t - t0) * v;
+    if (y < -40 || y > 1560) continue;
+    r += confetti(30 + hash(i * 2.3 + 1) * 1020 + 60 * Math.sin(t * 2.4 + i), y, i + 1, t);
+  }
+  w += `<clipPath id="${cid}"><rect x="-200" y="-200" width="${W + 400}" height="1700"/></clipPath><g clip-path="url(#${cid})">${r}</g>`;
+  let s = cam(zoomIn(t, 0, 1.12, 0.2), 600, 900, w);
+  const k1 = pop(t, 0.35, 0.5), k2 = pop(t, 0.75, 0.5);
+  s += big('Vitrina vacía.', 540, 280, 150, k1, lerp(-7, -3, k1));
+  s += big('Caja llena.', 540, 430, 165, k2, lerp(7, 2, k2), { fill: C.yel });
+  return s;
 };
 
-// 11) Llamada a la acción con pájaros + corte a tarjeta final
-const BIRDS11 = [{ t0: 0.2, d: 3.4, dir: 1, y: 232, a: 34 }, { t0: 1.2, d: 3.8, dir: -1, y: 1462, a: 30 }, { t0: 2.4, d: 3.0, dir: 1, y: 238, a: 26 }];
-S[11] = (t, T, sc) => {
-  const cut = (sc && sc.cut) || 5;
+/* ---------- 10) Llamada a la acción con cielo y pájaros + tarjeta final ---------- */
+const BIRDS10 = [{ t0: 0.2, d: 3.6, dir: 1, y: 250, a: 34 }, { t0: 1.0, d: 4.0, dir: -1, y: 1440, a: 30 }, { t0: 2.6, d: 3.2, dir: 1, y: 860, a: 26 }];
+S[10] = (t, T, sc) => {
+  const cut = (sc && sc.cut) || 6;
   if (t < cut) {
-    let s = skyClear(T, { band: 1300, sx: 930, sy: 250, sr: 62, clouds: [
-      { x0: 60, y: 230, s: 0.75, v: 16 }, { x0: 700, y: 900, s: 0.85, v: 26 }, { x0: 300, y: 1180, s: 0.6, v: 11 },
-      { x0: 1250, y: 420, s: 0.9, v: 20 }, { x0: 1650, y: 1320, s: 0.7, v: 14 }] });
-    BIRDS11.forEach((b, i) => {
+    let s = skyClear(T, { band: 1150, tm: 830, sx: 930, sy: 240, sr: 56, clouds: [
+      { x0: 60, y: 230, s: 0.75, v: 16 }, { x0: 700, y: 820, s: 0.85, v: 24 }, { x0: 300, y: 1230, s: 0.6, v: 11 },
+      { x0: 1250, y: 420, s: 0.9, v: 19 }, { x0: 1650, y: 1350, s: 0.7, v: 14 }] });
+    BIRDS10.forEach((b, i) => {
       const u = (t - b.t0) / b.d;
       if (u < 0 || u > 1) return;
       const x = b.dir > 0 ? lerp(-90, W + 90, u) : lerp(W + 90, -90, u);
       const fl = 0.35 + 0.65 * Math.sin(t * 2 * PI / 0.34 + i * 2);
-      s += bird(x, b.y + Math.sin(u * 7 + i) * 10, b.a, fl);
+      s += bird(x, Math.min(1450, b.y + Math.sin(u * 7 + i) * 12), b.a, fl);
     });
-    // globo de comentario
-    const kb = pop(t, 0.15, 0.55);
-    let b = `<path d="M-290 270 L-370 400 L-170 280Z" transform="translate(14 14)" fill="${INK}"/>`;
-    b += `<path d="M-290 270 L-370 400 L-170 280Z" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round"/>`;
-    b += panel(-440, -290, 880, 580, 90);
-    b += `<path d="M-286 278 L-356 385 L-180 284Z" fill="#FFFFFF"/>`;
-    b += at(0, -135, pop(t, 0.4, 0.5), text('Comenta', 0, 0, { size: 135, fill: INK, stroke: null }));
-    const word = 'INSTANTE', size = fit(word, 195, 780);
-    let xx = -measure(word, size) / 2;
-    for (let i = 0; i < word.length; i++) {
-      const ch = word[i], cw = measure(ch, size), k = pop(t, 0.7 + i * 0.07, 0.45);
-      b += at(xx + cw / 2, 90, k, text(ch, 0, 0, { size, fill: C.red, sw: SW * 2.2, sd: 9 }), (i % 2 ? 4 : -4) * (1 - k));
-      xx += cw;
-    }
-    s += at(540, 590, kb, b, lerp(-6, 0, kb));
-    // franja roja con la web
-    const ks = pop(t, 1.6, 0.6), url = 'escaparatetudela.es';
-    let st = `<rect x="-640" y="-80" width="1280" height="160" transform="translate(0 12)" fill="${INK}"/><rect x="-640" y="-80" width="1280" height="160" fill="${C.red}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-    st += text(url, 0, 2, { size: fit(url, 98, 930), sw: SW * 2, sd: 6 });
-    s += `<g transform="translate(${f(540 + (1 - ks) * -1500)} 1065) rotate(-3)">${st}</g>`;
-    // botón verde
-    const kbtn = pop(t, 2.5, 0.55), pulse = t > 3.1 ? 1 + 0.03 * Math.sin((t - 3.1) * 2 * PI / 1.2) : 1;
-    let bt = '';
-    if (t > 3.1) {
-      const ph = ((t - 3.1) % 1.2) / 1.2, rs = 1 + 0.16 * ph;
-      bt += `<rect x="${f(-390 * rs)}" y="${f(-78 * rs - 8 * ph)}" width="${f(780 * rs)}" height="${f(156 * rs + 16 * ph)}" rx="${f(78 * rs + 8 * ph)}" fill="none" stroke="${C.green}" stroke-width="${f(SW * 1.2 * (1 - ph))}"/>`;
-    }
-    bt += `<rect x="-378" y="-66" width="780" height="156" rx="78" fill="${INK}"/>`;
-    bt += `<rect x="-390" y="-78" width="780" height="156" rx="78" fill="${C.green}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-    const lab = 'Canal de WhatsApp';
-    bt += text(lab, 0, 2, { size: fit(lab, 86, 640), sw: SW * 2, sd: 5 });
-    s += at(540, 1250, kbtn * pulse, bt);
-    const tag = 'Etiqueta a quien siempre llega tarde';
-    s += at(540, 1385, pop(t, 3.2, 0.5), text(tag, 0, 0, { size: fit(tag, 60, 960), sw: SW * 1.5, sd: 5 }));
-    return cam(zoomIn(t, 0, 1.1, 0.2), 540, 900, s);
+    const lines = ['¿Te sobra', 'producto a', 'última hora?'];
+    lines.forEach((l, i) => { const k = pop(t, 0.15 + i * 0.18, 0.5); s += big(l, 540, 400 + i * 150, 165, k, (i % 2 ? 3 : -3) * (1 - k) - 2); });
+    // franja roja
+    const ks = pop(t, 1.2, 0.6), l2 = 'Publica una oferta flash';
+    let st = `<rect x="-640" y="-82" width="1280" height="164" transform="translate(0 12)" fill="${INK}"/><rect x="-640" y="-82" width="1280" height="164" fill="${C.red}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+    st += text(l2, 0, 2, { size: fit(l2, 100, 940), sw: SW * 2, sd: 6 });
+    s += `<g transform="translate(${f(540 + (1 - ks) * -1500)} 930) rotate(-3)">${st}</g>`;
+    // «Date de alta en escaparatetudela.es»
+    const k3 = pop(t, 2.1, 0.5), k4 = pop(t, 2.35, 0.5), url = 'escaparatetudela.es';
+    s += big('Date de alta en', 540, 1135, 112, k3, -2);
+    const pulse = t > 3 ? 1 + 0.03 * Math.sin((t - 3) * 2 * PI / 1.2) : 1, us = fit(url, 96, 860);
+    s += at(540, 1290, k4 * pulse, `<rect x="-470" y="-74" width="940" height="148" rx="74" transform="translate(12 12)" fill="${INK}"/><rect x="-470" y="-74" width="940" height="148" rx="74" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>` +
+      text(url, 0, 2, { size: us, fill: C.red, stroke: null }));
+    return cam(zoomIn(t, 0, 1.1, 0.2), 540, 850, s);
   }
   const u = t - cut;
-  let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640, 16, t * 8, C.dred);
-  // logo solo icono (logo.png), grande, sobre disco crema; las letras las pone el vídeo
+  let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 680, 16, t * 8, C.dred);
+  // logo solo icono (logo.png) grande y blanco sobre rojo
   const kl = pop(u, 0, 0.45), bob = 6 * Math.sin(u * 3);
-  s += at(540, 650 + bob, kl, `<circle cx="14" cy="14" r="400" fill="${INK}"/><circle r="400" fill="${C.cream}" stroke="${INK}" stroke-width="${f(SW * 1.2)}"/>` +
-    `<svg x="-370" y="-370" width="740" height="740" viewBox="20 20 460 460"><use href="#logoI"/></svg>`);
-  s += at(540, 1160, pop(u, 0.12, 0.45), text('Escaparate', 0, 0, { size: 145, sw: SW * 2.4, sd: 9 }));
-  s += at(540, 1300, pop(u, 0.2, 0.45), text('de Tudela', 0, 0, { size: 145, sw: SW * 2.4, sd: 9 }));
+  s += at(540, 680 + bob, kl, `<svg x="-380" y="-380" width="760" height="760" viewBox="20 20 460 460"><use href="#logoI"/></svg>`);
+  s += at(540, 1140, pop(u, 0.12, 0.45), text('Escaparate', 0, 0, { size: 145, sw: SW * 2.4, sd: 9 }));
+  s += at(540, 1280, pop(u, 0.2, 0.45), text('de Tudela', 0, 0, { size: 145, sw: SW * 2.4, sd: 9 }));
   const url = 'escaparatetudela.es', us = fit(url, 70, 680);
-  s += at(540, 1432, pop(u, 0.3, 0.45), `<rect x="-370" y="-52" width="760" height="104" rx="52" transform="translate(10 10)" fill="${INK}"/><rect x="-380" y="-52" width="760" height="104" rx="52" fill="${C.dred}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text(url, 0, 2, { size: us, sw: SW * 1.8, sd: 5 }));
+  s += at(540, 1418, pop(u, 0.3, 0.45), `<rect x="-370" y="-52" width="760" height="104" rx="52" transform="translate(10 10)" fill="${INK}"/><rect x="-380" y="-52" width="760" height="104" rx="52" fill="${C.dred}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text(url, 0, 2, { size: us, sw: SW * 1.8, sd: 5 }));
   return s;
 };
 
