@@ -1,17 +1,21 @@
 {
+  "title": "Marta y el último 2x1",
+  "output": "marta_y_el_ultimo_2x1.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
   "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
   "scenes": [
-    { "id": 1, "name": "Marta camina por la calle", "duration": 3.0, "still": 2.0 },
-    { "id": 2, "name": "Mira el móvil: pedido confirmado", "duration": 3.0, "still": 2.2 },
-    { "id": 3, "name": "Frenada ante TUS PIES", "duration": 3.0, "still": 2.4 },
-    { "id": 4, "name": "Zoom al escaparate -30% ¡DING!", "duration": 2.5, "still": 1.6 },
-    { "id": 5, "name": "Sorpresa ?!", "duration": 3.5, "still": 1.5 },
-    { "id": 6, "name": "Logo: Ya no se te escapan", "duration": 4.0, "still": 3.0 },
-    { "id": 7, "name": "La web en el móvil", "duration": 7.0, "still": 6.0 },
-    { "id": 8, "name": "Comenta INSTANTE", "duration": 7.0, "still": 5.0 },
-    { "id": 9, "name": "Guiño y tarjeta final", "duration": 3.0, "still": 2.6, "cut": 1.6 }
+    { "id": 1, "name": "Salón: Marta aburrida, «Sábado»", "duration": 3.0, "still": 1.5 },
+    { "id": 2, "name": "Vibra el móvil: notificación", "duration": 3.0, "still": 2.0 },
+    { "id": 3, "name": "Ojos brillantes, 13:45, «Quedan 15 minutos», salto", "duration": 3.0, "still": 1.2, "cut": 1.5 },
+    { "id": 4, "name": "Carrera bajo la lluvia, reloj 13:45 -> 14:00", "duration": 4.0, "still": 2.5 },
+    { "id": 5, "name": "Derrape ante la panadería: ABIERTO · 2x1 en pasteles", "duration": 3.0, "still": 1.75 },
+    { "id": 6, "name": "Sale con la caja, sale el sol, «Últimos 2x1», CERRADO", "duration": 3.0, "still": 2.7 },
+    { "id": 7, "name": "Lucía ante CERRADO · AGOTADO; Marta aparece", "duration": 3.0, "still": 2.75 },
+    { "id": 8, "name": "Marta le ofrece un pastel; Lucía «?»", "duration": 4.0, "still": 2.5 },
+    { "id": 9, "name": "Marta pillina + nube con el icono del canal; Lucía «!»", "duration": 4.0, "still": 2.5 },
+    { "id": 10, "name": "El canal en el móvil, «Tu canal de promociones»", "duration": 4.0, "still": 3.0 },
+    { "id": 11, "name": "Comenta INSTANTE + web + canal; tarjeta final", "duration": 7.0, "still": 4.4, "cut": 5.0 }
   ]
 }

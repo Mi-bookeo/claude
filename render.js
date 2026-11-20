@@ -5,7 +5,7 @@
      node render.js stills 4,7,8      -> PNG a tamaño real en stills/
      node render.js stills all
      node render.js scenes [1,2,...]  -> scenes/scene_XX.mp4
-     node render.js concat            -> marta_y_los_zapatos.mp4 + timeline.txt
+     node render.js concat            -> vídeo final (config.output) + timeline.txt
      node render.js all               -> scenes + stills + concat
 */
 'use strict';
@@ -31,6 +31,7 @@ function sceneTiming() {
 
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: cfg.width, height: cfg.height }, deviceScaleFactor: 1 });
+  page.on('pageerror', e => console.error('ERROR en la página:', e.message));
   await page.goto('file://' + path.join(ROOT, 'src', 'index.html'));
   const fonts = [
     ['Baloo2', 800, fs.readFileSync(path.join(ROOT, 'fonts', 'Baloo2-ExtraBold.ttf')).toString('base64')],
@@ -101,11 +102,11 @@ async function concat() {
   const sc = sceneTiming();
   const list = path.join(ROOT, 'concat_list.txt');
   fs.writeFileSync(list, sc.map(s => `file 'scenes/scene_${pad(s.id)}.mp4'`).join('\n') + '\n');
-  const tmp = path.join(ROOT, 'marta_y_los_zapatos.partial.mp4');
+  const tmp = path.join(ROOT, cfg.output.replace(/\.mp4$/, '.partial.mp4'));
   await run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-an', '-movflags', '+faststart', tmp]);
-  fs.renameSync(tmp, path.join(ROOT, 'marta_y_los_zapatos.mp4'));
+  fs.renameSync(tmp, path.join(ROOT, cfg.output));
   fs.unlinkSync(list);
-  let tl = `Marta y los zapatos — timeline (${cfg.width}x${cfg.height}, ${FPS} fps)\n`;
+  let tl = `${cfg.title} — timeline (${cfg.width}x${cfg.height}, ${FPS} fps)\n`;
   tl += `escena\tinicio_s\tfin_s\tduracion_s\tfotogramas\tnombre\n`;
   sc.forEach(s => { tl += `${pad(s.id)}\t${s.start.toFixed(3)}\t${s.end.toFixed(3)}\t${(s.end - s.start).toFixed(3)}\t${s.frames}\t${s.name}\n`; });
   tl += `TOTAL\t0.000\t${sc[sc.length - 1].end.toFixed(3)}\n`;
