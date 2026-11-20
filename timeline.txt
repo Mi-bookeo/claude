@@ -1,14 +1,13 @@
-Marta y el último 2x1 — timeline (1080x1920, 30 fps)
+Rosa y la cola de pasteles — timeline (1080x1920, 30 fps)
 escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
-01	0.000	3.000	3.000	90	Salón: Marta aburrida, «Sábado»
-02	3.000	6.900	3.900	117	Vibra el móvil: notificación
-03	6.900	9.900	3.000	90	Ojos brillantes, 13:45, «Quedan 15 minutos», salto
-04	9.900	13.500	3.600	108	Carrera bajo la lluvia, reloj 13:45 -> 14:00
-05	13.500	16.500	3.000	90	Derrape ante la panadería: ABIERTO · 2x1 en pasteles
-06	16.500	19.500	3.000	90	Sale con la caja, sale el sol, «Últimos 2x1», CERRADO
-07	19.500	22.500	3.000	90	Lucía ante CERRADO · AGOTADO; Marta aparece
-08	22.500	27.500	5.000	150	Marta le ofrece un pastel; Lucía «?»
-09	27.500	31.500	4.000	120	Marta pillina + nube con el icono del canal; Lucía «!»
-10	31.500	35.500	4.000	120	El canal en el móvil, «Tu canal de promociones»
-11	35.500	42.000	6.500	195	Comenta INSTANTE + web + canal; tarjeta final
-TOTAL	0.000	42.000
+01	0.000	3.000	3.000	90	Fachada a mediodía, reloj por la puerta, «12:00»
+02	3.000	6.000	3.000	90	Rosa mira el reloj, preocupada, «Cierra a las 14:00»
+03	6.000	9.000	3.000	90	Bombilla de idea, móvil y «2x1» con destello
+04	9.000	13.000	4.000	120	Rosa teclea; tarjeta de oferta; Publicar -> Publicada
+05	13.000	16.000	3.000	90	Calle: vibran los móviles, «Y la gente se entera al momento»
+06	16.000	20.000	4.000	120	Todos corren; la cola dobla la esquina; reloj 12:05-12:30, «¡Cola en la puerta!»
+07	20.000	25.000	5.000	150	Rosa despacha a toda velocidad; la vitrina se vacía, «¡Siguiente!»
+08	25.000	29.000	4.000	120	13:50: Marta se lleva la última caja; Rosa gira el cartel a AGOTADO
+09	29.000	32.000	3.000	90	Vitrina vacía, Rosa agotada y feliz, monedas y confeti
+10	32.000	40.000	8.000	240	Llamada a la acción con pájaros + tarjeta final
+TOTAL	0.000	40.000

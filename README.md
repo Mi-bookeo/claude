@@ -9,3 +9,9 @@ Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18), sin audio. Duraciones de esce
 node render.js stills 4,6,7   # fotogramas de prueba
 node render.js all            # escenas + stills + concatenado + timeline
 ```
+
+## Sonido
+```
+python3 audio/make_audio.py   # voces de audio/voces/ + efectos + (música si existe audio/musica.mp3) -> *_con_audio.mp4 (imagen con -c:v copy)
+```
+Nombres de voz esperados: narradora_1…8, rosa_1…3, marta_1 (mp3/wav/m4a/ogg/flac). Sin voces se genera `*_solo_efectos.mp4` (vista previa).
