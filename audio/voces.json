@@ -5,8 +5,7 @@
   "marta": "audio/voces/voces_estela.mp3",
   "lucia": "audio/voces/voces_estela.mp3",
   "panadera": "audio/voces/voces_estela.mp3",
-  "sofia": "audio/voces/marta_sofia_pastelito.mp3",
-  "carolina": "audio/voces/marta_sofia_pastelito.mp3"
+  "cambios_22-42": "audio/voces/cambios_narradora_marta.mp3"
  },
  "lines": [
   {
@@ -26,7 +25,7 @@
      "from": 1.93
     }
    ],
-   "src": "carolina"
+   "src": "cambios_22-42"
   },
   {
    "id": "02_narradora",
@@ -121,7 +120,7 @@
      "from": 1.76
     }
    ],
-   "src": "sofia"
+   "src": "cambios_22-42"
   },
   {
    "id": "08_lucia",
