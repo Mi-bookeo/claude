@@ -462,11 +462,6 @@ S[1] = (t, T) => {
   const p = walkPose(2 * PI * t / STEP);
   s += `<ellipse cx="430" cy="1446" rx="120" ry="16" fill="${INK}" opacity="0.18"/>`;
   s += placeMarta(430, 1446, 190, 204, 5.2, Object.assign({ expr: 'happy' }, p));
-  // texto con rebote
-  const k = pop(t, 0.35, 0.55);
-  const label = 'Pedido confirmado';
-  const ts = fit(label, 84, 640);
-  s += at(540, 350, k, panel(-440, -95, 880, 190, 50) + checkCircle(-345, 0, 56) + text(label, -270, 4, { size: ts, anchor: 'start', fill: INK, stroke: null }), lerp(-6, -2, k));
   return s;
 };
 

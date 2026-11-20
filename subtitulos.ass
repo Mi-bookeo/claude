@@ -1,0 +1,29 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Narradora,Baloo 2 ExtraBold,84,&H00FFFFFF,&H00FFFFFF,&H001A1A1E,&H001A1A1E,-1,0,0,0,100,100,0,0,1,8,5,2,70,70,215,1
+Style: Marta,Baloo 2 ExtraBold,90,&H00B18FF4,&H00B18FF4,&H001A1A1E,&H001A1A1E,-1,0,0,0,100,100,0,0,1,8,5,2,70,70,215,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.20,0:00:03.00,Narradora,,0,0,0,,{\fad(60,60)}Marta acaba de comprar unos zapatos online.
+Dialogue: 0,0:00:03.20,0:00:04.13,Narradora,,0,0,0,,{\fad(60,60)}Está feliz.
+Dialogue: 0,0:00:04.18,0:00:06.15,Narradora,,0,0,0,,{\fad(60,60)}¡Los estrena el sábado!
+Dialogue: 0,0:00:07.90,0:00:08.90,Marta,,0,0,0,,{\fad(60,60)}¿Eh?
+Dialogue: 0,0:00:11.70,0:00:12.87,Marta,,0,0,0,,{\fad(60,60)}¿Los mismos…
+Dialogue: 0,0:00:12.92,0:00:15.05,Marta,,0,0,0,,{\fad(60,60)}¿…con un 30 % de descuento?
+Dialogue: 0,0:00:15.10,0:00:16.45,Narradora,,0,0,0,,{\fad(60,60)}Con Escaparate de Tudela,
+Dialogue: 0,0:00:16.50,0:00:18.96,Narradora,,0,0,0,,{\fad(60,60)}esos descuentos ya no se te escapan.
+Dialogue: 0,0:00:19.30,0:00:20.40,Narradora,,0,0,0,,{\fad(60,60)}Los comercios de Tudela
+Dialogue: 0,0:00:20.45,0:00:22.30,Narradora,,0,0,0,,{\fad(60,60)}publican sus ofertas y novedades,
+Dialogue: 0,0:00:22.35,0:00:24.72,Narradora,,0,0,0,,{\fad(60,60)}y te llevan sus escaparates al móvil.
+Dialogue: 0,0:00:26.20,0:00:28.42,Narradora,,0,0,0,,{\fad(60,60)}Entra en escaparatetudela.es
+Dialogue: 0,0:00:28.47,0:00:29.97,Narradora,,0,0,0,,{\fad(60,60)}o comenta «instante»,
+Dialogue: 0,0:00:30.02,0:00:32.68,Narradora,,0,0,0,,{\fad(60,60)}y te mandamos el enlace al canal de WhatsApp.
+Dialogue: 0,0:00:33.30,0:00:34.99,Marta,,0,0,0,,{\fad(60,60)}¡Que no se te escape!

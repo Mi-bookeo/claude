@@ -1,0 +1,140 @@
+{
+ "_nota": "src = archivo, in/out = trozo del archivo original (s), at = escena + desfase (s) donde empieza en el vídeo. subs = subtítulos; cada trozo dura en proporción a sus letras salvo que lleve 'from' (s relativos al inicio del trozo).",
+ "sources": {
+  "narradora": "audio/voces/narradora_carolina.mp3",
+  "marta": "audio/voces/marta_sofia.mp3"
+ },
+ "lines": [
+  {
+   "id": "N1",
+   "voice": "narradora",
+   "in": 0.0,
+   "out": 2.55,
+   "scene": 1,
+   "at": 0.2,
+   "subs": [
+    "Marta acaba de comprar unos zapatos online."
+   ]
+  },
+  {
+   "id": "N2",
+   "voice": "narradora",
+   "in": 2.7,
+   "out": 5.4,
+   "scene": 2,
+   "at": 0.2,
+   "subs": [
+    {
+     "t": "Está feliz.",
+     "from": 0
+    },
+    {
+     "t": "¡Los estrena el sábado!",
+     "from": 0.98
+    }
+   ]
+  },
+  {
+   "id": "M1",
+   "voice": "marta",
+   "in": 0.0,
+   "out": 0.52,
+   "scene": 3,
+   "at": 1.9,
+   "subs": [
+    "¿Eh?"
+   ]
+  },
+  {
+   "id": "M2",
+   "voice": "marta",
+   "in": 0.64,
+   "out": 3.92,
+   "scene": 5,
+   "at": 0.2,
+   "subs": [
+    {
+     "t": "¿Los mismos…",
+     "from": 0.0
+    },
+    {
+     "t": "¿…con un 30 % de descuento?",
+     "from": 1.22
+    }
+   ]
+  },
+  {
+   "id": "N3",
+   "voice": "narradora",
+   "in": 5.56,
+   "out": 9.17,
+   "scene": 6,
+   "at": 0.1,
+   "subs": [
+    {
+     "t": "Con Escaparate de Tudela,",
+     "from": 0
+    },
+    {
+     "t": "esos descuentos ya no se te escapan.",
+     "from": 1.4
+    }
+   ]
+  },
+  {
+   "id": "N4",
+   "voice": "narradora",
+   "in": 9.38,
+   "out": 14.55,
+   "scene": 7,
+   "at": 0.3,
+   "subs": [
+    {
+     "t": "Los comercios de Tudela",
+     "from": 0
+    },
+    {
+     "t": "publican sus ofertas y novedades,",
+     "from": 1.15
+    },
+    {
+     "t": "y te llevan sus escaparates al móvil.",
+     "from": 3.05
+    }
+   ]
+  },
+  {
+   "id": "N5",
+   "voice": "narradora",
+   "in": 14.72,
+   "out": 20.95,
+   "scene": 8,
+   "at": 0.2,
+   "subs": [
+    {
+     "t": "Entra en escaparatetudela.es",
+     "from": 0
+    },
+    {
+     "t": "o comenta «instante»,",
+     "from": 2.27
+    },
+    {
+     "t": "y te mandamos el enlace al canal de WhatsApp.",
+     "from": 3.82
+    }
+   ]
+  },
+  {
+   "id": "M3",
+   "voice": "marta",
+   "in": 4.06,
+   "out": 5.5,
+   "scene": 9,
+   "at": 0.3,
+   "subs": [
+    "¡Que no se te escape!"
+   ]
+  }
+ ]
+}
