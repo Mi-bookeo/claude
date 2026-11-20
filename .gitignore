@@ -1,0 +1,5 @@
+node_modules/
+frames/
+tmp/
+*.partial.mp4
+concat_list.txt

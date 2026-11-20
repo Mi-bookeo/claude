@@ -1,0 +1,17 @@
+{
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
+  "scenes": [
+    { "id": 1, "name": "Marta camina por la calle", "duration": 3.0, "still": 2.0 },
+    { "id": 2, "name": "Mira el móvil: pedido confirmado", "duration": 3.0, "still": 2.2 },
+    { "id": 3, "name": "Frenada ante TUS PIES", "duration": 3.0, "still": 2.4 },
+    { "id": 4, "name": "Zoom al escaparate -30% ¡DING!", "duration": 2.5, "still": 1.6 },
+    { "id": 5, "name": "Sorpresa ?!", "duration": 3.5, "still": 1.5 },
+    { "id": 6, "name": "Logo: Ya no se te escapan", "duration": 4.0, "still": 3.0 },
+    { "id": 7, "name": "La web en el móvil", "duration": 7.0, "still": 6.0 },
+    { "id": 8, "name": "Comenta INSTANTE", "duration": 7.0, "still": 5.0 },
+    { "id": 9, "name": "Guiño y tarjeta final", "duration": 3.0, "still": 2.6, "cut": 1.6 }
+  ]
+}
