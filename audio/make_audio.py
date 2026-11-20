@@ -257,16 +257,16 @@ def main():
     write_wav(os.path.join(A, 'efectos.wav'), fx)
     print('efectos sintetizados (básicos) -> audio/efectos.wav')
 
-    vo = np.zeros(N); missing = []; cursor = {}; report = []
+    vo = np.zeros(N); missing = []; cursor = {}; report = []; last_end = -1.0
     for stem, sc in VOICES:
         p = find_voice(stem)
         if not p: missing.append(stem); continue
         x = read_any(p)
         nz = np.where(np.abs(x) > 0.01)[0]
         if len(nz): x = x[max(0, nz[0] - 240): nz[-1] + 2400]   # recorta silencios
-        t0 = cursor.get(sc, starts[sc] + LEAD)
+        t0 = max(cursor.get(sc, starts[sc] + (0.05 if sc == 1 else LEAD)), last_end + 0.2)  # nunca se solapan dos frases
         add(vo, x, t0)
-        t1 = t0 + len(x) / SR; cursor[sc] = t1 + GAP
+        t1 = t0 + len(x) / SR; cursor[sc] = t1 + GAP; last_end = t1
         report.append((stem, sc, t0, t1, t1 > ends[sc] + 1e-3))
     for stem, sc, t0, t1, over in report:
         print(f'  {stem:12s} escena {sc:2d}: {t0:6.2f} -> {t1:6.2f} s' + ('   ¡se pasa del final de la escena (%.2f s)!' % ends[sc] if over else ''))
