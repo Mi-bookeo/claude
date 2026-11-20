@@ -643,7 +643,7 @@ S[8] = (t, T) => {
     armF: lerp(4, -20, lift), armB: -6
   });
   s += sadCloud(M8.lx - 10, 470, (1 - easeOut((t - 0.95) / 0.25)) * (t < 1.2 ? 1 : 0) * pop(t, -1, 0.3), t);
-  s += mark('?', M8.lx + 165, 620, pop(t, 1.3, 0.5), 12 + 5 * Math.sin(t * 5), 210, '#FFFFFF');
+  s += mark('?', M8.lx + 165, 620, pop(t, 3.15, 0.5), 12 + 5 * Math.sin(t * 5), 210, '#FFFFFF');
   return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
 };
 
@@ -663,15 +663,15 @@ S[9] = (t, T) => {
   s += thoughtCloud(370, 395, 250, 165, kc);
   s += at(370, 395, kc * (1 + 0.05 * Math.sin(t * 7)), logoIcon(0, 0, 270));
   // Lucía con el pastel: abre mucho los ojos
-  const wow = t > 1.35;
-  const jump = wow ? Math.max(0, Math.sin(clamp((t - 1.35) / 0.35) * PI)) * 45 : 0;
+  const wow = t > 2.95;
+  const jump = wow ? Math.max(0, Math.sin(clamp((t - 2.95) / 0.35) * PI)) * 45 : 0;
   s += shadowEll(M8.lx, M8.y, 125);
   s += place(M8.lx, M8.y - jump, 190, 204, M8.sc, {
     who: 'lucia', flip: true, expr: wow ? 'wow' : 'doubt', look: wow ? [0.4, -0.3] : [0.8, 0.4], head: wow ? -6 : -2,
     armF: -42, armB: wow ? -30 : -6, legF: wow ? -10 : 0, legB: wow ? 12 : 0,
     handF: w => cupcakeL(203, 138, 1.2, w) + hand(202.5, 140, w)
   });
-  s += mark('!', M8.lx + 170, 600, pop(t, 1.4, 0.45), -8 + 4 * Math.sin(t * 6), 230);
+  s += mark('!', M8.lx + 170, 600, pop(t, 3.0, 0.45), -8 + 4 * Math.sin(t * 6), 230);
   return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
 };
 

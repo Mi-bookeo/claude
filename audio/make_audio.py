@@ -326,12 +326,12 @@ add(fx, sad_trombone(), T(7, 1.6), 0.18)
 add(fx, whoosh(0.3), T(7, 2.0), 0.35)
 # 8) brillo del pastel y «?»
 add(fx, bell(2640, 1.0, 3.5), T(8, 0.55), 0.16)
-add(fx, boing(), T(8, 1.3), 0.35)
+add(fx, boing(), T(8, 3.15), 0.35)
 # 9) dedo, nube de pensamiento, «!»
 add(fx, bell(3136, 0.8, 4.0), T(9, 0.2), 0.15)
 add(fx, plop(300, 900, 0.14), T(9, 0.55), 0.5)
-add(fx, pop(1200, 500, 0.08), T(9, 1.4), 0.4)
-add(fx, boing(0.3), T(9, 1.35), 0.25)
+add(fx, pop(1200, 500, 0.08), T(9, 3.0), 0.4)
+add(fx, boing(0.3), T(9, 2.95), 0.25)
 # 10) móvil, mensajes, Lucía saca su móvil
 add(fx, whoosh(0.3), T(10, 0.08), 0.35)
 add(fx, pop(900, 420, 0.1), T(10, 0.3), 0.3)
