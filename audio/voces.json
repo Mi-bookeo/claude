@@ -1,37 +1,40 @@
 {
- "_nota": "in/out = tramo del archivo de voces (s), localizado por silencios y sílabas. at = desfase dentro de la escena 'scene'. subs con 'from' = segundos desde el inicio del tramo.",
+ "_nota": "in/out = tramo del archivo de voces (s), localizado por silencios y sílabas. at = desfase dentro de la escena 'scene'. subs con 'from' = segundos desde el inicio del tramo. src = clave de 'sources' si el audio no es el de 'voice'.",
  "sources": {
   "narradora": "audio/voces/voces_estela.mp3",
   "marta": "audio/voces/voces_estela.mp3",
   "lucia": "audio/voces/voces_estela.mp3",
-  "panadera": "audio/voces/voces_estela.mp3"
+  "panadera": "audio/voces/voces_estela.mp3",
+  "sofia": "audio/voces/marta_sofia_pastelito.mp3",
+  "carolina": "audio/voces/marta_sofia_pastelito.mp3"
  },
  "lines": [
   {
    "id": "01_narradora",
    "voice": "narradora",
-   "in": 0.04,
-   "out": 2.62,
+   "in": 0.15,
+   "out": 4.08,
    "scene": 1,
-   "at": 0.15,
+   "at": 0.1,
    "subs": [
     {
-     "t": "Sábado.",
+     "t": "Sábado lluvioso…",
      "from": 0
     },
     {
-     "t": "Marta no tiene plan.",
-     "from": 1.2
+     "t": "y a Marta le apetece un postre.",
+     "from": 1.93
     }
-   ]
+   ],
+   "src": "carolina"
   },
   {
    "id": "02_narradora",
    "voice": "narradora",
    "in": 2.7,
    "out": 5.9,
-   "scene": 1,
-   "at": 2.75,
+   "scene": 2,
+   "at": 1.12,
    "subs": [
     {
      "t": "Pero ahora está dentro del canal",
@@ -49,7 +52,7 @@
    "in": 13.42,
    "out": 15.89,
    "scene": 3,
-   "at": 0.2,
+   "at": 0.5,
    "subs": [
     {
      "t": "¿Dos por uno en pasteles?",
@@ -104,8 +107,8 @@
   {
    "id": "08_marta",
    "voice": "marta",
-   "in": 16.75,
-   "out": 19.56,
+   "in": 4.35,
+   "out": 8.25,
    "scene": 8,
    "at": 0.25,
    "subs": [
@@ -114,10 +117,11 @@
      "from": 0
     },
     {
-     "t": "Me llevé el último dos por uno.",
-     "from": 1.38
+     "t": "Me llevé el último dos por uno de la promo.",
+     "from": 1.76
     }
-   ]
+   ],
+   "src": "sofia"
   },
   {
    "id": "08_lucia",
@@ -125,7 +129,7 @@
    "in": 27.66,
    "out": 28.37,
    "scene": 8,
-   "at": 3.2,
+   "at": 4.25,
    "subs": [
     "¿Qué promoción?"
    ]

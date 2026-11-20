@@ -643,7 +643,7 @@ S[8] = (t, T) => {
     armF: lerp(4, -20, lift), armB: -6
   });
   s += sadCloud(M8.lx - 10, 470, (1 - easeOut((t - 0.95) / 0.25)) * (t < 1.2 ? 1 : 0) * pop(t, -1, 0.3), t);
-  s += mark('?', M8.lx + 165, 620, pop(t, 3.15, 0.5), 12 + 5 * Math.sin(t * 5), 210, '#FFFFFF');
+  s += mark('?', M8.lx + 165, 620, pop(t, 4.2, 0.5), 12 + 5 * Math.sin(t * 5), 210, '#FFFFFF');
   return cam(zoomIn(t, 0, 1.1, 0.2), 540, 1000, s);
 };
 

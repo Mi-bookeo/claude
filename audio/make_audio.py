@@ -326,7 +326,7 @@ add(fx, sad_trombone(), T(7, 1.6), 0.18)
 add(fx, whoosh(0.3), T(7, 2.0), 0.35)
 # 8) brillo del pastel y «?»
 add(fx, bell(2640, 1.0, 3.5), T(8, 0.55), 0.16)
-add(fx, boing(), T(8, 3.15), 0.35)
+add(fx, boing(), T(8, 4.2), 0.35)
 # 9) dedo, nube de pensamiento, «!»
 add(fx, bell(3136, 0.8, 4.0), T(9, 0.2), 0.15)
 add(fx, plop(300, 900, 0.14), T(9, 0.55), 0.5)

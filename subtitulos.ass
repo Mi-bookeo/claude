@@ -14,25 +14,25 @@ Style: Panadera,Baloo 2 ExtraBold,88,&H00F2E3BF,&H00F2E3BF,&H001A1A1E,&H001A1A1E
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 0,0:00:00.15,0:00:01.30,Narradora,,0,0,0,,{\fad(60,60)}Sábado.
-Dialogue: 0,0:00:01.35,0:00:02.70,Narradora,,0,0,0,,{\fad(60,60)}Marta no tiene plan.
-Dialogue: 0,0:00:02.75,0:00:04.65,Narradora,,0,0,0,,{\fad(60,60)}Pero ahora está dentro del canal
-Dialogue: 0,0:00:04.70,0:00:06.15,Narradora,,0,0,0,,{\fad(60,60)}de Escaparate de Tudela.
-Dialogue: 0,0:00:06.20,0:00:07.88,Marta,,0,0,0,,{\fad(60,60)}¿Dos por uno en pasteles?
-Dialogue: 0,0:00:07.93,0:00:08.93,Marta,,0,0,0,,{\fad(60,60)}¡Corro!
-Dialogue: 0,0:00:13.95,0:00:14.95,Marta,,0,0,0,,{\fad(60,60)}¡Llego!
-Dialogue: 0,0:00:16.95,0:00:19.14,Panadera,,0,0,0,,{\fad(60,60)}Justo los últimos, guapa.
-Dialogue: 0,0:00:20.55,0:00:21.54,Lucia,,0,0,0,,{\fad(60,60)}Vaya…
-Dialogue: 0,0:00:21.59,0:00:22.20,Lucia,,0,0,0,,{\fad(60,60)}cerrado.
-Dialogue: 0,0:00:22.25,0:00:23.58,Marta,,0,0,0,,{\fad(60,60)}Toma, un pastelito.
-Dialogue: 0,0:00:23.63,0:00:25.15,Marta,,0,0,0,,{\fad(60,60)}Me llevé el último dos por uno.
-Dialogue: 0,0:00:25.20,0:00:26.20,Lucia,,0,0,0,,{\fad(60,60)}¿Qué promoción?
-Dialogue: 0,0:00:26.25,0:00:27.61,Marta,,0,0,0,,{\fad(60,60)}Es que no te has enterado:
-Dialogue: 0,0:00:27.66,0:00:29.15,Marta,,0,0,0,,{\fad(60,60)}no estás en el canal.
-Dialogue: 0,0:00:30.25,0:00:31.55,Marta,,0,0,0,,{\fad(60,60)}Tienes un canal para enterarte
-Dialogue: 0,0:00:31.60,0:00:32.85,Marta,,0,0,0,,{\fad(60,60)}de las últimas promociones.
-Dialogue: 0,0:00:32.90,0:00:34.25,Narradora,,0,0,0,,{\fad(60,60)}Ofertas flash, novedades
-Dialogue: 0,0:00:34.30,0:00:35.66,Narradora,,0,0,0,,{\fad(60,60)}y eventos de Tudela,
-Dialogue: 0,0:00:35.71,0:00:37.25,Narradora,,0,0,0,,{\fad(60,60)}al instante en tu móvil.
-Dialogue: 0,0:00:37.30,0:00:38.61,Narradora,,0,0,0,,{\fad(60,60)}Comenta «instante»
-Dialogue: 0,0:00:38.66,0:00:40.27,Narradora,,0,0,0,,{\fad(60,60)}y te mandamos el enlace.
+Dialogue: 0,0:00:00.10,0:00:01.98,Narradora,,0,0,0,,{\fad(60,60)}Sábado lluvioso…
+Dialogue: 0,0:00:02.03,0:00:03.95,Narradora,,0,0,0,,{\fad(60,60)}y a Marta le apetece un postre.
+Dialogue: 0,0:00:04.00,0:00:05.90,Narradora,,0,0,0,,{\fad(60,60)}Pero ahora está dentro del canal
+Dialogue: 0,0:00:05.95,0:00:07.25,Narradora,,0,0,0,,{\fad(60,60)}de Escaparate de Tudela.
+Dialogue: 0,0:00:07.30,0:00:08.98,Marta,,0,0,0,,{\fad(60,60)}¿Dos por uno en pasteles?
+Dialogue: 0,0:00:09.03,0:00:10.03,Marta,,0,0,0,,{\fad(60,60)}¡Corro!
+Dialogue: 0,0:00:14.45,0:00:15.45,Marta,,0,0,0,,{\fad(60,60)}¡Llego!
+Dialogue: 0,0:00:17.45,0:00:19.64,Panadera,,0,0,0,,{\fad(60,60)}Justo los últimos, guapa.
+Dialogue: 0,0:00:21.05,0:00:22.04,Lucia,,0,0,0,,{\fad(60,60)}Vaya…
+Dialogue: 0,0:00:22.09,0:00:22.70,Lucia,,0,0,0,,{\fad(60,60)}cerrado.
+Dialogue: 0,0:00:22.75,0:00:24.46,Marta,,0,0,0,,{\fad(60,60)}Toma, un pastelito.
+Dialogue: 0,0:00:24.51,0:00:26.70,Marta,,0,0,0,,{\fad(60,60)}Me llevé el último dos por uno de la promo.
+Dialogue: 0,0:00:26.75,0:00:27.70,Lucia,,0,0,0,,{\fad(60,60)}¿Qué promoción?
+Dialogue: 0,0:00:27.75,0:00:29.11,Marta,,0,0,0,,{\fad(60,60)}Es que no te has enterado:
+Dialogue: 0,0:00:29.16,0:00:30.65,Marta,,0,0,0,,{\fad(60,60)}no estás en el canal.
+Dialogue: 0,0:00:31.75,0:00:33.05,Marta,,0,0,0,,{\fad(60,60)}Tienes un canal para enterarte
+Dialogue: 0,0:00:33.10,0:00:34.35,Marta,,0,0,0,,{\fad(60,60)}de las últimas promociones.
+Dialogue: 0,0:00:34.40,0:00:35.75,Narradora,,0,0,0,,{\fad(60,60)}Ofertas flash, novedades
+Dialogue: 0,0:00:35.80,0:00:37.16,Narradora,,0,0,0,,{\fad(60,60)}y eventos de Tudela,
+Dialogue: 0,0:00:37.21,0:00:38.75,Narradora,,0,0,0,,{\fad(60,60)}al instante en tu móvil.
+Dialogue: 0,0:00:38.80,0:00:40.11,Narradora,,0,0,0,,{\fad(60,60)}Comenta «instante»
+Dialogue: 0,0:00:40.16,0:00:41.77,Narradora,,0,0,0,,{\fad(60,60)}y te mandamos el enlace.

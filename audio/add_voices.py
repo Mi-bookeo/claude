@@ -44,7 +44,7 @@ src = {k: decode(v) for k, v in vc['sources'].items()}
 voz = np.zeros(N)
 cues = []
 for ln in vc['lines']:
-    a = src[ln['voice']]
+    a = src[ln.get('src', ln['voice'])]
     seg = a[int(ln['in'] * SR):int(ln['out'] * SR)].copy()
     fd = int(0.012 * SR)
     seg[:fd] *= np.linspace(0, 1, fd); seg[-fd:] *= np.linspace(1, 0, fd)
