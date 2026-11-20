@@ -530,7 +530,7 @@ S[5] = (t, T) => {
   w += shadowEll(mx, FOOT, 120);
   w += placeMarta(mx, FOOT, 190, 204, SC, o);
   // panadera en la puerta, preparándose para girar el cartel
-  const bx = 985 + R, reach = easeOut((t - 1.55) / 0.3);
+  const bx = 1010 + R, reach = easeOut((t - 1.55) / 0.3);
   w += shadowEll(bx, FOOT - 60, 110);
   w += place(bx, FOOT - 60, 190, 204, SC * 1.03, { who: 'baker', flip: true, expr: t < 1.7 ? 'happy' : 'cheeky', armF: lerp(-8, -78, reach), armB: 6, head: -4 * reach });
   w += rain(T, -100, 0, W + 100, 1500, 60);
@@ -574,8 +574,8 @@ S[6] = (t, T) => {
   }
   // panadera gira el cartel
   const reach = t < 1.9 ? 0.6 : 1;
-  s += shadowEll(985, FOOT - 60, 110);
-  s += place(985, FOOT - 60, 190, 204, SC * 1.03, { who: 'baker', flip: true, expr: t < 2.2 ? 'happy' : 'wink', armF: lerp(-8, -80, reach) + (flipU > 0 && flipU < 1 ? 10 * Math.sin(flipU * PI) : 0), armB: 6 });
+  s += shadowEll(1010, FOOT - 60, 110);
+  s += place(1010, FOOT - 60, 190, 204, SC * 1.03, { who: 'baker', flip: true, expr: t < 2.2 ? 'happy' : 'wink', armF: lerp(-8, -80, reach) + (flipU > 0 && flipU < 1 ? 10 * Math.sin(flipU * PI) : 0), armB: 6 });
   if (flipU > 0 && flipU < 1) {
     const sg = BK6.sign;
     s += `<path d="M${f(sg.cx - sg.w * 0.62)} ${f(sg.cy - 40)} A${f(sg.w * 0.62)} ${f(sg.w * 0.3)} 0 0 0 ${f(sg.cx + sg.w * 0.62)} ${f(sg.cy - 40)}" fill="none" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round" stroke-dasharray="26 20"/>`;

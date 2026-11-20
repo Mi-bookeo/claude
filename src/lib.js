@@ -393,7 +393,8 @@ function person(o) {
       g = `<rect x="186" y="144" width="7" height="52" rx="3.5" fill="${back ? C.skinS : C.skin}" ${st()}/><path d="M183 196 h15 a5 5 0 0 1 0 8 h-15z" fill="${back ? C.dred : C.red}" ${st()}/>`;
     } else {
       const shoe = isL ? (back ? '#E8DCD8' : '#FFFFFF') : (back ? '#3E281D' : SHOE_BR);
-      g = `<rect x="185" y="142" width="9" height="55" rx="4" fill="${back ? NAVY_S : C.navy}" ${st()}/><path d="M182.5 195.5 h16 a4.5 4.5 0 0 1 0 8.5 h-16z" fill="${shoe}" ${st()}/>` +
+      g = isB ? `<rect x="183" y="142" width="13" height="55" rx="5" fill="${back ? NAVY_S : C.navy}" ${st()}/>` : `<rect x="185" y="142" width="9" height="55" rx="4" fill="${back ? NAVY_S : C.navy}" ${st()}/>`;
+      g += `<path d="M182.5 195.5 h16 a4.5 4.5 0 0 1 0 8.5 h-16z" fill="${shoe}" ${st()}/>` +
         (isL ? `<path d="M183 201 H202" stroke="${INK}" stroke-width="${w(1.4)}"/>` : '');
     }
     return `<g transform="rotate(${f(ang)} 190 146)">${g}</g>`;
@@ -410,12 +411,13 @@ function person(o) {
     const x = back ? 174 : 199;
     if (isM) g = `<rect x="${x}" y="106" width="7" height="34" rx="3.5" fill="${back ? C.skinS : C.skin}" ${st()}/>`;
     else if (isL) g = `<rect x="${x - 0.5}" y="105" width="8" height="32" rx="4" fill="${back ? YEL_S : YEL}" ${st()}/>` + hand(x + 3.5, 139, w, back ? C.skinS : C.skin);
-    else g = `<rect x="${x}" y="110" width="7" height="30" rx="3.5" fill="${back ? C.skinS : C.skin}" ${st()}/><rect x="${x - 1}" y="105" width="9" height="13" rx="4" fill="${back ? '#A32323' : C.red}" ${st()}/>`;
+    else g = `<rect x="${x - 1}" y="110" width="9" height="30" rx="4.5" fill="${back ? C.skinS : C.skin}" ${st()}/><rect x="${x - 2.5}" y="105" width="12" height="14" rx="5" fill="${back ? '#A32323' : C.red}" ${st()}/>`;
     if (!back && o.point) g += `<rect x="201.3" y="140" width="2.8" height="10" rx="1.4" fill="${C.skin}" stroke="${INK}" stroke-width="${w(2)}"/>
       <circle cx="202.5" cy="140.5" r="4.3" fill="${C.skin}" stroke="${INK}" stroke-width="${w(2.2)}"/>
       <path d="M200 138 Q202.5 141 205 138" stroke="${INK}" stroke-width="${w(1.3)}" fill="none" stroke-linecap="round"/>`;
     if (extra) g += `<g transform="rotate(${f(-ang - (o.lean || 0))} ${back ? 177.5 : 202.5} 140)">${extra}</g>`;
-    return `<g transform="rotate(${f(ang)} ${pv[0]} ${pv[1]})">${g}</g>`;
+    const g2 = `<g transform="rotate(${f(ang)} ${pv[0]} ${pv[1]})">${g}</g>`;
+    return isB ? `<g transform="translate(${back ? -6 : 6} 0)">${g2}</g>` : g2;
   };
   let g = '';
   if (o.sit) g += sitLeg(true) + sitLeg(false);
@@ -444,14 +446,14 @@ function person(o) {
     <path d="M175.5 127 Q190 131 205 127" stroke="${INK}" stroke-width="${w(2)}" fill="none" stroke-linecap="round"/>
     <path d="M183 97 Q190 101 197 97" stroke="${INK}" stroke-width="${w(2)}" fill="none" stroke-linecap="round"/>`;
   } else {
-    torso += `<rect x="175" y="130" width="30" height="22" rx="5" fill="${C.navy}" ${st()}/>
-    <path d="M177 98 Q190 93 203 98 L208 138 Q190 142 172 138Z" fill="${C.red}"/>
-    <path d="M177 98 L185 97 L185 141 Q177 140 172 138Z" fill="#A32323"/>
-    <path d="M177 98 Q190 93 203 98 L208 138 Q190 142 172 138Z" fill="none" ${st()}/>
-    <path d="M182 104 H199 L204 160 Q190 163 177 160Z" fill="#FFFFFF" ${st()}/>
-    <path d="M183 104 L185 97 M198 104 L195 97" stroke="${INK}" stroke-width="${w(2.2)}" stroke-linecap="round"/>
-    <rect x="185" y="132" width="11" height="9" rx="2" fill="#FFFFFF" ${st(2)}/>
-    <path d="M180 118 Q172 121 170 127" stroke="${INK}" stroke-width="${w(1.8)}" fill="none" stroke-linecap="round"/>`;
+    torso += `<rect x="168" y="128" width="44" height="24" rx="8" fill="${C.navy}" ${st()}/>
+    <path d="M173 98 Q190 91 207 98 Q216 118 214 140 Q190 147 166 140 Q164 118 173 98Z" fill="${C.red}"/>
+    <path d="M173 98 L182 96 L182 145 Q172 143 166 140 Q164 118 173 98Z" fill="#A32323"/>
+    <path d="M173 98 Q190 91 207 98 Q216 118 214 140 Q190 147 166 140 Q164 118 173 98Z" fill="none" ${st()}/>
+    <path d="M179 104 H201 Q208 128 210 160 Q190 165 170 160 Q172 128 179 104Z" fill="#FFFFFF" ${st()}/>
+    <path d="M180 104 L183 96 M200 104 L197 96" stroke="${INK}" stroke-width="${w(2.2)}" stroke-linecap="round"/>
+    <rect x="183" y="132" width="14" height="10" rx="2.5" fill="#FFFFFF" ${st(2)}/>
+    <path d="M177 118 Q168 121 165 127" stroke="${INK}" stroke-width="${w(1.8)}" fill="none" stroke-linecap="round"/>`;
   }
   // cabeza
   let hd = `<circle cx="190" cy="78" r="14" fill="${C.skin}" ${st()}/>`;

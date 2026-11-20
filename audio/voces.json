@@ -1,0 +1,132 @@
+{
+ "_nota": "in/out = tramo del archivo de voces (s), separado por silencios. voice = narradora | marta | lucia | panadera. at = desfase dentro de la escena. subs = subtítulos (duración proporcional a las letras salvo 'from').",
+ "sources": {
+  "narradora": "audio/voces/voces_estela.mp3",
+  "marta": "audio/voces/voces_estela.mp3",
+  "lucia": "audio/voces/voces_estela.mp3",
+  "panadera": "audio/voces/voces_estela.mp3"
+ },
+ "lines": [
+  {
+   "id": "T01",
+   "voice": "PENDIENTE",
+   "in": 0,
+   "out": 0.95,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T02",
+   "voice": "PENDIENTE",
+   "in": 1.18,
+   "out": 5.93,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T03",
+   "voice": "PENDIENTE",
+   "in": 6.13,
+   "out": 13.29,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T04",
+   "voice": "PENDIENTE",
+   "in": 13.42,
+   "out": 18.0,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T05",
+   "voice": "PENDIENTE",
+   "in": 18.08,
+   "out": 19.6,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T06",
+   "voice": "PENDIENTE",
+   "in": 19.82,
+   "out": 22.51,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T07",
+   "voice": "PENDIENTE",
+   "in": 22.92,
+   "out": 25.52,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T08",
+   "voice": "PENDIENTE",
+   "in": 25.64,
+   "out": 26.32,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T09",
+   "voice": "PENDIENTE",
+   "in": 26.63,
+   "out": 27.17,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T10",
+   "voice": "PENDIENTE",
+   "in": 27.65,
+   "out": 28.42,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  },
+  {
+   "id": "T11",
+   "voice": "PENDIENTE",
+   "in": 28.61,
+   "out": 30.59,
+   "scene": 0,
+   "at": 0.0,
+   "subs": [
+    "PENDIENTE"
+   ]
+  }
+ ]
+}

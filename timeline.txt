@@ -1,0 +1,14 @@
+Marta y el último 2x1 — timeline (1080x1920, 30 fps)
+escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
+01	0.000	3.000	3.000	90	Salón: Marta aburrida, «Sábado»
+02	3.000	6.000	3.000	90	Vibra el móvil: notificación
+03	6.000	9.000	3.000	90	Ojos brillantes, 13:45, «Quedan 15 minutos», salto
+04	9.000	13.000	4.000	120	Carrera bajo la lluvia, reloj 13:45 -> 14:00
+05	13.000	16.000	3.000	90	Derrape ante la panadería: ABIERTO · 2x1 en pasteles
+06	16.000	19.000	3.000	90	Sale con la caja, sale el sol, «Últimos 2x1», CERRADO
+07	19.000	22.000	3.000	90	Lucía ante CERRADO · AGOTADO; Marta aparece
+08	22.000	26.000	4.000	120	Marta le ofrece un pastel; Lucía «?»
+09	26.000	30.000	4.000	120	Marta pillina + nube con el icono del canal; Lucía «!»
+10	30.000	34.000	4.000	120	El canal en el móvil, «Tu canal de promociones»
+11	34.000	41.000	7.000	210	Comenta INSTANTE + web + canal; tarjeta final
+TOTAL	0.000	41.000
