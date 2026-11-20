@@ -756,11 +756,14 @@ S[11] = (t, T, sc) => {
   }
   const u = t - cut;
   let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640, 16, t * 8, C.dred);
-  s += logoBadge(540, 620, 660, 0, pop(u, 0, 0.45));
-  s += at(540, 1065, pop(u, 0.1, 0.45), text('Escaparate', 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }));
-  s += at(540, 1215, pop(u, 0.18, 0.45), text('de Tudela', 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }));
-  const url = 'escaparatetudela.es', us = fit(url, 76, 700);
-  s += at(540, 1385, pop(u, 0.28, 0.45), `<rect x="-380" y="-62" width="780" height="124" rx="62" transform="translate(10 10)" fill="${INK}"/><rect x="-390" y="-62" width="780" height="124" rx="62" fill="${C.dred}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text(url, 0, 2, { size: us, sw: SW * 1.8, sd: 5 }));
+  // logo solo icono (logo.png), grande, sobre disco crema; las letras las pone el vídeo
+  const kl = pop(u, 0, 0.45), bob = 6 * Math.sin(u * 3);
+  s += at(540, 650 + bob, kl, `<circle cx="14" cy="14" r="400" fill="${INK}"/><circle r="400" fill="${C.cream}" stroke="${INK}" stroke-width="${f(SW * 1.2)}"/>` +
+    `<svg x="-370" y="-370" width="740" height="740" viewBox="20 20 460 460"><use href="#logoI"/></svg>`);
+  s += at(540, 1160, pop(u, 0.12, 0.45), text('Escaparate', 0, 0, { size: 145, sw: SW * 2.4, sd: 9 }));
+  s += at(540, 1300, pop(u, 0.2, 0.45), text('de Tudela', 0, 0, { size: 145, sw: SW * 2.4, sd: 9 }));
+  const url = 'escaparatetudela.es', us = fit(url, 70, 680);
+  s += at(540, 1432, pop(u, 0.3, 0.45), `<rect x="-370" y="-52" width="760" height="104" rx="52" transform="translate(10 10)" fill="${INK}"/><rect x="-380" y="-52" width="760" height="104" rx="52" fill="${C.dred}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text(url, 0, 2, { size: us, sw: SW * 1.8, sd: 5 }));
   return s;
 };
 
