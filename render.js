@@ -38,7 +38,8 @@ async function openPage(browser) {
   ];
   const logos = [
     ['logoW', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo_blanco.png')).toString('base64')],
-    ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo_rojo.png')).toString('base64')]
+    ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo_rojo.png')).toString('base64')],
+    ['logoI', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo.png')).toString('base64')]
   ];
   await page.evaluate(([c, f, l]) => window.init(c, f, l), [cfg, fonts, logos]);
   return page;

@@ -729,7 +729,8 @@ S[9] = (t, T, sc) => {
   }
   const u = t - cut;
   let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640, 16, t * 8, C.dred);
-  s += logoBadge(540, 620, 660, 0, pop(u, 0, 0.45));
+  // solo el icono (logo.png), grande; el nombre va debajo como texto
+  s += at(540, 625, pop(u, 0, 0.45), `<svg x="-340" y="-340" width="680" height="680" viewBox="30 23 440 440"><use href="#logoI"/></svg>`);
   s += at(540, 1065, pop(u, 0.1, 0.45), text('Escaparate', 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }));
   s += at(540, 1215, pop(u, 0.18, 0.45), text('de Tudela', 0, 0, { size: 150, sw: SW * 2.4, sd: 9 }));
   const url = 'escaparatetudela.es', us = fit(url, 76, 700);
