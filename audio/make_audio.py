@@ -3,9 +3,9 @@
 
   python3 audio/make_audio.py
 
-1) Voces: audio/voces/<voz>_<n>.(wav|mp3|m4a|ogg|flac), al inicio de su escena según timeline.txt:
-   narradora_1 -> escena 1 (cubre también la 2), narradora_2 -> 3, pedro_1 -> 4, narradora_3 -> 6,
-   pedro_2 -> 7, narradora_4 -> 8.
+1) Voces: audio/voces/<voz>_<n>.(wav|mp3|m4a|ogg|flac) (audio/cortar_voces.py las corta del mp3 original),
+   al inicio de su escena según timeline.txt: narradora_1 -> escena 1 (cubre también la 2), narradora_2 -> 3,
+   pedro_1 -> 4, narradora_3 -> 6, pedro_2 -> 7 (acaba en el «chin» del brindis), narradora_4 -> 8.
 2) Efectos: audio/sfx/<nombre>.wav si existe (mismos nombres que los sintetizados); si no, se sintetizan
    (básicos) -> audio/efectos.wav
 3) Música: audio/musica.mp3 si existe (automatización por escena, ~17 dB por debajo de la voz); si no, sin música.
@@ -289,8 +289,10 @@ def write_wav(path, x):
         w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(st.tobytes())
 def rms_db(x): return 20 * math.log10(max(1e-9, float(np.sqrt(np.mean(x ** 2))))) if len(x) else -180
 
-# (archivo, escena de inicio, última escena que puede cubrir)
-VOICES = [('narradora_1', 1, 2), ('narradora_2', 3, 3), ('pedro_1', 4, 4), ('narradora_3', 6, 6), ('pedro_2', 7, 7), ('narradora_4', 8, 8)]
+# (archivo, escena de inicio, última escena que puede cubrir, momento de la escena en que debe TERMINAR o None)
+# pedro_2 («¡Salud!») se coloca para que acabe justo en el choque de vasos de la escena 7 (t = 3,0 s, BAR.clink en scenes.js)
+VOICES = [('narradora_1', 1, 2, None), ('narradora_2', 3, 3, None), ('pedro_1', 4, 4, None), ('narradora_3', 6, 6, None),
+          ('pedro_2', 7, 7, 3.05), ('narradora_4', 8, 8, None)]
 LEAD = 0.12
 def find_voice(stem):
     for ext in ('wav', 'mp3', 'm4a', 'ogg', 'flac', 'aac'):
@@ -304,13 +306,15 @@ def main():
     print('efectos ' + ('de audio/sfx/ + ' if os.path.isdir(SFX_DIR) else '') + 'sintetizados (básicos) -> audio/efectos.wav')
 
     vo = np.zeros(N); missing = []; last_end = -1.0
-    for stem, sc, sc_end in VOICES:
+    for stem, sc, sc_end, end_at in VOICES:
         p = find_voice(stem)
         if not p: missing.append(stem); continue
         x = read_any(p)
         nz = np.where(np.abs(x) > 0.01)[0]
         if len(nz): x = x[max(0, nz[0] - 240): nz[-1] + 2400]
-        t0 = max(starts[sc] + (0.05 if sc == 1 else LEAD), last_end + 0.2)
+        t0 = starts[sc] + (0.05 if sc == 1 else LEAD)
+        if end_at is not None: t0 = max(t0, starts[sc] + end_at - len(x) / SR)
+        t0 = max(t0, last_end + 0.2)
         add(vo, x, t0); t1 = t0 + len(x) / SR; last_end = t1
         print(f'  {stem:12s} escena {sc}: {t0:6.2f} -> {t1:6.2f} s' + ('   ¡se pasa del final de la escena (%.2f s)!' % ends[sc_end] if t1 > ends[sc_end] else ''))
 
