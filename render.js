@@ -17,6 +17,12 @@ const { chromium } = require('playwright');
 const ROOT = __dirname;
 const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
 const FPS = cfg.fps;
+// Variante (p. ej. VARIANT=canal): cambia la palabra clave y solo re-renderiza sus escenas
+const VARIANT = process.env.VARIANT || '';
+const VAR = VARIANT ? cfg.variants[VARIANT] : null;
+if (VAR) cfg.keyword = VAR.keyword;
+const vsuf = id => (VAR && VAR.scenes.includes(id) ? '_' + VARIANT : '');
+const osuf = VARIANT ? '_' + VARIANT : '';
 const pad = n => String(n).padStart(2, '0');
 
 function sceneTiming() {
@@ -62,8 +68,8 @@ function run(cmd, args, opts = {}) {
 
 async function renderScene(browser, sc) {
   const page = await openPage(browser);
-  const out = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.mp4`);
-  const tmp = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.partial.mp4`);
+  const out = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}${vsuf(sc.id)}.mp4`);
+  const tmp = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}${vsuf(sc.id)}.partial.mp4`);
   const e = cfg.encoder;
   let proc;
   const done = run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error',
@@ -91,7 +97,7 @@ async function stills(browser, ids, dir) {
     const fr = Math.min(sc.frames - 1, Math.round(sc.still * FPS));
     const t = fr / FPS;
     const buf = await frame(page, sc.id, t, sc.start + t);
-    const out = path.join(dir, `still_scene_${pad(sc.id)}.png`);
+    const out = path.join(dir, `still_scene_${pad(sc.id)}${vsuf(sc.id)}.png`);
     fs.writeFileSync(out, buf);
     console.log(`still escena ${sc.id} (t=${t.toFixed(2)} s) -> ${path.relative(ROOT, out) || out}`);
   }
@@ -101,16 +107,16 @@ async function stills(browser, ids, dir) {
 async function concat() {
   const sc = sceneTiming();
   const list = path.join(ROOT, 'concat_list.txt');
-  fs.writeFileSync(list, sc.map(s => `file 'scenes/scene_${pad(s.id)}.mp4'`).join('\n') + '\n');
-  const tmp = path.join(ROOT, 'marta_y_los_zapatos.partial.mp4');
+  fs.writeFileSync(list, sc.map(s => `file 'scenes/scene_${pad(s.id)}${vsuf(s.id)}.mp4'`).join('\n') + '\n');
+  const tmp = path.join(ROOT, `marta_y_los_zapatos${osuf}.partial.mp4`);
   await run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-an', '-movflags', '+faststart', tmp]);
-  fs.renameSync(tmp, path.join(ROOT, 'marta_y_los_zapatos.mp4'));
+  fs.renameSync(tmp, path.join(ROOT, `marta_y_los_zapatos${osuf}.mp4`));
   fs.unlinkSync(list);
   let tl = `Marta y los zapatos — timeline (${cfg.width}x${cfg.height}, ${FPS} fps)\n`;
   tl += `escena\tinicio_s\tfin_s\tduracion_s\tfotogramas\tnombre\n`;
   sc.forEach(s => { tl += `${pad(s.id)}\t${s.start.toFixed(3)}\t${s.end.toFixed(3)}\t${(s.end - s.start).toFixed(3)}\t${s.frames}\t${s.name}\n`; });
   tl += `TOTAL\t0.000\t${sc[sc.length - 1].end.toFixed(3)}\n`;
-  fs.writeFileSync(path.join(ROOT, 'timeline.txt'), tl);
+  if (!VARIANT) fs.writeFileSync(path.join(ROOT, 'timeline.txt'), tl);
   console.log(tl);
 }
 

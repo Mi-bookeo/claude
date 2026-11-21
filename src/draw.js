@@ -674,7 +674,7 @@ S[8] = (t, T) => {
   b += panel(-450, -315, 900, 630, 90);
   b += `<path d="M-296 298 L-366 405 L-190 304Z" fill="#FFFFFF"/>`;
   b += at(0, -150, pop(t, 0.5, 0.5), text('Comenta', 0, 0, { size: 140, fill: INK, stroke: null }));
-  const word = 'INSTANTE', size = fit(word, 200, 800);
+  const word = (CFG.keyword || 'INSTANTE'), size = fit(word, 200, 800);
   const total = measure(word, size);
   let xx = -total / 2;
   for (let i = 0; i < word.length; i++) {
