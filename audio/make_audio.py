@@ -375,8 +375,8 @@ def rms_db(x): return 20 * math.log10(max(1e-9, float(np.sqrt(np.mean(x ** 2))))
 # (archivo, escena). Si una escena tiene dos voces, la segunda va detrás de la primera.
 VOICES = [('narradora_1', 1), ('amiga_1', 2), ('pedro_1', 3), ('pedro_2', 4), ('pedro_3', 5),
           ('pedro_4', 9), ('narradora_2', 10), ('narradora_3', 10)]
-LEAD, GAP = 0.12, 0.12
-LEAD_SC = {1: 0.05, 3: 0.25}   # escena 3: deja sonar el «sting» antes de la voz
+LEAD, GAP = 0.12, 0.08
+LEAD_SC = {1: 0.02, 3: 0.05, 10: 0.03}   # escena 3: la voz entra sobre el «sting»; 10: dos frases en 6 s
 def find_voice(stem):
     for ext in ('wav', 'mp3', 'm4a', 'ogg', 'flac', 'aac'):
         for p in glob.glob(os.path.join(A, 'voces', f'{stem}.{ext}')) + glob.glob(os.path.join(A, 'voces', f'{stem}_*.{ext}')):
