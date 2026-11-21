@@ -18,10 +18,10 @@ S[1] = (t, T) => {
   w += placeFolk(5, p2, 1495, 2.25, Object.assign(walkPose(2 * PI * t / 0.75 + 1, 0.8), { expr: 'smile', handF: phoneHand(202.5, 139.5, { lit: true, card: 1 }) }));
   let s = cam(zoomIn(t, 0, 1.12, 0.22) * lerp(1, 1.07, easeInOut(t / 4)), 540, 1050, w);
   const kl = pop(t, 0.3, 0.6), bob = t > 1 ? 6 * Math.sin((t - 1) * 3) : 0;
-  s += at(540, 410 + bob, 1, `<circle r="232" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}" transform="scale(${f(kl)})"/>`) + logoBadge(540, 410 + bob, 400, lerp(-14, 0, kl), kl, 'logoR');
+  s += at(540, 420 + bob, kl, `<rect x="-232" y="-232" width="464" height="464" rx="64" transform="translate(12 12)" fill="${INK}"/><rect x="-232" y="-232" width="464" height="464" rx="64" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>`, lerp(-14, 0, kl)) + logoBadge(540, 420 + bob, 400, lerp(-14, 0, kl), kl, 'logoR');
   const k1 = pop(t, 1.0, 0.5), k2 = pop(t, 1.2, 0.5);
-  s += big('¿Qué es Escaparate', 540, 715, 118, k1, lerp(-7, -2, k1));
-  s += big('de Tudela?', 540, 845, 150, k2, lerp(7, 2, k2), { fill: C.yel });
+  s += big('¿Qué es Escaparate', 540, 735, 118, k1, lerp(-7, -2, k1));
+  s += big('de Tudela?', 540, 862, 150, k2, lerp(7, 2, k2), { fill: C.yel });
   return s;
 };
 
