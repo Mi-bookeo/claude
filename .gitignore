@@ -4,3 +4,5 @@ tmp/
 *.partial.mp4
 concat_list.txt
 stills_preview/
+audio/mezcla.wav
+audio/voz.wav
