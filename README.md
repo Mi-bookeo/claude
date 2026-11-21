@@ -16,3 +16,8 @@ python3 audio/make_audio.py   # sonido (imagen con -c:v copy)
 - Voces: `audio/voces/narradora_1…5` (wav/mp3/m4a/ogg/flac) → escenas 1, 2, 3, 4 y 6.
 - Efectos: `audio/sfx/<nombre>.wav` si existe; si no, sintetizados (básicos) → `audio/efectos.wav`.
 - Música: `audio/musica.mp3` si existe; si no, música suave sintetizada → `audio/musica_sintetizada.wav` (~17 dB bajo la voz).
+
+## Subtítulos
+```
+python3 audio/subtitulos.py   # .srt/.ass + que_es_escaparate_de_tudela_con_subtitulos.mp4 (incrustados en y 1500-1920)
+```

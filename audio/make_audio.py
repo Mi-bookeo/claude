@@ -318,6 +318,7 @@ def main():
         add(vo, x, t0); t1 = t0 + len(x) / SR; last_end = t1
         print(f'  {stem:12s} escena {sc}: {t0:6.2f} -> {t1:6.2f} s' + ('   ¡se pasa del final de la escena (%.2f s)!' % ends[sc] if t1 > ends[sc] else ''))
 
+    write_wav(os.path.join(A, 'voz.wav'), vo)  # pista de voz ya colocada (para sincronizar subtítulos)
     mus_path = os.path.join(A, 'musica.mp3')
     if os.path.exists(mus_path):
         m = read_any(mus_path); m = np.tile(m, int(np.ceil(N / len(m))))[:N]
