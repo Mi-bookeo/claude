@@ -341,7 +341,7 @@ add(fx, bell(2640, 1.0, 3.5), T(10, 1.75), 0.15)
 add(fx, bell(3520, 0.8, 4.0), T(10, 2.32), 0.10)
 # 11) globo, letras, franja, botón, pájaros, tarjeta final
 add(fx, plop(300, 900, 0.14), T(11, 0.15), 0.55)
-for i in range(8): add(fx, pop(1400 + i * 60, 800, 0.05), T(11, 0.72 + i * 0.07), 0.18)
+for i in range(5): add(fx, pop(1400 + i * 60, 800, 0.05), T(11, 0.72 + i * 0.07), 0.18)
 add(fx, whoosh(0.45), T(11, 1.58), 0.4)
 add(fx, pop(800, 380, 0.1), T(11, 2.55), 0.4)
 add(fx, pop(1000, 500, 0.08), T(11, 3.25), 0.3)

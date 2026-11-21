@@ -5,7 +5,8 @@
   "marta": "audio/voces/voces_estela.mp3",
   "lucia": "audio/voces/voces_estela.mp3",
   "panadera": "audio/voces/voces_estela.mp3",
-  "cambios_22-42": "audio/voces/cambios_narradora_marta.mp3"
+  "cambios_22-42": "audio/voces/cambios_narradora_marta.mp3",
+  "n11_canal": "audio/voces/narradora_11_canal.wav"
  },
  "lines": [
   {
@@ -172,8 +173,8 @@
   {
    "id": "11_narradora",
    "voice": "narradora",
-   "in": 6.13,
-   "out": 13.25,
+   "in": 0.0,
+   "out": 7.26,
    "scene": 10,
    "at": 2.9,
    "subs": [
@@ -190,14 +191,15 @@
      "from": 2.81
     },
     {
-     "t": "Comenta «instante»",
+     "t": "Comenta «canal»",
      "from": 4.4
     },
     {
      "t": "y te mandamos el enlace.",
-     "from": 5.76
+     "from": 5.88
     }
-   ]
+   ],
+   "src": "n11_canal"
   }
  ]
 }

@@ -725,7 +725,7 @@ S[11] = (t, T, sc) => {
     b += panel(-440, -290, 880, 580, 90);
     b += `<path d="M-286 278 L-356 385 L-180 284Z" fill="#FFFFFF"/>`;
     b += at(0, -135, pop(t, 0.4, 0.5), text('Comenta', 0, 0, { size: 135, fill: INK, stroke: null }));
-    const word = 'INSTANTE', size = fit(word, 195, 780);
+    const word = 'CANAL', size = fit(word, 215, 780);
     let xx = -measure(word, size) / 2;
     for (let i = 0; i < word.length; i++) {
       const ch = word[i], cw = measure(ch, size), k = pop(t, 0.7 + i * 0.07, 0.45);

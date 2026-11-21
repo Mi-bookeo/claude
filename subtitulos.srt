@@ -79,10 +79,10 @@ y eventos de Tudela,
 al instante en tu móvil.
 
 21
-00:00:38,800 --> 00:00:40,110
-Comenta «instante»
+00:00:38,800 --> 00:00:40,230
+Comenta «canal»
 
 22
-00:00:40,160 --> 00:00:41,770
+00:00:40,280 --> 00:00:41,910
 y te mandamos el enlace.
 

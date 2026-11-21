@@ -10,5 +10,5 @@ escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
 08	22.500	27.500	5.000	150	Marta le ofrece un pastel; Lucía «?»
 09	27.500	31.500	4.000	120	Marta pillina + nube con el icono del canal; Lucía «!»
 10	31.500	35.500	4.000	120	El canal en el móvil, «Tu canal de promociones»
-11	35.500	42.000	6.500	195	Comenta INSTANTE + web + canal; tarjeta final
+11	35.500	42.000	6.500	195	Comenta CANAL + web + canal; tarjeta final
 TOTAL	0.000	42.000
