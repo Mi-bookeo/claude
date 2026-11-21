@@ -4,7 +4,7 @@
   python3 audio/make_audio.py
 
 1) Voces: audio/voces/<voz>_<n>.(wav|mp3|m4a|ogg|flac) (audio/cortar_voces.py las corta del mp3 original),
-   al inicio de su escena según timeline.txt: narradora_1 -> escena 1 (cubre también la 2), narradora_2 -> 3,
+   al inicio de su escena según timeline.txt: narradora_1 -> escena 1 (cubre también la 2), la 3 sin voz,
    pedro_1 -> 4, narradora_3 -> 6, pedro_2 -> 7 (acaba en el «chin» del brindis), narradora_4 -> 8.
 2) Efectos: audio/sfx/<nombre>.wav si existe (mismos nombres que los sintetizados); si no, se sintetizan
    (básicos) -> audio/efectos.wav
@@ -290,8 +290,9 @@ def write_wav(path, x):
 def rms_db(x): return 20 * math.log10(max(1e-9, float(np.sqrt(np.mean(x ** 2))))) if len(x) else -180
 
 # (archivo, escena de inicio, última escena que puede cubrir, momento de la escena en que debe TERMINAR o None)
+# La escena 3 va sin voz. narradora_4 empieza justo al inicio de la escena 8 (casi 8 s de voz en 8 s de escena).
 # pedro_2 («¡Salud!») se coloca para que acabe justo en el choque de vasos de la escena 7 (t = 3,0 s, BAR.clink en scenes.js)
-VOICES = [('narradora_1', 1, 2, None), ('narradora_2', 3, 3, None), ('pedro_1', 4, 4, None), ('narradora_3', 6, 6, None),
+VOICES = [('narradora_1', 1, 2, None), ('pedro_1', 4, 4, None), ('narradora_3', 6, 6, None),
           ('pedro_2', 7, 7, 3.05), ('narradora_4', 8, 8, None)]
 LEAD = 0.12
 def find_voice(stem):
@@ -312,7 +313,7 @@ def main():
         x = read_any(p)
         nz = np.where(np.abs(x) > 0.01)[0]
         if len(nz): x = x[max(0, nz[0] - 240): nz[-1] + 2400]
-        t0 = starts[sc] + (0.05 if sc == 1 else LEAD)
+        t0 = starts[sc] + (0.05 if sc == 1 else (0.0 if stem == 'narradora_4' else LEAD))
         if end_at is not None: t0 = max(t0, starts[sc] + end_at - len(x) / SR)
         t0 = max(t0, last_end + 0.2)
         add(vo, x, t0); t1 = t0 + len(x) / SR; last_end = t1
