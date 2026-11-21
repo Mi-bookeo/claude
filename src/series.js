@@ -24,7 +24,7 @@ function puff(x, y, r, k) {
 // recorte del icono (móvil + toldo + etiqueta %) de los PNG con letras
 function logoIcon(cx, cy, size, which = 'logoR') {
   const h = size / 2;
-  return `<svg x="${f(cx - h)}" y="${f(cy - h)}" width="${f(size)}" height="${f(size)}" viewBox="150 72 200 200"><use href="#${which}"/></svg>`;
+  return `<svg x="${f(cx - h)}" y="${f(cy - h)}" width="${f(size)}" height="${f(size)}" viewBox="148 80 204 204"><use href="#${which}"/></svg>`;
 }
 function speedLinesH(x, y, len, n, gap, sw = SW) {
   let s = '';

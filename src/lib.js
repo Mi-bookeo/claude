@@ -248,7 +248,7 @@ function itemFn(name) {
   if (name === 'shoes') return (x, y, w, h) => {
     const s = w * 0.62 / 128;
     return `<path d="M${f(x + w * 0.1)} ${f(y + h * 0.86)} H${f(x + w * 0.9)}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linecap="round"/>` +
-      sneakerPair(x + w * 0.48, y + h * 0.86, s, {}) + sticker(x + w * 0.74, y + h * 0.30, w * 0.17, -12);
+      sneakerPair(x + w * 0.48, y + h * 0.86, s, {}) + sticker(x + w * 0.74, y + h * 0.30, w * 0.17, -12, '%');
   };
   return (x, y, w, h) => unitBox(x, y, w, h, ITEMS[name]);
 }

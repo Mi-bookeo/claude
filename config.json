@@ -1,20 +1,16 @@
 {
-  "title": "Rosa y la cola de pasteles",
-  "output": "rosa_y_la_cola_de_pasteles.mp4",
+  "title": "¿Qué es Escaparate de Tudela?",
+  "output": "que_es_escaparate_de_tudela.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
   "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
   "scenes": [
-    { "id": 1, "name": "Fachada a mediodía, reloj por la puerta, «12:00»", "duration": 3.0, "still": 1.3 },
-    { "id": 2, "name": "Rosa mira el reloj, preocupada, «Cierra a las 14:00»", "duration": 3.0, "still": 1.7 },
-    { "id": 3, "name": "Bombilla de idea, móvil y «2x1» con destello", "duration": 3.0, "still": 2.0 },
-    { "id": 4, "name": "Rosa teclea; tarjeta de oferta; Publicar -> Publicada", "duration": 4.0, "still": 3.2, "cut": 1.1 },
-    { "id": 5, "name": "Calle: vibran los móviles, «Y la gente se entera al momento»", "duration": 3.0, "still": 1.8 },
-    { "id": 6, "name": "Todos corren; la cola dobla la esquina; reloj 12:05-12:30, «¡Cola en la puerta!»", "duration": 4.0, "still": 3.7 },
-    { "id": 7, "name": "Rosa despacha a toda velocidad; la vitrina se vacía, «¡Siguiente!»", "duration": 5.0, "still": 3.45 },
-    { "id": 8, "name": "13:50: Marta se lleva la última caja; Rosa gira el cartel a AGOTADO", "duration": 4.0, "still": 2.75 },
-    { "id": 9, "name": "Vitrina vacía, Rosa agotada y feliz, monedas y confeti", "duration": 3.0, "still": 1.8 },
-    { "id": 10, "name": "Llamada a la acción con pájaros + tarjeta final", "duration": 8.0, "still": 4.0, "cut": 6.0 }
+    { "id": 1, "name": "Calle soleada con 4 tiendas; logo y «¿Qué es Escaparate de Tudela?»", "duration": 4.0, "still": 2.0 },
+    { "id": 2, "name": "Móvil del portal; los comercios lanzan Oferta, Novedad y Evento", "duration": 8.0, "still": 6.2 },
+    { "id": 3, "name": "Calle llena de gente; las tarjetas llegan a todos los móviles, «Directo a tu móvil»", "duration": 6.0, "still": 3.2 },
+    { "id": 4, "name": "Móvil en la mano; 3 toques, 3 fachadas y los números 1-2-3, «Con solo 3 toques»", "duration": 6.0, "still": 4.2 },
+    { "id": 5, "name": "Persona con el móvil y burbujas, «Los escaparates de Tudela, en tu mano»", "duration": 3.0, "still": 1.6 },
+    { "id": 6, "name": "Entra a conocernos / ¿Eres comercio? Escríbenos + tarjeta final", "duration": 10.0, "still": 6.6, "swap": 4.0, "cut": 8.0 }
   ]
 }
