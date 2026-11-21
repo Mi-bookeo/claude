@@ -291,6 +291,14 @@ function homeFacade(x, base, w, h, open = 0) {
   return { svg: s, door: { x: dx, y: dy, w: dw, h: dh } };
 }
 
+/* Norma de la serie desde el vídeo 07: «Escaparate de Tudela» escrito en letras aparece como mucho UNA vez por plano.
+   Cuando ya hay texto con el nombre, el logo va sin letras (logo.png). */
+// logo.png (icono sin letras) centrado en (cx,cy); size = lado del cuadro que ocupa el icono
+function logoPng(cx, cy, size, rot = 0, sc = 1) {
+  const h = size / 2;
+  return at(cx, cy, sc, `<svg x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" viewBox="35 28 430 430"><use href="#logoI"/></svg>`, rot);
+}
+
 /* ===================== MÓVIL: AUDIO DE CHAT ===================== */
 // avatar circular genérico (amiga: pelo largo castaño, jersey rosa)
 function avatar(cx, cy, r) {
@@ -379,9 +387,9 @@ function xmasCardLocal(t = 0, o = {}) {
   g += `<g clip-path="url(#${id})"><rect x="${x0}" y="${y0}" width="${Wd}" height="${hh}" fill="${C.red}"/></g>`;
   g += `<line x1="${x0}" y1="${y0 + hh}" x2="${x0 + Wd}" y2="${y0 + hh}" ${st(1)}/>`;
   g += `<rect x="${x0}" y="${y0}" width="${Wd}" height="${Hd}" rx="40" fill="none" ${st(1)}/>`;
-  const ir = hh * 0.36, icx = x0 + 30 + ir, icy = y0 + hh / 2;
-  g += `<rect x="${f(icx - ir)}" y="${f(icy - ir)}" width="${f(ir * 2)}" height="${f(ir * 2)}" rx="${f(ir * 0.42)}" fill="#FFFFFF" ${st(0.8)}/>` + logoIcon(icx, icy + ir * 0.05, ir * 1.85);
-  g += text('Escaparate de Tudela', icx + ir + 20, icy + 2, { size: fit('Escaparate de Tudela', 50, Wd - 2 * ir - 90), anchor: 'start', sw: SW * 1.4, sd: 4 });
+  // franja roja solo con el logo (sin letras: el nombre ya va escrito en el plano)
+  const ir = hh * 0.4, icy = y0 + hh / 2;
+  g += `<rect x="${f(-ir)}" y="${f(icy - ir)}" width="${f(ir * 2)}" height="${f(ir * 2)}" rx="${f(ir * 0.42)}" fill="#FFFFFF" ${st(0.8)}/>` + logoPng(0, icy, ir * 1.8);
   // ilustración
   const iy = y0 + hh + 24, ih = 330;
   g += `<rect x="${x0 + 24}" y="${iy}" width="${Wd - 48}" height="${ih}" rx="26" fill="#DDF0E3" ${st(0.8)}/>`;

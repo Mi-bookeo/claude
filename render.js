@@ -40,7 +40,9 @@ async function openPage(browser) {
   const logos = [
     // logos de la raíz (1000x1000, fondo opaco) con el fondo quitado por tools/key_logos.py
     ['logoW', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_blanco_t.png')).toString('base64')],
-    ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_rojo_t.png')).toString('base64')]
+    ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_rojo_t.png')).toString('base64')],
+    // logo.png: solo el icono, sin letras (500x500, transparente)
+    ['logoI', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo.png')).toString('base64')]
   ];
   await page.evaluate(([c, f, l]) => window.init(c, f, l), [cfg, fonts, logos]);
   return page;

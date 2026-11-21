@@ -191,7 +191,7 @@ S[4] = (t, T) => {
   w += thinkCloud(470, 905 + fl, 860, 600, kc);
   w += xmasCard(470, 935 + fl, 0.56 * kc, lerp(-12, -3, kc) + Math.sin(t * 1.8), t, { kSeal: pop(t, P4.snap + 0.6, 0.5) });
   const kl = pop(t, P4.snap + 0.45, 0.55);
-  w += at(470, 600 + fl * 0.6, kl, `<circle cx="10" cy="10" r="112" fill="${INK}"/><circle r="112" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>` + logoBadge(0, 4, 182, 0, 1, 'logoR'), lerp(14, 4, kl));
+  w += at(470, 600 + fl * 0.6, kl, `<circle cx="10" cy="10" r="112" fill="${INK}"/><circle r="112" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>` + logoPng(0, 2, 175), lerp(14, 4, kl));
   if (t > P4.snap + 0.6) {
     const ks = pop(t, P4.snap + 0.6, 0.35) * (1 + 0.25 * Math.sin(t * 16));
     w += sparkle(600, 520, 34, ks) + sparkle(345, 540, 22, pop(t, P4.snap + 0.7, 0.35) * (1 + 0.2 * Math.sin(t * 13)));
@@ -509,11 +509,11 @@ S[10] = (t, T, sc) => {
     s += sparkle(975, 620, 26, pop(t, 1.0, 0.4) * (1 + 0.2 * Math.sin(t * 13 + 1)));
     return cam(zoomIn(t, 0, 1.1, 0.2), 540, 800, s);
   }
-  // tarjeta final: fondo rojo, logo blanco, «Escaparate de Tudela» y la web
+  // tarjeta final: fondo rojo, logo sin letras (logo.png), «Escaparate de Tudela» y la web
   const u = t - cut;
   let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640, 16, t * 8, '#C62828');
   const kl = pop(u, 0, 0.45), bob = 6 * Math.sin(u * 3);
-  s += logoBadge(540, 620 + bob, 700, lerp(-10, 0, kl), kl, 'logoW');
+  s += logoPng(540, 640 + bob, 640, lerp(-10, 0, kl), kl);
   s += big('Escaparate de Tudela', 540, 1090, 104, pop(u, 0.15, 0.45), 0);
   const url = 'escaparatetudela.es', us = fit(url, 78, 720);
   s += at(540, 1250, pop(u, 0.3, 0.45), `<rect x="-400" y="-58" width="800" height="116" rx="58" transform="translate(10 10)" fill="${INK}"/><rect x="-400" y="-58" width="800" height="116" rx="58" fill="${C.dred}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text(url, 0, 2, { size: us, sw: SW * 1.8, sd: 5 }));
