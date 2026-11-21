@@ -1,0 +1,13 @@
+Pedro y el amigo invisible — timeline (1080x1920, 30 fps)
+escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
+01	0.000	4.000	4.000	120	Casa de Pedro: se coloca el cuello y se peina frente al espejo; «Cena de cuadrilla · 21:00»
+02	4.000	8.000	4.000	120	Móvil vibrando sobre la mesa: audio de la cuadrilla sonando; «Nuevo audio»
+03	8.000	11.000	3.000	90	Zoom rápido a la cara de pánico; «¡EL AMIGO INVISIBLE!»
+04	11.000	15.000	4.000	120	Chasquido, cara iluminada, nube con la oferta y el logo; «¡Lo vi en Escaparate de Tudela!»
+05	15.000	20.000	5.000	150	Teclea rápido: carrusel a toda velocidad que se para con «¡PUM!» en la oferta de 10 €
+06	20.000	25.000	5.000	150	Sale corriendo de casa al atardecer con luces de Navidad, tropieza y sigue; «¡Que cierra!»
+07	25.000	29.000	4.000	120	Tienda REGALOS: frena en la puerta (campanilla); dentro coge una caja, paga y sale con la bolsa
+08	29.000	34.000	5.000	150	Bar con la cuadrilla: entra Pedro con la bolsita, todos se giran y alzan los brazos
+09	34.000	38.000	4.000	120	Se acerca a cámara, guiña un ojo y levanta la bolsa; «¡Noche salvada!»
+10	38.000	44.000	6.000	180	Atardecer con pájaros: «Las mejores ofertas de Tudela» + web; tarjeta final roja
+TOTAL	0.000	44.000

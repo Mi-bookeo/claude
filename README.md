@@ -10,3 +10,11 @@ Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18), sin audio ni subtítulos, 44 
 node render.js stills 2,5,8   # fotogramas de prueba
 node render.js all            # escenas + stills + concatenado + timeline
 ```
+
+## Sonido
+```
+python3 audio/make_audio.py   # efectos + voces + música -> pedro_amigo_invisible_con_audio.mp4 (imagen con -c:v copy)
+```
+- Voces: `audio/voces/<voz>_<n>.(wav|mp3|…)` → narradora_1 (1), amiga_1 (2), pedro_1 (3), pedro_2 (4), pedro_3 (5), pedro_4 (9), narradora_2 + narradora_3 (10).
+- Efectos: `audio/sfx/<nombre>.wav` si existe; si no, sintetizados (básicos) → `audio/efectos.wav`.
+- Música: `audio/musica.mp3` si existe (automatización por escena, ~17 dB bajo la voz); si no, sin música.
