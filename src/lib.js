@@ -336,6 +336,13 @@ function face(o, w) {
     case 'doubt':
       return P(196, 81) + P(203, 80.6) + L('M194 76 L198 75.6') + L('M200.8 73.6 Q203 71.6 205.4 73.8', 1.7) + blush(0.45) +
         L('M197.2 88.4 Q198.8 87 200.4 88.4 Q202 89.8 203.6 88.4', 1.9);
+    case 'curious': // (vídeo 08) cejas muy arriba, ojos atentos, boquita en «o»
+      return P(196, 81, 2.3) + P(203, 81, 2.3) + L('M193.4 74.2 Q195.8 71.8 198.2 73.6 M200.6 73.4 Q203 71.6 205.4 73.8', 1.7) + blush(0.5) +
+        `<ellipse cx="200.6" cy="88.2" rx="1.7" ry="2.1" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.4)}"/>`;
+    case 'meh': // (vídeo 08) indiferente, «ya vendré»: párpados a media asta, media sonrisa ladeada
+      return `<path d="M194 81 A2 2 0 0 0 198 81Z M201 81 A2 2 0 0 0 205 81Z" fill="${INK}"/>` +
+        L('M193.8 80.8 H198.2 M200.8 80.8 H205.2', 1.5) + L('M194 76.6 L198 76.4 M201 75.2 Q203 74.2 205.2 75.4') +
+        blush(0.4) + L('M196.6 88.6 Q200.6 89.4 204.4 86.8', 2);
     case 'smile':
       return P(196, 81) + P(203, 81) + L('M194 76 L198 75 M201 75 L205 76') + blush() +
         `<path d="M195.6 86 Q200 93 204.4 86 Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.6)}" stroke-linejoin="round"/>`;
