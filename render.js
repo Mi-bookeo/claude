@@ -38,9 +38,9 @@ async function openPage(browser) {
     ['Bangers', 400, fs.readFileSync(path.join(ROOT, 'fonts', 'Bangers-Regular.ttf')).toString('base64')]
   ];
   const logos = [
-    ['logoW', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo_blanco.png')).toString('base64')],
-    ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo_rojo.png')).toString('base64')],
-    ['logoI', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo.png')).toString('base64')]
+    // logos de la raíz (1000x1000, fondo opaco) con el fondo quitado por tools/key_logos.py
+    ['logoW', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_blanco_t.png')).toString('base64')],
+    ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_rojo_t.png')).toString('base64')]
   ];
   await page.evaluate(([c, f, l]) => window.init(c, f, l), [cfg, fonts, logos]);
   return page;

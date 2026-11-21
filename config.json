@@ -1,19 +1,20 @@
 {
-  "title": "Mari Carmen y los bolsos",
-  "output": "mari_carmen_y_los_bolsos.mp4",
+  "title": "Pedro y el amigo invisible",
+  "output": "pedro_amigo_invisible.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
   "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
   "scenes": [
-    { "id": 1, "name": "Fachada de la tienda DETALLE, calle tranquila; «DETALLE · Complementos»", "duration": 4.0, "still": 2.0 },
-    { "id": 2, "name": "Zoom al escaparate: 4 bolsos; la mano pega el cartel «%», destello y «¡clac!»", "duration": 4.0, "still": 2.25 },
-    { "id": 3, "name": "Interior vacío: Mari Carmen expectante, golpetea el mostrador; «Y ahora… a esperar»", "duration": 3.0, "still": 1.6 },
-    { "id": 4, "name": "Saca el móvil del delantal y teclea con los dos pulgares; sale el logo", "duration": 4.0, "still": 2.6 },
-    { "id": 5, "name": "Primer plano del móvil: tarjeta de oferta, «Publicar» -> tic verde «Publicada»; Mari Carmen satisfecha", "duration": 5.0, "still": 2.6, "swap": 3.4 },
-    { "id": 6, "name": "Calle llena de gente: vibración, sacan el móvil, bolso rosa con «%»; «Directo a su móvil»", "duration": 4.0, "still": 2.6 },
-    { "id": 7, "name": "Entra una clienta (campanilla) y saluda; señas, «¡cha-ching!» y pulgar arriba", "duration": 5.0, "still": 3.6 },
-    { "id": 8, "name": "Móvil grande sobre el cielo con la web (carrusel) y la mano; «Ofertas y novedades…»", "duration": 4.0, "still": 2.2 },
-    { "id": 9, "name": "¿Tienes un negocio? Escríbenos + sobre con el correo; tarjeta final roja", "duration": 8.0, "still": 3.0, "cut": 6.0 }
+    { "id": 1, "name": "Casa de Pedro: se coloca el cuello y se peina frente al espejo; «Cena de cuadrilla · 21:00»", "duration": 4.0, "still": 1.2 },
+    { "id": 2, "name": "Móvil vibrando sobre la mesa: audio de la cuadrilla sonando; «Nuevo audio»", "duration": 4.0, "still": 1.95 },
+    { "id": 3, "name": "Zoom rápido a la cara de pánico; «¡EL AMIGO INVISIBLE!»", "duration": 3.0, "still": 1.2 },
+    { "id": 4, "name": "Chasquido, cara iluminada, nube con la oferta y el logo; «¡Lo vi en Escaparate de Tudela!»", "duration": 4.0, "still": 2.8 },
+    { "id": 5, "name": "Teclea rápido: carrusel a toda velocidad que se para con «¡PUM!» en la oferta de 10 €", "duration": 5.0, "still": 3.3 },
+    { "id": 6, "name": "Sale corriendo de casa al atardecer con luces de Navidad, tropieza y sigue; «¡Que cierra!»", "duration": 5.0, "still": 2.45 },
+    { "id": 7, "name": "Tienda REGALOS: frena en la puerta (campanilla); dentro coge una caja, paga y sale con la bolsa", "duration": 4.0, "still": 2.75, "cut": 1.2 },
+    { "id": 8, "name": "Bar con la cuadrilla: entra Pedro con la bolsita, todos se giran y alzan los brazos", "duration": 5.0, "still": 3.0 },
+    { "id": 9, "name": "Se acerca a cámara, guiña un ojo y levanta la bolsa; «¡Noche salvada!»", "duration": 4.0, "still": 2.6 },
+    { "id": 10, "name": "Atardecer con pájaros: «Las mejores ofertas de Tudela» + web; tarjeta final roja", "duration": 6.0, "still": 2.5, "cut": 4.0 }
   ]
 }
