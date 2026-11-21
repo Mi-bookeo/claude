@@ -1,18 +1,19 @@
 {
-  "title": "Pedro y el plan de viernes",
-  "output": "pedro_y_el_plan_de_viernes.mp4",
+  "title": "Mari Carmen y los bolsos",
+  "output": "mari_carmen_y_los_bolsos.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
   "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
   "scenes": [
-    { "id": 1, "name": "Pedro sale de la oficina, cansado; «Viernes, 17:55»", "duration": 3.0, "still": 1.6 },
-    { "id": 2, "name": "Camina cansado por la calle; signos ? y nube vacía; «Sin ningún plan»", "duration": 3.0, "still": 2.2 },
-    { "id": 3, "name": "El móvil vibra y sale la notificación", "duration": 3.0, "still": 2.0 },
-    { "id": 4, "name": "Primer plano: oferta flash con sello «Flash 18-20 h»; sonrisa lenta", "duration": 4.0, "still": 3.0 },
-    { "id": 5, "name": "Nube de pensamiento con el bar «LA TORTILLA»; ojos brillantes", "duration": 3.0, "still": 1.8 },
-    { "id": 6, "name": "«Ahora Pedro ya tiene plan»: pulgar arriba y anda decidido", "duration": 3.0, "still": 0.9 },
-    { "id": 7, "name": "Interior del bar: charla, risas, brindis «¡CHIN!»; «Viernes resuelto»", "duration": 5.0, "still": 3.2 },
-    { "id": 8, "name": "Atardecer: «No te pierdas el mejor plan del día» + web; tarjeta final roja", "duration": 8.0, "still": 3.0, "cut": 6.0 }
+    { "id": 1, "name": "Fachada de la tienda DETALLE, calle tranquila; «DETALLE · Complementos»", "duration": 4.0, "still": 2.0 },
+    { "id": 2, "name": "Zoom al escaparate: 4 bolsos; la mano pega el cartel «%», destello y «¡clac!»", "duration": 4.0, "still": 2.25 },
+    { "id": 3, "name": "Interior vacío: Mari Carmen expectante, golpetea el mostrador; «Y ahora… a esperar»", "duration": 3.0, "still": 1.6 },
+    { "id": 4, "name": "Saca el móvil del delantal y teclea con los dos pulgares; sale el logo", "duration": 4.0, "still": 2.6 },
+    { "id": 5, "name": "Primer plano del móvil: tarjeta de oferta, «Publicar» -> tic verde «Publicada»; Mari Carmen satisfecha", "duration": 5.0, "still": 2.6, "swap": 3.4 },
+    { "id": 6, "name": "Calle llena de gente: vibración, sacan el móvil, bolso rosa con «%»; «Directo a su móvil»", "duration": 4.0, "still": 2.6 },
+    { "id": 7, "name": "Entra una clienta (campanilla) y saluda; señas, «¡cha-ching!» y pulgar arriba", "duration": 5.0, "still": 3.6 },
+    { "id": 8, "name": "Móvil grande sobre el cielo con la web (carrusel) y la mano; «Ofertas y novedades…»", "duration": 4.0, "still": 2.2 },
+    { "id": 9, "name": "¿Tienes un negocio? Escríbenos + sobre con el correo; tarjeta final roja", "duration": 8.0, "still": 3.0, "cut": 6.0 }
   ]
 }
