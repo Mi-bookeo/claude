@@ -183,6 +183,17 @@ function folk(o) {
   if (p.top === 'coat') tor += `<path d="M190 99 V156" stroke="${INK}" stroke-width="${w(1.6)}"/><circle cx="193.5" cy="112" r="1.4" fill="${INK}"/><circle cx="193.5" cy="126" r="1.4" fill="${INK}"/><circle cx="193.5" cy="140" r="1.4" fill="${INK}"/><path d="M184 97 Q190 104 196 97" fill="${C.cream}" ${st(1.8)}/>`;
   if (p.top === 'tee' || p.top === 'dress') tor += `<path d="M184 97.5 Q190 102 196 97.5" stroke="${INK}" stroke-width="${w(1.8)}" fill="none" stroke-linecap="round"/>`;
   if (p.top === 'dress') tor += `<path d="M176 120 Q190 124 204 120" stroke="${INK}" stroke-width="${w(2)}" fill="none" stroke-linecap="round"/>`;
+  // (vídeo 05) camisa a cuadros y delantal de camarero
+  if (p.plaid) {
+    const id = 'pl' + (uid++);
+    let ln = '';
+    for (let x = 172; x < 212; x += 7) ln += `<rect x="${x}" y="90" width="2.6" height="80" fill="${p.plaid}"/>`;
+    for (let y = 102; y < 170; y += 7) ln += `<rect x="168" y="${y}" width="46" height="2.6" fill="${p.plaid}"/>`;
+    tor += `<clipPath id="${id}"><path d="${torso}"/></clipPath><g clip-path="url(#${id})" opacity="0.75">${ln}</g><path d="${torso}" fill="none" ${st()}/>
+      <path d="M184 97.5 L190 104 L196 97.5" fill="none" stroke="${INK}" stroke-width="${w(1.8)}" stroke-linejoin="round"/><circle cx="190" cy="112" r="1.2" fill="${INK}"/><circle cx="190" cy="124" r="1.2" fill="${INK}"/><circle cx="190" cy="136" r="1.2" fill="${INK}"/>`;
+  }
+  if (p.apron) tor += `<path d="M183 98 L186 116 M197 98 L194 116" stroke="${p.apron}" stroke-width="${w(2.4)}" stroke-linecap="round"/>
+    <path d="M181 116 H200 L203 ${bodyLen + 16} Q191 ${bodyLen + 19} 178 ${bodyLen + 16}Z" fill="${p.apron}" ${st()}/><path d="M179 128 H202" stroke="#FFFFFF" stroke-width="${w(1.4)}" opacity="0.5"/>`;
   b += tor;
   if (o.front0) b += o.front0(w);
   b += arm([202, 108], o.armF || 0, false, o.handF ? o.handF(w) : '');
