@@ -1,24 +1,18 @@
-# Pedro y el plan de viernes (vídeo 05 · Escaparate de Tudela)
+# Mari Carmen y los bolsos (vídeo 06 · Escaparate de Tudela)
 
-Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18), sin audio ni subtítulos. Duraciones de escena: `config.json`.
+Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18), 41 s. Duraciones de escena: `config.json`.
 
-- `pedro_y_el_plan_de_viernes.mp4` — vídeo completo sin audio · `scenes/` una escena por archivo · `timeline.txt` · `stills/`
-- `pedro_y_el_plan_de_viernes_con_audio.mp4` — con voces y efectos (sintetizados, básicos); sin música
-- `pedro_y_el_plan_de_viernes_con_subtitulos.mp4` — lo mismo con subtítulos incrustados · `pedro_y_el_plan_de_viernes.srt` / `.ass`
-- Código: `src/lib.js`, `src/series.js`, `src/rosa.js`, `src/v04.js` (piezas de los vídeos 01-04), `src/v05.js` (Pedro y piezas nuevas), `src/scenes.js`
+- `mari_carmen_y_los_bolsos.mp4` — vídeo completo sin audio · `scenes/` una escena por archivo · `timeline.txt` · `stills/`
+- `mari_carmen_y_los_bolsos_con_audio.mp4` — misma imagen (`-c:v copy`) con la pista de sonido
+- Código: `src/lib.js`, `src/series.js`, `src/rosa.js`, `src/v04.js`, `src/v05.js` (piezas de los vídeos 01-05), `src/v06.js` (Mari Carmen y piezas nuevas), `src/scenes.js`
 
 ```
-node render.js stills 4,5,7   # fotogramas de prueba
+node render.js stills 2,5,6   # fotogramas de prueba
 node render.js all            # escenas + stills + concatenado + timeline
 python3 audio/make_audio.py   # sonido (imagen con -c:v copy)
 ```
 
 ## Sonido
-- Voces: `audio/cortar_voces.py` corta los mp3 de `audio/voces/` → narradora_1 (escenas 1-2), pedro_1 (4), narradora_3 (6), pedro_2 (7, acaba en el «chin»), narradora_4 (8). La escena 3 va sin voz.
+- Voces: `audio/voces/<voz>_<n>.(wav|mp3|…)` → narradora_1..4 (escenas 1-4), mari_1 + narradora_5 (5), narradora_6 (6), clienta_1 + mari_2 (7), narradora_7 (8), narradora_8 (9).
 - Efectos: `audio/sfx/<nombre>.wav` si existe; si no, sintetizados (básicos) → `audio/efectos.wav`.
 - Música: `audio/musica.mp3` si existe (automatización por escena, ~17 dB bajo la voz); si no, sin música.
-
-## Subtítulos
-```
-python3 audio/subtitulos.py   # .srt/.ass + vídeo con subtítulos incrustados (y 1540-1800; narradora en blanco, Pedro en amarillo)
-```
