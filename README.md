@@ -14,6 +14,10 @@ python3 audio/make_audio.py   # efectos + voces + música -> dos_carteles_con_au
 ```
 
 ## Sonido
+```
+python3 audio/cortar_voces.py # corta los mp3 de ElevenLabs (audio/voces/original_*.mp3) en una frase por archivo
+python3 audio/make_audio.py
+```
 - Voces: `audio/voces/<voz>_<n>.(wav|mp3|…)` → narradora_1 (1), narradora_2 (2), clienta_1 + narradora_3 (3), narradora_4 (4), clienta_2 + narradora_5 (5), narradora_6 (6), narradora_7 (7), narradora_8 (8).
 - Efectos: `audio/sfx/<nombre>.wav` si existe; si no, sintetizados (básicos) → `audio/efectos.wav`.
 - Música: `audio/musica.mp3` si existe (automatización por escena y redoble en la 4, ~17 dB bajo la voz); si no, sin música.

@@ -414,7 +414,7 @@ def rms_db(x): return 20 * math.log10(max(1e-9, float(np.sqrt(np.mean(x ** 2))))
 VOICES = [('narradora_1', 1), ('narradora_2', 2), ('clienta_1', 3), ('narradora_3', 3), ('narradora_4', 4),
           ('clienta_2', 5), ('narradora_5', 5), ('narradora_6', 6), ('narradora_7', 7), ('narradora_8', 8)]
 LEAD, GAP = 0.12, 0.08
-LEAD_SC = {}
+LEAD_SC = {2: 0.02}   # escena 2: frase larga en 4 s
 VOFF = {}
 def find_voice(stem):
     for ext in ('wav', 'mp3', 'm4a', 'ogg', 'flac', 'aac'):
