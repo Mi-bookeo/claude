@@ -4,7 +4,7 @@
   python3 audio/make_audio.py
 
 1) Voces: audio/voces/<voz>_<n>.(wav|mp3|m4a|ogg|flac), al inicio de su escena según timeline.txt:
-   narradora_1 -> 1; amiga_1 -> 2; pedro_1 -> 3; pedro_2 -> 4; pedro_3 -> 5; pedro_4 -> 9;
+   narradora_1 -> 1; amiga_1 -> 2; pedro_1 -> 3; pedro_2 -> 4; pedro_3 -> 5 (a los 2,75 s, con el «¡PUM!»); pedro_4 -> 9;
    narradora_2 y después narradora_3 -> 10.
 2) Efectos: audio/sfx/<nombre>.wav si existe (mismos nombres que los sintetizados); si no, se sintetizan
    (básicos) -> audio/efectos.wav
@@ -377,6 +377,7 @@ VOICES = [('narradora_1', 1), ('amiga_1', 2), ('pedro_1', 3), ('pedro_2', 4), ('
           ('pedro_4', 9), ('narradora_2', 10), ('narradora_3', 10)]
 LEAD, GAP = 0.12, 0.08
 LEAD_SC = {1: 0.02, 3: 0.05, 10: 0.03}   # escena 3: la voz entra sobre el «sting»; 10: dos frases en 6 s
+VOFF = {'pedro_3': 2.75}   # «¡Ahí está!» con el «¡PUM!» del carrusel (2,75 s de la escena 5)
 def find_voice(stem):
     for ext in ('wav', 'mp3', 'm4a', 'ogg', 'flac', 'aac'):
         for p in glob.glob(os.path.join(A, 'voces', f'{stem}.{ext}')) + glob.glob(os.path.join(A, 'voces', f'{stem}_*.{ext}')):
@@ -395,7 +396,7 @@ def main():
         x = read_any(p)
         nz = np.where(np.abs(x) > 0.01)[0]
         if len(nz): x = x[max(0, nz[0] - 240): nz[-1] + 2400]
-        t0 = max(starts[sc] + LEAD_SC.get(sc, LEAD), last_end + GAP)
+        t0 = max(starts[sc] + VOFF.get(stem, LEAD_SC.get(sc, LEAD)), last_end + GAP)
         add(vo, x, t0); t1 = t0 + len(x) / SR; last_end = t1
         print(f'  {stem:12s} escena {sc}: {t0:6.2f} -> {t1:6.2f} s' + ('   ¡se pasa del final de la escena (%.2f s)!' % ends[sc] if t1 > ends[sc] else ''))
 

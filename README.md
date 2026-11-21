@@ -16,6 +16,6 @@ node render.js all            # escenas + stills + concatenado + timeline
 python3 audio/cortar_voces.py # corta los mp3 de ElevenLabs (audio/voces/original_*.mp3) en una frase por archivo
 python3 audio/make_audio.py   # efectos + voces + música -> pedro_amigo_invisible_con_audio.mp4 (imagen con -c:v copy)
 ```
-- Voces: `audio/voces/<voz>_<n>.(wav|mp3|…)` → narradora_1 (1), amiga_1 (2), pedro_1 (3), pedro_2 (4), pedro_3 (5), pedro_4 (9), narradora_2 + narradora_3 (10).
+- Voces: `audio/voces/<voz>_<n>.(wav|mp3|…)` → narradora_1 (1), amiga_1 (2), pedro_1 (3), pedro_2 (4), pedro_3 (5, a los 2,75 s), pedro_4 (9), narradora_2 + narradora_3 (10).
 - Efectos: `audio/sfx/<nombre>.wav` si existe; si no, sintetizados (básicos) → `audio/efectos.wav`.
 - Música: `audio/musica.mp3` si existe (automatización por escena, ~17 dB bajo la voz); si no, sin música.
