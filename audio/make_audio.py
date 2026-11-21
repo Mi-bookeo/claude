@@ -315,7 +315,8 @@ def rms_db(x): return 20 * math.log10(max(1e-9, float(np.sqrt(np.mean(x ** 2))))
 VOICES = [('narradora_1', 1), ('narradora_2', 2), ('narradora_3', 3), ('narradora_4', 4),
           ('mari_1', 5), ('narradora_5', 5), ('narradora_6', 6), ('clienta_1', 7), ('mari_2', 7),
           ('narradora_7', 8), ('narradora_8', 9)]
-LEAD, GAP = 0.12, 0.2
+LEAD, GAP = 0.12, 0.12
+LEAD_SC = {1: 0.05, 7: 0.05}   # escena 7: clienta_1 + mari_2 (4,8 s de voz en 5 s)
 def find_voice(stem):
     for ext in ('wav', 'mp3', 'm4a', 'ogg', 'flac', 'aac'):
         for p in glob.glob(os.path.join(A, 'voces', f'{stem}.{ext}')) + glob.glob(os.path.join(A, 'voces', f'{stem}_*.{ext}')):
@@ -334,7 +335,7 @@ def main():
         x = read_any(p)
         nz = np.where(np.abs(x) > 0.01)[0]
         if len(nz): x = x[max(0, nz[0] - 240): nz[-1] + 2400]
-        t0 = max(starts[sc] + (0.05 if sc == 1 else LEAD), last_end + GAP)
+        t0 = max(starts[sc] + LEAD_SC.get(sc, LEAD), last_end + GAP)
         add(vo, x, t0); t1 = t0 + len(x) / SR; last_end = t1
         print(f'  {stem:12s} escena {sc}: {t0:6.2f} -> {t1:6.2f} s' + ('   ¡se pasa del final de la escena (%.2f s)!' % ends[sc] if t1 > ends[sc] else ''))
 
