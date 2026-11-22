@@ -123,7 +123,8 @@ S[3] = (t, T, sc) => {
   const headW = m12W(SITX, HOME.seat, 190, 149, SITM, 194, 80);
   if (wow) s += `<g opacity="0.9">${impactLines(headW[0], headW[1], t, 26, 330)}</g>`;
   s += marta12(SITX, HOME.seat, 190, 149, SITM, sitState(T, {
-    expr: wow ? 'shock' : grabbed ? 'surprise' : t >= c.buzz ? 'surprise' : 'pensive', upperRot: lean,
+    expr: wow ? (t < c.wow + 0.7 ? 'shock' : 'sparkle') : grabbed ? 'surprise' : t >= c.buzz ? 'surprise' : 'pensive', upperRot: lean,
+    talk: t >= c.wow + 0.7 ? talkAmt(t, sc.talk) : 0,
     head: wow ? -4 : 0, squash: wow ? [1 + 0.05 * damp(t - c.wow, 20, 6), 1 - 0.05 * damp(t - c.wow, 20, 6)] : null,
     armF, armB: { h: [178, 141], side: 1, hand: 'fist', hs: 1.1 }
   }));
@@ -340,7 +341,7 @@ S[8] = (t, T, sc) => {
     const hop = t >= c.bien ? Math.max(0, Math.sin(PI * clamp((t - c.bien) / 0.4))) * 20 : 0;
     const wave = POSE.wave(2 * PI * (t - c.front) * 2.2);
     front = shadowEll(X2, FAC.base + 4, 80 - hop) + marta12(X2, FAC.base - hop * STM / 3, 190, 204, STM, {
-      expr: 'joy', blink: blink11(T), bob: breath11(T, STM), pony: 6 * Math.sin(2 * PI * T / 1.9), armF: basketArm,
+      expr: 'joy', talk: talkAmt(t, sc.talk), blink: blink11(T), bob: breath11(T, STM), pony: 6 * Math.sin(2 * PI * T / 1.9), armF: basketArm,
       armB: { h: [166, 80], side: 1, hand: 'open', hs: 1.3, hrot: -14 + 14 * Math.sin(2 * PI * (t - c.front) * 2.2) }, head: -3
     }) + hangItem(X2, FAC.base - hop * STM / 3, STM, 3 * Math.sin(T * 3));
     void wave;
@@ -370,7 +371,7 @@ S[9] = (t, T, sc) => {
     s += sparkle(170, 480, 30, 0.6 + 0.4 * Math.sin(T * 8)) + sparkle(920, 1000, 26, 0.6 + 0.4 * Math.sin(T * 7 + 2));
     return s;
   }
-  const c = cues(sc, { title: 0.3, strip: 1.3, sub: 2.2, web: 3.0 });
+  const c = cues(sc, { title: 0.3, pulse: 4.95, strip: 6.15, sub: 7.2, web: 8.3 });
   const M = 8.3, px = 540, py = 1402, AX = 190, AY = 150;
   // cielo, sol, nubes y pájaros
   let s = `<rect width="${W}" height="${H}" fill="${C.sky}"/><rect y="1120" width="${W}" height="${H}" fill="${C.skyL}"/>`;
@@ -395,7 +396,8 @@ S[9] = (t, T, sc) => {
   s += hedge(T);
   s = cam(comicZoom(u, 1.45), 540, 1000, s);
   // textos
-  s += bigT('Apúntate al canal', 540, 262, 116, pop(u, c.title, 0.5), -3, { fill: C.yel });
+  const kt = pop(u, c.title, 0.5) * (u > c.pulse ? 1 + 0.12 * Math.sin(PI * clamp((u - c.pulse) / 0.35)) : 1);
+  s += bigT('Apúntate al canal', 540, 262, 116, kt, -3, { fill: C.yel });
   const ks = pop(u, c.strip, 0.5);
   s += at(540, 400, ks, `<rect x="-470" y="-62" width="940" height="124" rx="26" transform="translate(10 10)" fill="${INK}"/><rect x="-470" y="-62" width="940" height="124" rx="26" fill="${C.red}" ${st12()}/>` +
     text('Comenta CANAL', 0, 4, { size: 96, sw: SW * 2, sd: 6 }), -2);
@@ -404,6 +406,21 @@ S[9] = (t, T, sc) => {
     text('escaparatetudela.es', 0, 2, { size: 42, fill: INK, stroke: null, shadow: false }));
   return s;
 };
+
+/* ---------- subtítulos (solo en la versión subtitulada: node render.js subs) ---------- */
+// franja inferior (y > 1400), hasta dos líneas, letra grande
+function subtitle(T) {
+  const c = SUBS.find(q => T >= q.start - 1e-6 && T < q.end);
+  if (!c) return '';
+  let size = 74, lines = wrapText(c.text, size, 960);
+  while (lines.length > 2 && size > 48) { size -= 4; lines = wrapText(c.text, size, 960); }
+  const lh = size * 1.2, wMax = Math.max(...lines.map(l => measure(l, size)));
+  const bw = Math.min(1050, wMax + 80), bh = lines.length * lh + 44, cy = 1630;
+  let s = `<rect x="${f(540 - bw / 2)}" y="${f(cy - bh / 2)}" width="${f(bw)}" height="${f(bh)}" rx="30" fill="${INK}" fill-opacity="0.86"/>`;
+  const col = c.who === 'marta' ? C.yel : '#FFFFFF';
+  lines.forEach((l, i) => { s += text(l, 540, cy - (lines.length - 1) * lh / 2 + i * lh + size * 0.04, { size, fill: col, sw: size * 0.14, shadow: false }); });
+  return s;
+}
 
 /* ---------- API para el renderizador ---------- */
 window.init = async function (cfg, fonts, logos, subs) {
@@ -429,5 +446,7 @@ window.init = async function (cfg, fonts, logos, subs) {
 window.renderFrame = function (sceneId, t, T) {
   uid = 0;
   const sc = CFG.scenes.find(s => s.id === sceneId);
-  document.getElementById('dyn').innerHTML = S[sceneId](t, T, sc);
+  let s = S[sceneId](t, T, sc);
+  if (SUBS) s += subtitle(T);
+  document.getElementById('dyn').innerHTML = s;
 };

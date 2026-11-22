@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Música de fondo original y suave, sintetizada con código (vídeo 11 «4 motivos para estar en el canal»).
-   Pop alegre a 112 BPM en Do mayor (I-V-vi-IV), con pad, bajo, arpegio tipo marimba, percusión suave
-   y «stingers» (campanita + acorde) al entrar cada número. Estructura leída de config.json:
-     escena 1  alegre y animada · escenas 2-4 ritmo constante + stinger en cada número
-     escena 5  sube con más energía (momento más alto) · escenas 6-7 mantiene y cierra con acorde final.
+"""Música de fondo original y suave, sintetizada con código (vídeo 12 «Marta y la cesta de bebé»).
+   Do mayor a 100 BPM. Estructura leída de config.json (inicio de cada escena y cues):
+     escenas 1-2  tierna y tranquila: pad, cajita de música y bajo suave, sin batería
+     escena 3     sube: golpe de energía (acorde + campanitas + bombo) en la notificación
+     escenas 4-5  ritmo animado y ligero: marimba en corcheas, shaker, bombo y palmas suaves
+     escenas 6-8  alegre y de celebración: melodía, palmas y bombo en cada tiempo
+     escena 9     cierra con energía y baja bajo la voz de Marta; acorde final en la tarjeta.
    Salida: audio/musica.wav (48 kHz, estéreo). Si existe audio/musica.mp3, make_audio.py usa esa en su lugar."""
 import json, os, wave
 import numpy as np
@@ -20,7 +22,7 @@ N = int(TOTAL * SR) + SR
 L = np.zeros(N); R = np.zeros(N)
 rng = np.random.default_rng(11)
 
-BPM = 112.0
+BPM = 100.0
 BEAT = 60 / BPM
 BAR = 4 * BEAT
 mid = lambda m: 440.0 * 2 ** ((m - 69) / 12)
@@ -69,59 +71,60 @@ def clap(g=1.0):
     e = np.exp(-t * 28) + 0.5 * np.exp(-np.maximum(t - 0.012, 0) * 40) * (t > 0.012)
     return np.diff(np.concatenate([[0], w])) * e * 0.18 * g
 
-# intensidad por tramo (0..1) según la escena
+# ---------- estructura ----------
 def section(t):
     for i in range(len(starts) - 1, -1, -1):
         if t >= starts[i]: return i + 1
     return 1
-ENERGY = {1: 0.8, 2: 0.7, 3: 0.7, 4: 0.72, 5: 1.0, 6: 0.85, 7: 0.85}
-
-end_music = TOTAL - 2.0  # tarjeta final: acorde que se sostiene
-nb = int(end_music / BEAT) + 1
+cue = lambda i, k, d: cfg['scenes'][i - 1].get('cues', {}).get(k, d)
+TENDER = [(48, [60, 64, 67]), (45, [57, 60, 64]), (41, [57, 60, 65]), (43, [59, 62, 67])]   # C Am F G
+LIVELY = [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [57, 60, 64]), (41, [57, 60, 65])]   # C G Am F
+fin = starts[8] + cfg['scenes'][8]['shots']['FIN'][0]
+hit = starts[2] + cue(3, 'notif', 0.2)
+nb = int(fin / BEAT) + 1
 for b in range(nb):
     t = b * BEAT
-    if t >= end_music: break
-    sec = section(t); en = ENERGY[sec]
-    bar = int(t / BAR); beat = b % 4
-    root, chord = PROG[bar % 4]
-    up = 12 if sec == 5 else 0
+    if t >= fin: break
+    sec = section(t); bar = int(t / BAR); beat = b % 4
+    if sec <= 2 or (sec == 3 and t < hit):  # tierna
+        root, chord = TENDER[bar % 4]
+        if beat == 0:
+            for k, m in enumerate(chord): add(tone(mid(m), BAR + 0.4, 'pad', a=0.5, d=1.2, s=0.7, r=0.6), t, 0.05, pan=(k - 1) * 0.5)
+            add(tone(mid(root), BAR, 'sine', a=0.05, d=0.8, s=0.5, r=0.3), t, 0.12)
+        seq = [chord[0] + 12, chord[1] + 12, chord[2] + 12, chord[1] + 24]
+        add(tone(mid(seq[beat]), 1.4, 'bell', a=0.003, d=0.5, s=0.0, r=0.3), t, 0.045, pan=0.3 * (1 if beat % 2 else -1))
+        if beat == 2: add(tone(mid(chord[2] + 24), 1.0, 'bell', a=0.003, d=0.4, s=0.0, r=0.3), t + BEAT / 2, 0.025, pan=0.5)
+        continue
+    root, chord = LIVELY[bar % 4]
+    en = {3: 0.8, 4: 0.8, 5: 0.85, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.75}[sec]
+    party = sec in (6, 7, 8)
     if beat == 0:
-        for k, m in enumerate(chord):  # pad
-            add(tone(mid(m + up * 0.0), BAR + 0.3, 'pad', a=0.25, d=1.0, s=0.7, r=0.4), t, 0.05 * en, pan=(k - 1) * 0.5)
+        for k, m in enumerate(chord): add(tone(mid(m), BAR + 0.3, 'pad', a=0.2, d=1.0, s=0.7, r=0.4), t, 0.045 * en, pan=(k - 1) * 0.5)
         add(tone(mid(root), BEAT * 1.8, 'tri', a=0.01, d=0.4, s=0.5, r=0.1), t, 0.16 * en)
-    if beat == 2:
-        add(tone(mid(root + 7 if root < 45 else root), BEAT * 1.6, 'tri', a=0.01, d=0.4, s=0.5, r=0.1), t, 0.12 * en)
-    # arpegio en corcheas
+    if beat == 2: add(tone(mid(root + 7 if root < 45 else root), BEAT * 1.6, 'tri', a=0.01, d=0.4, s=0.5, r=0.1), t, 0.12 * en)
     for h in range(2):
         tt = t + h * BEAT / 2
-        if sec == 1 or sec >= 5 or (sec in (2, 3, 4)):
-            seq = chord + [chord[1] + 12]
-            m = seq[(beat * 2 + h) % 4] + 12 + (12 if sec == 5 and h == 1 else 0)
-            add(tone(mid(m), 0.35, 'marimba', a=0.004, d=0.12, s=0.0, r=0.05), tt, (0.07 if sec != 5 else 0.085) * en, pan=0.35 if h else -0.35)
-        add(shaker(en), tt + 0.002, 0.8 if sec != 1 else 1.0, pan=0.4)
-    # percusión
-    if beat in (0, 2) or sec == 5: add(kick(), t, 0.22 * en)
-    if beat in (1, 3): add(clap(), t, 0.9 * en, pan=-0.1)
-    # melodía en la escena 5 (el momento más alto) y en la 1
-    if sec in (1, 5) and beat in (0, 1, 3):
-        mel = [72, 74, 76, 79, 76, 74, 72, 67][(b // 1) % 8] + (0 if sec == 1 else 5 - 5)
-        add(tone(mid(mel + (12 if sec == 5 else 0)), BEAT * 0.9, 'sine', a=0.02, d=0.25, s=0.4, r=0.1), t, 0.045 * en, pan=0.1)
-
-# stingers al entrar cada número (escenas 2-5): campanita + acorde brillante
-for i in (1, 2, 3, 4):
-    t0 = starts[i] + 0.06
-    for k, m in enumerate([84, 88, 91]):
-        add(tone(mid(m), 1.2, 'bell', a=0.002, d=0.4, s=0.0, r=0.2), t0 + k * 0.05, 0.05 * (1.3 if i == 4 else 1), pan=(k - 1) * 0.4)
-    add(tone(mid(36 + 12), 0.5, 'tri', a=0.005, d=0.2, s=0.2, r=0.1), t0, 0.12)
-# subida antes del motivo 4: redoble suave de shaker y barrido
-for k in range(8):
-    add(shaker(1.4), starts[4] - 0.5 + k * 0.06, 0.6 + k * 0.08)
+        seq = chord + [chord[1] + 12]
+        m = seq[(beat * 2 + h) % 4] + 12 + (12 if party and h == 1 else 0)
+        add(tone(mid(m), 0.35, 'marimba', a=0.004, d=0.12, s=0.0, r=0.05), tt, 0.07 * en, pan=0.35 if h else -0.35)
+        add(shaker(en), tt + 0.002, 0.8, pan=0.4)
+    if beat in (0, 2) or party: add(kick(), t, 0.2 * en)
+    if beat in (1, 3): add(clap(), t, (1.0 if party else 0.7) * en, pan=-0.1)
+    if party and beat in (0, 1, 3):
+        mel = [76, 79, 81, 79, 76, 74, 72, 74][b % 8]
+        add(tone(mid(mel), BEAT * 0.9, 'sine', a=0.02, d=0.25, s=0.4, r=0.1), t, 0.05, pan=0.1)
+# golpe de energía en la notificación (escena 3)
+for k, m in enumerate([72, 76, 79, 84]):
+    add(tone(mid(m), 1.4, 'bell', a=0.002, d=0.5, s=0.0, r=0.3), hit + k * 0.045, 0.06, pan=(k - 1.5) * 0.3)
+    add(tone(mid(m - 12), 1.2, 'pad', a=0.01, d=0.6, s=0.4, r=0.4), hit, 0.05, pan=(k - 1.5) * 0.3)
+add(kick(), hit, 0.35); add(tone(mid(36), 0.8, 'tri', a=0.005, d=0.3, s=0.2, r=0.2), hit, 0.2)
+for k in range(6): add(shaker(1.4), hit - 0.36 + k * 0.06, 0.5 + k * 0.1)
 # cierre: acorde final sostenido en la tarjeta
 for k, m in enumerate([60, 64, 67, 72, 76]):
-    add(tone(mid(m), 2.4, 'pad', a=0.03, d=1.2, s=0.6, r=1.0), end_music, 0.06, pan=(k - 2) * 0.3)
-    add(tone(mid(m + 12), 2.0, 'bell', a=0.002, d=0.6, s=0.0, r=0.4), end_music + k * 0.04, 0.03, pan=(k - 2) * 0.3)
-add(tone(mid(36), 2.0, 'tri', a=0.01, d=0.8, s=0.3, r=0.8), end_music, 0.18)
-add(kick(), end_music, 0.3)
+    add(tone(mid(m), 2.4, 'pad', a=0.03, d=1.2, s=0.6, r=1.0), fin, 0.06, pan=(k - 2) * 0.3)
+    add(tone(mid(m + 12), 2.0, 'bell', a=0.002, d=0.6, s=0.0, r=0.4), fin + k * 0.04, 0.03, pan=(k - 2) * 0.3)
+add(tone(mid(36), 2.0, 'tri', a=0.01, d=0.8, s=0.3, r=0.8), fin, 0.18)
+add(kick(), fin, 0.3)
 
 # eco corto (espacio) y normalización
 def delay(x, ms, g):

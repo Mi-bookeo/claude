@@ -1,33 +1,33 @@
-# 4 motivos para estar en el canal (vídeo 11 · Escaparate Tudela)
+# Marta y la cesta de bebé (vídeo 12 · Escaparate de Tudela)
 
-Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 48,8 s (escenas ajustadas a la voz de Marta). Marta habla a cámara y enumera cuatro motivos
-para estar en el canal (el cuarto, «El mejor»: apoyas al comercio local). Dirigido al público.
+Vídeo vertical 1080x1920, 30 fps, H.264 (libx264, crf 18, yuv420p), 53,0 s. Dirigido al público: Marta busca un regalo
+para la hija recién nacida de su amiga Lucía, le llega una oferta de una farmacia, escribe desde la propia oferta,
+recoge la cesta el viernes e invita a apuntarse al canal.
 
-- `marta_cuatro_motivos.mp4` — vídeo sin audio · `marta_cuatro_motivos_con_audio.mp4` — misma imagen (-c:v copy) + sonido
-- `marta_cuatro_motivos_subtitulado.mp4` — con subtítulos dibujados en la franja inferior + la misma pista de sonido · `marta_cuatro_motivos.srt` y `subtitles.json` — tiempos (`python3 audio/subtitulos.py`, luego `node render.js subs`)
+- `marta_cesta_bebe.mp4` — vídeo sin audio ni subtítulos (franja inferior y > 1400 libre)
+- `marta_cesta_bebe_con_audio.mp4` — misma imagen (-c:v copy) + voces, efectos y música
+- `marta_cesta_bebe_subtitulado.mp4` — con subtítulos dibujados en la franja inferior + la misma pista de sonido;
+  `marta_cesta_bebe.srt` y `subtitles.json` — tiempos de los subtítulos
 - `scenes/` una escena por archivo · `stills/` un fotograma por escena · `timeline.txt` inicio/fin de cada escena
-- `config.json` — duración de cada escena, tramos de los planos (`shots`: A/B/C, P1/P2/FIN) y tramos en que Marta
-  mueve la boca (`talk`), en segundos locales de la escena
-- Código: `src/v11.js` (Marta a cámara, manos y poses, cabecera, números, imágenes insertadas), `src/scenes.js`;
-  piezas de la serie en `src/lib.js`, `src/series.js`, `src/rosa.js`, `src/v04.js`…`src/v10.js`
-- Logos: `logo_rojo.png` (fondos claros: cabecera), `logo_blanco.png` (fondos rojos: tarjeta final); recortes en `assets/`
+- `config.json` — duración de cada escena (único sitio), momentos de aparición (`cues`), planos (`shots`),
+  tramos de boca de Marta (`talk`) y frase de cada escena (`voice`)
+- Código: `src/v12.js` (piezas nuevas: Marta sentada y de medio cuerpo, Lucía con el bebé, salón, portátil,
+  cesta, móvil con oferta y chat, farmacia y farmacéutica), `src/scenes.js`; piezas de la serie en `src/lib.js`,
+  `src/series.js`, `src/rosa.js`, `src/v04.js`…`src/v11.js`
+- Logos: `logo.png` (solo icono) junto al nombre escrito; `logo_rojo.png` / `logo_blanco.png` (recortes en `assets/`)
 
 ```
 node render.js stills 2,5,7     # fotogramas de prueba
-node render.js scenes 3         # volver a renderizar solo una escena
 node render.js all              # escenas + stills + concatenado + timeline
-python3 audio/cortar_voces.py   # corta audio/voces/original_marta.mp3 en marta_1…7 y escribe los tramos «talk» en config.json
-python3 audio/make_audio.py     # voces + efectos + música -> marta_cuatro_motivos_con_audio.mp4 (imagen con -c:v copy)
+python3 audio/cortar_voces.py   # corta las dos grabaciones en narradora_1…4 y marta_1…3 y las coloca en config.json
+python3 audio/make_audio.py     # voces + efectos + música -> marta_cesta_bebe_con_audio.mp4 (imagen con -c:v copy)
+python3 audio/subtitulos.py && node render.js subs   # subtítulos -> tmp/subtitulado_mudo.mp4 (luego se le añade la mezcla)
 ```
 
 ## Sonido
-- Voz original: `audio/voces/original_marta.mp3` (ElevenLabs, «Sofia»), cortada en las 7 frases del guion.
-- Voces: `audio/voces/marta_<n>.(wav|mp3|m4a|ogg|flac)` al inicio de la escena n (1…7), igualadas a -20 dBFS RMS; cada una empieza 0,15 s después del inicio de su escena.
-  Las que falten quedan en silencio (el script avisa). Si una frase dura más que su escena, el script lo indica:
-  ajusta `duration`, `shots` y `talk` de esa escena en `config.json` y ejecuta `node render.js scenes <n>` y
-  `node render.js concat` antes de volver a mezclar.
-- Efectos: `audio/sfx/<nombre>.wav` si existe (pop, pop_s, ding, ting, carton, clac, chaching, guitarra, murmullo,
-  cling, latido, aplausos, risas, confeti, tachan, whoosh); si no, se sintetizan con código (básicos).
+- Voces (ElevenLabs): `audio/voces/original_narradora.mp3` («Carolina Ruiz») y `audio/voces/original_marta.mp3`
+  («Sofia»), cortadas en una frase por archivo. Escenas 5 y 7 sin voz. En las escenas 3 y 8 la frase de Marta empieza
+  a 1,0 s para que «¡Wow!» y «¡Bien!» coincidan con su rótulo; el resto, a 0,15 s del inicio de la escena.
+- Efectos: `audio/sfx/<nombre>.wav` si existe; si no, sintetizados con código (básicos).
 - Música: `audio/musica.mp3` si existe; si no, música original suave sintetizada por `audio/make_music.py`
-  (pop a 112 BPM, stingers en cada número, sube en la escena 5, acorde final en la tarjeta). Queda ~18 dB bajo
-  la voz y baja 2 dB más mientras habla Marta.
+  (tierna en 1-2, golpe de energía en la notificación, animada en 4-5, celebración en 6-8, cierre en 9).

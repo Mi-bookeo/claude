@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Pista de sonido del vídeo 11 y vídeo con audio (la imagen NO se vuelve a codificar: -c:v copy).
-   1) Voces: audio/voces/marta_<n>.(wav|mp3|m4a|ogg|flac) al inicio de la escena n (n = 1..7), igualadas a
-      -20 dBFS RMS. Las que falten quedan en silencio (se avisa). Si una frase es más larga que su escena, se avisa
-      para ajustar config.json (duración, planos y tramos «talk») y volver a renderizar esa escena.
-   2) Efectos: audio/sfx/<nombre>.wav si existe; si no, se sintetizan (básicos) -> audio/efectos.wav.
-   3) Música: audio/musica.mp3 si existe; si no, audio/musica.wav (make_music.py, sintetizada).
-      Queda ~18 dB por debajo de la voz y baja 2 dB más mientras habla Marta.
-   Salida: audio/mezcla.wav y marta_cuatro_motivos_con_audio.mp4 (AAC 192 kb/s)."""
+"""Pista de sonido del vídeo 12 «Marta y la cesta de bebé» y vídeo con audio (la imagen NO se vuelve a codificar: -c:v copy).
+   1) Voces: una frase por escena según config.json ('voice', lo escribe cortar_voces.py), igualadas a -20 dBFS RMS:
+      narradora_1→1, narradora_2→2, marta_1→3, narradora_3→4, (5 sin voz), narradora_4→6, (7 sin voz), marta_2→8, marta_3→9.
+   2) Efectos: audio/sfx/<nombre>.wav si existe; si no, se sintetizan con código (básicos) -> audio/efectos.wav.
+   3) Música: audio/musica.mp3 si existe; si no, audio/musica.wav (make_music.py, sintetizada, suave).
+      Queda ~17 dB por debajo de las voces, baja 3 dB más mientras hay voz y otros 3 dB bajo la voz de Marta en la escena 9.
+   Salida: audio/mezcla.wav y marta_cesta_bebe_con_audio.mp4 (AAC 192 kb/s)."""
 import json, os, subprocess, wave
 import numpy as np
 
@@ -35,14 +34,18 @@ def rms_active(x):
     return np.sqrt((act ** 2).mean()) if len(act) else 0
 
 # ---------------- voces ----------------
-voice = np.zeros(N); missing = []; info = []
-for i in range(1, 8):
-    f = next((A('voces', f'marta_{i}.{e}') for e in ('wav', 'mp3', 'm4a', 'ogg', 'flac') if os.path.exists(A('voces', f'marta_{i}.{e}'))), None)
-    if not f: missing.append(f'marta_{i}'); continue
+# una frase por escena según config.json ('voice': archivo e inicio dentro de la escena; lo escribe cortar_voces.py)
+voice = np.zeros(N); vmask = np.zeros(N); missing = []; info = []
+for i, sc in enumerate(SC, 1):
+    vo = sc.get('voice')
+    if not vo: info.append(f'escena {i}: sin voz (solo efectos)'); continue
+    f = os.path.join(ROOT, vo['file'])
+    if not os.path.exists(f): missing.append(vo['file']); continue
     v = load(f); v *= 10 ** (-20 / 20) / max(rms_active(v), 1e-6)
-    d, sd = len(v) / SR, SC[i - 1]['duration']
-    info.append(f'marta_{i}: {d:.2f} s en escena {i} ({sd:.2f} s)' + ('  <-- MÁS LARGA QUE LA ESCENA: ajusta config.json' if d + 0.15 > sd else ''))
-    a = int((st(i) + SC[i - 1].get('voice', {}).get('start', 0.15)) * SR); voice[a:a + len(v)] += v[: N - a]
+    d = len(v) / SR
+    info.append(f'escena {i}: {os.path.basename(f)} {d:.2f} s desde {st(i) + vo["start"]:.2f} s' + ('  <-- MÁS LARGA QUE LA ESCENA' if vo['start'] + d > sc['duration'] else ''))
+    a_ = int((st(i) + vo['start']) * SR); voice[a_:a_ + len(v)] += v[: N - a_]
+    if 'marta' in vo['file']: vmask[a_:a_ + len(v)] = 1
 if missing: print('AVISO: faltan voces (quedan en silencio):', ', '.join(missing))
 for l in info: print(l)
 
@@ -119,42 +122,99 @@ def syn(name):
         for k in range(len(t)):  # filtro que barre de grave a agudo
             a = 0.02 + 0.25 * (k / len(t)); acc += a * (x[k] - acc); s[k] = acc
         s *= np.sin(np.pi * t / d) ** 2 * 2.2
+    elif name == 'room':  # ambiente tranquilo de casa: rumor grave muy suave
+        d = 5.0; t = t_(d); s = lp(noise(d), 0.01) * 6 + lp(noise(d), 0.08) * 0.25
+        s *= np.minimum(1, t / 0.4) * np.minimum(1, (d - t) / 0.4)
+    elif name == 'clock':  # tic-tac lejano
+        d = 5.0; t = t_(d); s = np.zeros(len(t))
+        for k in range(10):
+            o = 0.3 + k * 0.5; tt = np.maximum(t - o, 0)
+            s += (t >= o) * np.sin(2 * np.pi * (2600 if k % 2 else 2200) * tt) * np.exp(-tt * 300) * (0.8 if k % 2 else 1)
+        s = lp(s, 0.5)
+    elif name == 'keys':  # tecleo suave de portátil
+        d = 1.6; t = t_(d); s = np.zeros(len(t)); o = 0.0
+        while o < d - 0.06:
+            a_ = int(o * SR); n_ = int(0.03 * SR); s[a_:a_ + n_] += hp(rng.standard_normal(n_), 0.3) * np.exp(-np.arange(n_) / SR * 180) * rng.uniform(0.5, 1)
+            o += rng.uniform(0.07, 0.16)
+        s = lp(s, 0.4)
+    elif name == 'scroll':  # rueda del ratón: trinquete
+        d = 0.9; t = t_(d); s = np.zeros(len(t))
+        for k in range(16):
+            o = k * 0.05; a_ = int(o * SR); n_ = int(0.008 * SR); s[a_:a_ + n_] += hp(rng.standard_normal(n_), 0.5) * np.exp(-np.arange(n_) / SR * 600)
+    elif name == 'buzz':  # vibración del móvil: dos zumbidos
+        d = 1.0; t = t_(d); g = ((t % 0.5) < 0.34) * 1.0
+        s = (np.sin(2 * np.pi * 150 * t) + 0.5 * np.sign(np.sin(2 * np.pi * 150 * t)) * 0.3) * g * (0.7 + 0.3 * np.sin(2 * np.pi * 26 * t))
+        s = lp(s, 0.2)
+    elif name == 'sting':  # «sting» cómico de sorpresa: silbido que sube + golpe brillante
+        d = 0.9; t = t_(d); f = 500 + 1500 * np.minimum(t / 0.25, 1)
+        s = np.sin(2 * np.pi * np.cumsum(f) / SR) * (t < 0.28) * 0.6
+        tt = np.maximum(t - 0.25, 0); s += (t >= 0.25) * sum(np.sin(2 * np.pi * fq * tt) for fq in (1047, 1319, 1568, 2093)) * np.exp(-tt * 4) * 0.3
+        s += (t >= 0.25) * hp(noise(d), 0.5) * np.exp(-tt * 18) * 0.6
+    elif name == 'swish':
+        d = 0.32; t = t_(d); x = noise(d); s = np.zeros(len(t)); acc = 0.0
+        for k in range(len(t)):
+            a_ = 0.35 - 0.3 * (k / len(t)); acc += a_ * (x[k] - acc); s[k] = acc
+        s *= np.sin(np.pi * t / d) ** 2 * 2
+    elif name == 'tap':  # toque en la pantalla del móvil
+        t = t_(0.04); s = (hp(noise(0.04), 0.4) * 0.6 + np.sin(2 * np.pi * 900 * t)) * np.exp(-t * 160)
+    elif name == 'tic':  # tic de los puntos «escribiendo»
+        t = t_(0.05); s = np.sin(2 * np.pi * 1800 * t) * np.exp(-t * 120)
+    elif name == 'flip':  # hoja de papel que pasa
+        d = 0.35; t = t_(d); s = hp(noise(d), 0.25) * np.exp(-((t - 0.1) / 0.07) ** 2) + hp(noise(d), 0.4) * np.exp(-np.maximum(t - 0.2, 0) * 50) * (t >= 0.2) * 0.7
+    elif name == 'step':  # paso suave en la acera
+        t = t_(0.12); s = (lp(noise(0.12), 0.15) * 2 + np.sin(2 * np.pi * 90 * t) * 0.6) * np.exp(-t * 45)
+    elif name == 'bell':  # campanilla de la puerta: varios golpecitos metálicos
+        d = 1.6; t = t_(d); s = np.zeros(len(t))
+        for o, g in ((0, 1), (0.13, 0.8), (0.27, 0.6), (0.42, 0.4)):
+            tt = np.maximum(t - o, 0); s += (t >= o) * g * sum(np.sin(2 * np.pi * fq * tt) * np.exp(-tt * dc) for fq, dc in ((2350, 5), (3420, 7), (5100, 11)))
+        s *= 0.3
+    elif name == 'toc':  # cesta de mimbre que se apoya en el mostrador
+        t = t_(0.18); s = (lp(noise(0.18), 0.2) * 1.5 + np.sin(2 * np.pi * 220 * t)) * np.exp(-t * 40)
+    elif name == 'murmullo_s':  # murmullo suave de farmacia
+        d = 6.0; t = t_(d); s = lp(noise(d), 0.05) * (0.7 + 0.3 * np.sin(2 * np.pi * 1.7 * t) * np.sin(2 * np.pi * 0.4 * t)) * 2
+        s *= np.minimum(1, t / 0.4) * np.minimum(1, (d - t) / 0.4)
+    elif name == 'dingj':  # «ding» alegre (dos notas que suben)
+        t = t_(1.2); s = sum((t >= o) * np.sin(2 * np.pi * fq * np.maximum(t - o, 0)) * np.exp(-np.maximum(t - o, 0) * 4) for fq, o in ((1568, 0), (2093, 0.12), (2637, 0.24)))
     else: raise KeyError(name)
     SYN[name] = s.astype(np.float64); return SYN[name]
 
 fx = np.zeros(N)
 EV = []
 def ev(name, t, g_db=0.0): EV.append((name, t, g_db))
-# 1) pop en el título y en cada círculo
-cue = lambda i, k, d: SC[i - 1].get('cues', {}).get(k, d)
-ev('pop', st(1) + cue(1, 'title1', 0.2), -4); ev('pop_s', st(1) + cue(1, 'title2', 0.5), -6)
-for k in range(3): ev('pop', st(1) + cue(1, 'circles', 1.1) + 0.22 * k, -3)
-ev('pop', st(1) + cue(1, 'four', 1.85), 0); ev('ding', st(1) + cue(1, 'four', 1.85) + 0.05, -10)
-# 2-5) ding brillante en cada número (y pop del rótulo)
-for i in (2, 3, 4, 5): ev('ding', st(i) + 0.1, -4); ev('pop_s', st(i) + 0.38, -8)
-# 2) cartón que se abre y «ting» de notificación
-B2 = shot(2, 'B'); ev('carton', B2 + 0.05, -2); ev('pop_s', B2 + 0.5, -10); ev('ting', B2 + 1.05, -5); ev('ting', B2 + 2.9, -9); ev('pop_s', B2 + 0.4, -10)
-# 3) «clac» del cartel 2x1 y «cha-ching»
-B3 = shot(3, 'B'); ev('whoosh', B3 + 0.25, -10); ev('clac', B3 + 0.65, -2); ev('chaching', B3 + 0.85, -5); ev('pop_s', B3 + 0.4, -10)
-# 4) guitarra suave, murmullo de bar y «cling» de copas
-B4 = shot(4, 'B'); ev('murmullo', B4, -10); ev('guitarra', B4 + 0.05, -7); ev('cling', B4 + 1.3, -7); ev('pop_s', B4 + 0.4, -10)
-# 5) ta-chán con el sello, latido, aplausos y risas lejanas, confeti
-ev('tachan', st(5) + 0.6, -5)
-B5, C5 = shot(5, 'B'), shot(5, 'C')
+cue = lambda i, k, d=0: SC[i - 1].get('cues', {}).get(k, d)
+at = lambda i, k, d=0: st(i) + cue(i, k, d)
+# 1) ambiente tranquilo de casa con reloj lejano; pop del título
+ev('room', st(1), -16); ev('clock', st(1), -26); ev('pop', at(1, 'title'), -8); ev('pop_s', at(1, 'title2'), -10); ev('pop_s', at(1, 'think'), -11)
+# 2) tecleo suave y scroll del ratón
+ev('room', st(2), -18); ev('keys', st(2) + 0.1, -14); ev('scroll', st(2) + 1.7, -12); ev('scroll', st(2) + 3.0, -13); ev('pop', at(2, 'title'), -9)
+for k in range(3): ev('pop_s', at(2, 'q') + 0.25 * k, -11)
+# 3) vibración, ding de notificación y «sting» de sorpresa en el WOW
+ev('buzz', at(3, 'buzz'), -10); ev('ding', at(3, 'notif'), -8); ev('sting', at(3, 'wow') - 0.25, -6)
+# 4) pop al pulsar «WhatsApp» y swish del cambio de pantalla; pop del mensaje
+ev('pop', at(4, 'seal'), -12); ev('tap', at(4, 'press'), -6); ev('pop', at(4, 'press') + 0.02, -4); ev('swish', at(4, 'cut') - 0.12, -6)
+ev('pop', at(4, 'bubble'), -6)
+# 5) tecleo en el móvil, pop enviado, tic de los puntos, ding recibido, pulgar
+t0, t1 = at(5, 'type0'), at(5, 'type1'); k = 0
+while t0 + k * 0.11 < t1: ev('tap', t0 + k * 0.11 + 0.02 * np.sin(k * 7), -14 - 3 * (k % 2)); k += 1
+ev('pop', at(5, 'send'), -5)
 k = 0
-while B5 + 0.15 + k / 1.3 < C5: ev('latido', B5 + 0.15 + k / 1.3, -9); k += 1
-ev('aplausos', B5 + 0.3, -13); ev('risas', B5 + 0.6, -18); ev('confeti', B5 + 0.2, -10); ev('confeti', B5 + 3.2, -12)
-ev('pop', B5 + 0.35, -8); ev('pop', B5 + 0.55, -8); ev('tachan', B5 + 1.0, -9)
-ev('latido', C5 + 0.1, -10)
-# 6) whoosh + pop del globo «CANAL»
-ev('pop_s', st(6) + cue(6, 'comenta', 0.2), -8); ev('whoosh', st(6) + cue(6, 'bubble', 0.75) - 0.2, -6); ev('pop', st(6) + cue(6, 'bubble', 0.75) + 0.03, -2)
-ev('pop_s', st(6) + cue(6, 'pill', 2.1), -9); ev('pop_s', st(6) + cue(6, 'enviamos', 1.4), -11)
-# 7) pop por burbuja y whoosh del avioncito; whoosh del logo final
-P1 = shot(7, 'P1'); q = (SC[6]['shots']['P1'][1] - SC[6]['shots']['P1'][0]) / 4; ev('pop_s', P1 + 0.45 * q, -7)
-for k in range(4):
-    ev('whoosh', P1 + (0.85 + 0.32 * k) * q, -11); ev('pop', P1 + (1.15 + 0.32 * k) * q, -5); ev('pop_s', P1 + (2.2 + 0.28 * k) * q, -10)
-ev('pop_s', shot(7, 'P2') + 0.1, -8)
-ev('whoosh', shot(7, 'FIN') - 0.15, -3); ev('ding', shot(7, 'FIN') + 0.1, -9)
+while at(5, 'typing') + k * 0.28 < at(5, 'reply') - 0.05: ev('tic', at(5, 'typing') + k * 0.28, -17); k += 1
+ev('ding', at(5, 'reply'), -7); ev('pop', at(5, 'thumb'), -6); ev('swish', at(5, 'cut') - 0.1, -9); ev('pop', at(5, 'text'), -8); ev('tachan', at(5, 'text') + 0.05, -12)
+# 6) flip del calendario, pasos de Marta y campanilla de la puerta
+ev('flip', at(6, 'cal'), -4); ev('flip', at(6, 'calOut'), -7)
+k = 0
+while at(6, 'walk0') + 0.1 + k * 0.35 < at(6, 'enter') + 0.3: ev('step', at(6, 'walk0') + 0.1 + k * 0.35, -12); k += 1
+ev('bell', at(6, 'door'), -6)
+# 7) murmullo suave de farmacia, toc de la cesta en el mostrador y ta-chán con corazones
+ev('murmullo_s', st(7), -16); ev('toc', st(7) + 0.12, -5); ev('pop', at(7, 'title'), -9); ev('tachan', at(7, 'hold'), -5); ev('pop_s', at(7, 'hold') + 0.3, -10); ev('pop_s', at(7, 'hold') + 0.6, -11)
+# 8) campanilla al salir y ding alegre
+ev('bell', at(8, 'open'), -6); ev('bell', at(8, 'close'), -12); ev('dingj', at(8, 'bien'), -7)
+k = 0
+while at(8, 'out') + k * 0.35 < at(8, 'front'): ev('step', at(8, 'out') + 0.05 + k * 0.35, -13); k += 1
+# 9) whoosh al entrar los textos y pop de la franja roja; whoosh y ding en la tarjeta final
+ev('whoosh', st(9) - 0.05, -9)
+ev('whoosh', at(9, 'title') - 0.15, -7); ev('pop', at(9, 'strip'), -3); ev('whoosh', at(9, 'sub') - 0.15, -9); ev('whoosh', at(9, 'web') - 0.15, -11)
+ev('whoosh', shot(9, 'FIN') - 0.15, -4); ev('ding', shot(9, 'FIN') + 0.1, -9)
 for name, t, g in EV:
     s = syn(name); s = s / max(np.abs(s).max(), 1e-9) * 10 ** ((g - 6) / 20)
     a = int(t * SR); fx[a:a + len(s)] += s[: max(0, N - a)]
@@ -167,16 +227,15 @@ if not mp.endswith('.mp3'): subprocess.run(['python3', A('make_music.py')], chec
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
 mus = np.frombuffer(raw, '<f4').astype(np.float64).reshape(-1, 2)
 mus = np.vstack([mus, np.zeros((max(0, N - len(mus)), 2))])[:N]
-# nivel: -38 dBFS RMS (≈ 18 dB bajo la voz a -20) y baja 2 dB más mientras habla Marta
-mus *= 10 ** (-38 / 20) / max(np.sqrt((mus ** 2).mean()), 1e-9)
-env = np.abs(voice); win = int(0.25 * SR); env = np.convolve(env, np.ones(win) / win, 'same')
-duck = 10 ** (-2 * np.clip(env / 0.02, 0, 1) / 20)
-mus *= duck[:, None]
-# plano del bar (escena 4, plano B): música 5 dB más baja para que se oiga la guitarra y el ambiente
-BAR_DB = -5.0
-g = np.ones(N); b0, b1 = shot(4, 'B'), SC[3]['start'] + SC[3]['shots']['B'][1]; tt = np.arange(N) / SR
-g = 10 ** (BAR_DB * np.clip(np.minimum((tt - b0 + 0.25) / 0.25, (b1 + 0.25 - tt) / 0.25), 0, 1) / 20)
-mus *= g[:, None]
+# nivel: -37 dBFS RMS (≈ 17 dB bajo las voces, a -20 dBFS RMS); baja 3 dB más mientras hay voz y, en la escena 9,
+# otros 3 dB bajo la voz de Marta (la música «cierra con energía y baja bajo la voz»)
+mus *= 10 ** (-37 / 20) / max(np.sqrt((mus ** 2).mean()), 1e-9)
+env = np.abs(voice); win = int(0.3 * SR); env = np.convolve(env, np.ones(win) / win, 'same')
+duck_db = -3 * np.clip(env / 0.02, 0, 1)
+tt = np.arange(N) / SR; s9, f9 = st(9), shot(9, 'FIN')
+in9 = np.clip(np.minimum((tt - s9 - 0.8) / 0.6, (f9 - tt) / 0.3), 0, 1)
+duck_db += -3 * in9
+mus *= (10 ** (duck_db / 20))[:, None]
 print(f'música: {os.path.relpath(mp, ROOT)}  RMS {db(np.sqrt((mus ** 2).mean())):.1f} dBFS')
 
 mix = mus + (voice + fx)[:, None] * np.array([1.0, 1.0])
@@ -188,7 +247,7 @@ with wave.open(A('mezcla.wav'), 'wb') as w:
 with wave.open(A('efectos.wav'), 'wb') as w:
     w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(fx, -1, 1) * 32767).astype('<i2').tobytes())
-vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, 'marta_cuatro_motivos_con_audio.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
+vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, 'marta_cesta_bebe_con_audio.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-i', A('mezcla.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy',
                 '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', tmp], check=True)
 os.replace(tmp, out)
