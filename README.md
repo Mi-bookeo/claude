@@ -17,6 +17,7 @@ python3 audio/make_audio.py   # efectos + voces + música -> de_puerta_en_puerta
 ## Sonido
 ```
 python3 audio/cortar_voces.py # corta los mp3 de ElevenLabs (audio/voces/original_*.mp3) en una frase por archivo
+python3 audio/make_music.py  # música original sintetizada (suave): musica_1945.mp3 y musica_2026.mp3
 python3 audio/make_audio.py
 ```
 - Voces: `audio/voces/<voz>_<n>.(wav|mp3|…)` → narradora_1 (1), narradora_2 (2), vendedor_1 + narradora_3 (3), narradora_4 (4) … narradora_8 (8).
