@@ -1,30 +1,30 @@
-# Carmen y María (vídeo 10 · Escaparate de Tudela)
+# 4 motivos para estar en el canal (vídeo 11 · Escaparate Tudela)
 
-Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 50,3 s. Dirigido a comercios: no basta con que te vean,
-tienen que saber que existes. Duraciones de escena: `config.json`; tiempos: `timeline.txt`.
+Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 51,0 s. Marta habla a cámara y enumera cuatro motivos
+para estar en el canal (el cuarto, «El mejor»: apoyas al comercio local). Dirigido al público.
 
-- `carmen_y_maria.mp4` — vídeo sin audio · `carmen_y_maria_con_audio.mp4` — misma imagen (-c:v copy) + pista de sonido
-- `carmen_y_maria_subtitulado.mp4` — con subtítulos dibujados en la franja inferior + la misma pista · `carmen_y_maria.srt` y `subtitles.json` — tiempos de los subtítulos
-- `scenes/` una escena por archivo · `stills/` un fotograma por escena
-- Código: `src/v10.js` (Carmen, María, tiendas de moda, avenida, callejuela, interior, tarjetas Novedad/Oferta, María en primer plano),
-  `src/scenes.js`; piezas de la serie en `src/lib.js`, `src/series.js`, `src/rosa.js`, `src/v04.js`…`src/v09.js`
-- Fuentes: Baloo 2 y Bangers en `fonts/` · Logos: `logo_blanco.png` (fondos rojos), `logo_rojo.png` (fondos claros); recortes en `assets/`
+- `marta_cuatro_motivos.mp4` — vídeo sin audio · `marta_cuatro_motivos_con_audio.mp4` — misma imagen (-c:v copy) + sonido
+- `scenes/` una escena por archivo · `stills/` un fotograma por escena · `timeline.txt` inicio/fin de cada escena
+- `config.json` — duración de cada escena, tramos de los planos (`shots`: A/B/C, P1/P2/FIN) y tramos en que Marta
+  mueve la boca (`talk`), en segundos locales de la escena
+- Código: `src/v11.js` (Marta a cámara, manos y poses, cabecera, números, imágenes insertadas), `src/scenes.js`;
+  piezas de la serie en `src/lib.js`, `src/series.js`, `src/rosa.js`, `src/v04.js`…`src/v10.js`
+- Logos: `logo_rojo.png` (fondos claros: cabecera), `logo_blanco.png` (fondos rojos: tarjeta final); recortes en `assets/`
 
 ```
-node render.js stills 1,2,3,9   # fotogramas de prueba
+node render.js stills 2,5,7     # fotogramas de prueba
+node render.js scenes 3         # volver a renderizar solo una escena
 node render.js all              # escenas + stills + concatenado + timeline
-python3 audio/cortar_voces.py   # corta los mp3 de ElevenLabs (audio/voces/original_*.mp3) en frases + tiempos de subtítulos
-python3 audio/make_audio.py     # voces + efectos + música -> carmen_y_maria_con_audio.mp4 + subtitles.json / .srt
-node render.js subs             # imagen con subtítulos -> tmp/subtitulado_mudo.mp4
-python3 audio/make_audio.py     # (otra vez) -> carmen_y_maria_subtitulado.mp4 (imagen con -c:v copy)
+python3 audio/make_audio.py     # voces + efectos + música -> marta_cuatro_motivos_con_audio.mp4 (imagen con -c:v copy)
 ```
 
 ## Sonido
-- Voces originales: `audio/voces/original_narracion.mp3` (narración, Javier Rojas), `original_carmen.mp3` y `original_maria.mp3` (Lydia).
-  Todas se igualan a -20 dBFS RMS (el susurro de María, grabado más bajo, sube ~5 dB y +1 dB extra).
-- Voces: `audio/voces/<voz>_<n>.(wav|mp3|m4a|ogg|flac)` al inicio de su escena: narradora_1…6 → escenas 1…6;
-  narradora_7 y luego carmen_1 → 7; narradora_8 → 8; maria_1 → 9. Las que falten quedan en silencio (el script avisa).
-- Efectos: `audio/sfx/<nombre>.wav` si existe (nombres: pop, plop, ding, ting, campanilla, whoosh, whoosh_suave, tic_farola,
-  suspiro, maullido, pajaro, persiana, percha, tecla, susurro_aire, ambiente_avenida, murmullo_calle, murmullo_tienda,
-  trafico_lejano, viento); si no, se sintetizan (básicos) → `audio/efectos.wav`.
-- Música: `audio/musica.mp3` si existe (envolvente por escenas, ~17 dB bajo la voz, baja más en el susurro de María); si no, sin música.
+- Voces: `audio/voces/marta_<n>.(wav|mp3|m4a|ogg|flac)` al inicio de la escena n (1…7), igualadas a -20 dBFS RMS.
+  Las que falten quedan en silencio (el script avisa). Si una frase dura más que su escena, el script lo indica:
+  ajusta `duration`, `shots` y `talk` de esa escena en `config.json` y ejecuta `node render.js scenes <n>` y
+  `node render.js concat` antes de volver a mezclar.
+- Efectos: `audio/sfx/<nombre>.wav` si existe (pop, pop_s, ding, ting, carton, clac, chaching, guitarra, murmullo,
+  cling, latido, aplausos, risas, confeti, tachan, whoosh); si no, se sintetizan con código (básicos).
+- Música: `audio/musica.mp3` si existe; si no, música original suave sintetizada por `audio/make_music.py`
+  (pop a 112 BPM, stingers en cada número, sube en la escena 5, acorde final en la tarjeta). Queda ~18 dB bajo
+  la voz y baja 4 dB más mientras habla Marta.
