@@ -1,6 +1,6 @@
 {
-  "title": "De puerta en puerta",
-  "output": "de_puerta_en_puerta.mp4",
+  "title": "Carmen y María",
+  "output": "carmen_y_maria.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
@@ -11,58 +11,14 @@
     "pix_fmt": "yuv420p"
   },
   "scenes": [
-    {
-      "id": 1,
-      "name": "1945 · Cartón de título: «1945» con rebote; «Después de la guerra»",
-      "duration": 5.8,
-      "still": 1.6,
-      "old": true
-    },
-    {
-      "id": 2,
-      "name": "1945 · Calle antigua: el vendedor entra con la cestilla de tornillos; «Puerta a puerta»",
-      "duration": 5.0,
-      "still": 3.9,
-      "old": true
-    },
-    {
-      "id": 3,
-      "name": "1945 · Montaje de 3 puertas: ¡toc, toc!, abre un vecino, tornillo, monedas, saluda con la gorra; «¡Tornillos!»",
-      "duration": 5.0,
-      "still": 0.8,
-      "old": true
-    },
-    {
-      "id": 4,
-      "name": "Salto de época: contador 1945-1960-1990-2010-2026; destello y paso a colores vivos",
-      "duration": 5.0,
-      "still": 2.6,
-      "flash": 1.8
-    },
-    {
-      "id": 5,
-      "name": "2026 · Calle moderna: «2026», «Ya no hace falta ir puerta a puerta»; móvil flotando con ondas",
-      "duration": 4.4,
-      "still": 2.4
-    },
-    {
-      "id": 6,
-      "name": "Tienda: Mari Carmen publica; salen «Novedad», «Oferta» y «Evento»; «Publicar» -> tic verde",
-      "duration": 5.0,
-      "still": 4.4
-    },
-    {
-      "id": 7,
-      "name": "Calle llena de gente: vibran los móviles y ven las tarjetas; «A la mano de tus futuros clientes»",
-      "duration": 4.5,
-      "still": 2.8
-    },
-    {
-      "id": 8,
-      "name": "¿Eres comercio? Comenta ALTA y te enviamos la solicitud + web; tarjeta final roja con el logo",
-      "duration": 7.6,
-      "still": 3.2,
-      "cut": 5.6
-    }
+    { "id": 1, "name": "Pantalla partida: avenida de Carmen (arriba) y callejuela de María (abajo); «Dos tiendas de moda. Dos calles muy distintas.»", "duration": 4.0, "still": 1.6 },
+    { "id": 2, "name": "Avenida de Carmen: la gente pasa de largo; zoom a Carmen; «Mucha gente pasa… pero nadie entra»", "duration": 5.0, "still": 4.4 },
+    { "id": 3, "name": "Callejuela de María: tiendas cerradas, gato, una persona al fondo; «Aquí casi no pasa nadie»", "duration": 5.0, "still": 2.0 },
+    { "id": 4, "name": "Interior de la tienda de María, llena de gente; «Pero siempre llena»", "duration": 4.0, "still": 2.0 },
+    { "id": 5, "name": "Viñetas de Carmen y María; «No basta con que te vean» / «Tienen que saber que existes»", "duration": 5.0, "still": 4.0 },
+    { "id": 6, "name": "María publica: «Novedad» y «Oferta» salen del móvil; «Publicar» -> tic verde", "duration": 5.0, "still": 4.2 },
+    { "id": 7, "name": "Avenida: vibran los móviles, ven las tarjetas y echan a andar juntos; Carmen sorprendida; «A la mano de tus clientes»", "duration": 5.0, "still": 1.9 },
+    { "id": 8, "name": "«Escaparate de Tudela hace que existas»; «¿Tienes un comercio?»; «Comenta ALTA y te enviamos la solicitud»; web", "duration": 7.0, "still": 4.0 },
+    { "id": 9, "name": "El susurro: María se acerca, mano en la boca, mira a los lados y guiña; «Gratis hasta el 31 de enero»; tarjeta final roja", "duration": 7.0, "still": 3.5, "cut": 5.0 }
   ]
 }
