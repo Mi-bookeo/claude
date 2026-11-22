@@ -1,242 +1,274 @@
-/* Vídeo 08 — «Dos carteles». Escenas sobre lib.js + series.js + rosa.js + v04.js + v05.js + v06.js + v07.js + v08.js.
+/* Vídeo 09 — «De puerta en puerta». Escenas sobre lib.js + series.js + rosa.js + v04…v09.js.
    Todo se calcula a partir de (t local de la escena, T global). Franja de subtítulos (y > 1400) y margen
-   superior (y < 192) libres de textos y elementos importantes. Cortes secos entre escenas. */
+   superior (y < 192) libres de textos y elementos importantes. Cortes secos entre escenas.
+   Escenas 1-3 y primera mitad de la 4: 1945 (sepia, 15 fps efectivos, temblor, arañazos). Resto: estilo de la serie. */
 'use strict';
 
 const S = {};
 const big = (str, x, y, size, k, rot = 0, o = {}) => at(x, y, k, text(str, 0, 0, Object.assign({ size: fit(str, size, o.maxW || 980, o.font || 'B'), sw: SW * 2.3, sd: 9 }, o)), rot);
-const breathe = T => -1.6 * (0.5 - 0.5 * Math.cos(2 * PI * T / 1.6));
 const bump = (t, times, a = 0.03) => 1 + times.reduce((m, t0) => m + (t >= t0 ? a * Math.max(0, damp(t - t0, 14, 6)) : 0), 0);
-// exterior de día: cielo #BFE3F2 + banda #E4F4FA, sol con rayos y 5 nubes hacia la izquierda
+const breathe = T => -1.6 * (0.5 - 0.5 * Math.cos(2 * PI * T / 1.6));
 const day = (T, o = {}) => skyClear(T, Object.assign({ band: 1000, tm: 720, sx: 930, sy: 300, sr: 54 }, o));
-const LUC = { feet: 1395, sc: 4.0, stop: 110 };
-const lucia = (x, o) => shadowEll(x, LUC.feet, 26 * LUC.sc) + place(x, LUC.feet, 190, 204, LUC.sc, Object.assign({ who: 'lucia' }, o));
-const walkL = (t, amp = 1) => { const p = walkPose(2 * PI * t / 0.8, amp); delete p.pony; return p; };       // ciclo de andar 0,8 s
-const runL = t => { const p = runPose(t); delete p.pony; return p; };                                            // ciclo de correr 0,4 s
-const sideWalls = () => `<rect x="-40" y="600" width="150" height="900" fill="${C.pink}" ${stk()}/><rect x="-40" y="600" width="150" height="40" fill="${C.dred}" ${stk()}/>` +
-  `<rect x="970" y="540" width="160" height="960" fill="${C.navy}" ${stk()}/><rect x="970" y="540" width="160" height="40" fill="${C.dred}" ${stk()}/>`;
-const SHOP = { x: 120, base: 1330, w: 840, h: 950 };
-const GS = tiendaGeo(SHOP.x, SHOP.base, SHOP.w, SHOP.h);
+const MCB_ = T => ({ bob: breath(T), blink: blinkAt(T) });
+const GROUND_OLD = 1380;
 
-/* ---------- 1) Gancho: dos tiendas iguales con el «%»; «¿Por qué tu oferta no vende?» ---------- */
+/* ---------- 1) 1945 · Cartón de título: «1945» con rebote; «Después de la guerra» ---------- */
 S[1] = (t, T) => {
-  let w = day(T, { band: 1040, sx: 930, sy: 300 });
-  [40, 560].forEach((x, i) => { w += tiendaShop(x, 1400, 480, 590, { pct: pop(t, 0.2 + i * 0.15, 0.5), page: 12, t: T }); });
-  w += ground(1400, 0, { sp: 230 });
-  let s = cam(zoomIn(t, 0, 1.16, 0.24) * lerp(1, 1.04, easeInOut(t / 4)), 540, 1000, w);
-  const k1 = pop(t, 0.45, 0.55), k2 = pop(t, 0.7, 0.55);
-  s += big('¿Por qué tu oferta', 540, 540, 132, k1, lerp(-9, -3, k1));
-  s += big('no vende?', 540, 700, 190, k2, lerp(8, 2, k2), { fill: C.yel });
-  return s;
+  let w = paperBg();
+  // cartón con doble filete
+  w += `<rect x="96" y="430" width="888" height="860" fill="none" stroke="${O.ink}" stroke-width="6"/><rect x="118" y="452" width="844" height="816" fill="none" stroke="${O.brown}" stroke-width="2.5"/>`;
+  [[96, 430], [984, 430], [96, 1290], [984, 1290]].forEach(([x, y]) => { w += `<rect x="${x - 16}" y="${y - 16}" width="32" height="32" fill="${O.paper}" stroke="${O.ink}" stroke-width="4" transform="rotate(45 ${x} ${y})"/>`; });
+  const kr = easeOut((t - 0.15) / 0.35);
+  w += ornRule(540, 560, 640, kr);
+  const k = pop(t, 0.3, 0.6);
+  w += bigOld('1945', 540, 800, 380, k, lerp(-10, 0, k), { sd: 12 });
+  w += ornRule(540, 1030, 640, easeOut((t - 0.7) / 0.35));
+  const k2 = pop(t, 1.0, 0.5);
+  w += bigOld('Después de la guerra', 540, 1135, 78, k2, lerp(6, 0, k2), { font: 'A', maxW: 760, sd: 4 });
+  return oldFilm(cam(zoomIn(t, 0, 1.12, 0.2) * lerp(1, 1.04, easeInOut(t / 4)), 540, 860, w), T);
 };
 
-/* ---------- 2) Pantalla partida: SIN FECHA (izquierda) / CON FECHA (derecha) ---------- */
-const HALF_CLOUDS = [{ x0: 60, y: 330, s: 0.5, v: 12 }, { x0: 330, y: 470, s: 0.42, v: 18 }, { x0: 600, y: 560, s: 0.36, v: 9 }, { x0: 820, y: 390, s: 0.46, v: 14 }];
+/* ---------- 2) 1945 · Calle antigua: el vendedor entra con la cestilla de tornillos; «Puerta a puerta» ---------- */
+const V2 = { sc: 3.35, stop: 470, tStop: 3.3 };
 S[2] = (t, T) => {
-  let s = '';
-  [0, 1].forEach(side => {
-    const X0 = side * 540, id = 'half' + side;
-    let h = `<rect x="${X0}" y="0" width="540" height="${H}" fill="${C.sky}"/><rect x="${X0}" y="1000" width="540" height="${H}" fill="${C.skyL}"/>`;
-    h += sun(X0 + (side ? 450 : 90), 500, 38, T * 12);
-    HALF_CLOUDS.forEach(c => { const span = 540 + 500, x = (((c.x0 - c.v * T) % span) + span) % span - 250; h += cloud(X0 + x, c.y, c.s); });
-    h += tiendaShop(X0 + 25, 1290, 490, 880, { pct: pop(t, 0.35 + side * 0.15, 0.5), pctK: 1.3, rib: side ? pop(t, 1.0, 0.55) : 0, page: 12, t: T });
-    h += `<rect x="${X0}" y="1290" width="540" height="${H}" fill="${C.ground}"/><line x1="${X0}" y1="1290" x2="${X0 + 540}" y2="1290" ${stk()}/>`;
-    for (let x = X0 + 60; x < X0 + 640; x += 200) h += `<line x1="${x}" y1="1290" x2="${x - 120}" y2="${H}" stroke="${INK}" stroke-width="${f(SW * 0.6)}"/>`;
-    if (side && t > 1.0 && t < 1.8) { h += sparkle(X0 + 90, 930, 26, pop(t, 1.1, 0.35)); h += sparkle(X0 + 455, 870, 22, pop(t, 1.2, 0.35)); }
-    const ks = pop(t, 0.6 + side * 0.55, 0.55);
-    h += fechaLabel(X0 + 270, 290, ks * 0.98, side === 1, side ? 3 : -3);
-    s += `<clipPath id="${id}"><rect x="${X0}" y="0" width="540" height="${H}"/></clipPath><g clip-path="url(#${id})">` + cam(zoomIn(t, side * 0.12, 1.14, 0.24), X0 + 270, 800, h) + `</g>`;
-  });
-  s += `<rect x="532" y="-10" width="16" height="${H + 20}" fill="${INK}"/>`;
-  return s;
-};
-
-/* ---------- 3) Mitad izquierda a pantalla completa: Lucía pasa, sonríe, «Otro día…»; el calendario vuela y el cartel se apaga ---------- */
-const TEAR3 = { t0: 3.3, dt: 0.11, n: 16 };
-S[3] = (t, T) => {
-  let w = day(T, { band: 1000, sx: 950, sy: 250, sr: 50 });
-  w += sideWalls();
-  const nT = t < TEAR3.t0 ? 0 : Math.min(TEAR3.n, Math.floor((t - TEAR3.t0) / TEAR3.dt) + 1);
-  const curl = nT > 0 && nT < TEAR3.n ? 0 : 0;
-  const pctA = 1 - 0.82 * easeInOut((t - 3.4) / 1.6);
-  w += tiendaShop(SHOP.x, SHOP.base, SHOP.w, SHOP.h, { pct: 1, pctA, page: 12 + nT, curl, web: pop(t, 5.0, 0.5), t: T });
-  // hojas del calendario que salen volando
-  for (let n = 0; n < nT; n++) w += flyingSheet(GS.cal.x, GS.cal.y + GS.cal.w * 0.3, GS.cal.w, 12 + n, (t - TEAR3.t0 - n * TEAR3.dt) / 0.75, n % 2 ? 1 : -1);
-  // polvo alrededor del cartel que se apaga
-  w += dust(GS.pct.x, GS.pct.y, GS.pct.r, t, 3.6, 1.6);
-  if (t > 5.0) for (let i = 0; i < 5; i++) { const u = ((t - 5.0) * 0.8 + i / 5) % 1; w += `<circle cx="${f(GS.pct.x - 120 + i * 60)}" cy="${f(GS.pct.y + 40 + u * 300)}" r="5" fill="#B8AAA6" opacity="${f(1 - u)}"/>`; }
-  w += ground(SHOP.base, 0, { sp: 230 });
-  // Lucía
-  let lx, o;
-  if (t < 1.3) { lx = lerp(-160, LUC.stop, t / 1.3); o = Object.assign(walkL(t), { expr: 'happy', look: [0.4, 0] }); }
-  else if (t < 3.2) {
-    lx = LUC.stop;
-    const dm = damp(t - 1.3, 14, 5);
-    o = { legF: -10 * dm, legB: 10 * dm, armF: 12 * dm, armB: -12 * dm, bob: breathe(T) };
-    if (t < 1.75) Object.assign(o, { expr: 'curious', look: [1, -1.1], head: -8 });
-    else if (t < 2.25) Object.assign(o, { expr: 'smile', look: [1, -0.9], head: -6 });
-    else {
-      const sh = easeOut((t - 2.25) / 0.22) * (1 - easeInOut((t - 2.95) / 0.25));
-      Object.assign(o, { expr: 'meh', look: [0.6, 0], head: lerp(-4, 10, sh), armF: -38 * sh, armB: 38 * sh, bob: -6 * sh + breathe(T) });
-      if (sh > 0.5) o.front = w2 => `<path d="M172 92 q-4 -6 0 -12 M208 92 q4 -6 0 -12" fill="none" stroke="${INK}" stroke-width="${w2(1.6)}" stroke-linecap="round"/>`;
-    }
-  } else { lx = lerp(LUC.stop, 1300, (t - 3.2) / 1.8); o = Object.assign(walkL(t), { expr: 'meh', look: [0.4, 0], head: 2 }); }
-  if (lx < 1250) w += lucia(lx, o);
-  if (t > 1.35 && t < 1.8) w += mark('?', lx + 150, 760, pop(t, 1.35, 0.3), 12, 130, '#FFFFFF');
-  // nube «Otro día…»
-  const kc = pop(t, 2.35, 0.45) * (1 - easeOut((t - 3.75) / 0.2));
-  w += thought(300, 640, 450, 200, kc, 'Otro día…', lx + 40, 830, 78);
-  let s = cam(zoomIn(t, 0, 1.28, 0.3) * bump(t, [TEAR3.t0], 0.025), 540, 900, w);
-  if (t < 0.3) s += speedLinesRadial(540, 900, 1 - t / 0.3);
-  return s;
-};
-
-/* ---------- 4) El cerebro: «Ya veré…» -> reloj de cuenta atrás -> «¡AHORA!» ---------- */
-const BR4 = { x: 540, y: 1090, sc: 1.22, on: 2.0, alert: 2.35 };
-S[4] = (t, T) => {
-  let w = dotWall();
-  const alert = t >= BR4.alert;
-  let by = BR4.y, rot = 0, arms = 0, legs = 0;
-  if (!alert) { by += 6 * Math.sin(t * 2.4); rot = -4 + 3 * Math.sin(t * 1.6); }
+  let w = oldSky(T, { band: 860, sx: 880, sy: 450, sr: 64 });
+  w += stoneHouse(-60, GROUND_OLD, 430, 720, { door: { col: O.olive, at: 0.55 }, win: 2, roof: O.rust });
+  w += stoneHouse(370, GROUND_OLD, 390, 820, { wall: O.creamS, shut: O.olive, door: { col: O.brown, at: 0.5 }, win: 2, roof: O.brownS });
+  w += stoneHouse(760, GROUND_OLD, 400, 640, { shut: O.rust, door: { col: O.grey, at: 0.42 }, win: 2, roof: O.rust });
+  w += gasLamp(985, GROUND_OLD, 600);
+  w += cobbles(GROUND_OLD);
+  // vendedor
+  let x, o;
+  if (t < V2.tStop) { x = lerp(-180, V2.stop, t / V2.tStop); o = Object.assign(oldWalk(t), { expr: 'smile' }); }
   else {
-    const u = (t - BR4.alert) / 0.45;
-    if (u < 1) { by -= 180 * Math.sin(PI * u); legs = 0.7 * Math.sin(PI * u); }
-    arms = easeOut(u / 0.4); rot = 3 * Math.sin(t * 22) * Math.max(0, 1 - (t - BR4.alert) / 1.2);
+    x = V2.stop;
+    const u = t - V2.tStop, up = easeOut(u / 0.3);
+    o = { legF: 0, legB: 0, armB: -4, bendB: 6, armF: lerp(-10, 58, up), bendF: lerp(10, 58, up), expr: u > 0.3 ? 'talk' : 'smile', bob: breathe(T), bb: 2 * Math.max(0, damp(u, 12, 5)) };
+    if (up > 0.5) o.holdF = holdScrew(2.4);
   }
-  w += `<ellipse cx="${BR4.x}" cy="${f(BR4.y + 236 * BR4.sc)}" rx="${f(220 * (alert ? lerp(0.7, 1, 1 - Math.max(0, BR4.y - by) / 180) : 1))}" ry="26" fill="${INK}" opacity="0.15"/>`;
-  if (alert && t < BR4.alert + 1.3) w += impactRing(BR4.x, by - 10, 330, 300, t, 18);
-  w += brainChar(BR4.x, by, BR4.sc, { mode: alert ? 'alert' : 'sleepy', t, arms, legs, rot });
-  if (!alert) w += zzz(760, 760, t);
-  w += thought(300, 620, 470, 230, pop(t, 0.45, 0.45) * (alert ? 0 : 1), 'Ya veré…', 420, 830, 80);
-  w += countdownClock(820, 610, 100, pop(t, BR4.on, 0.4), t, t > BR4.on);
-  w += shoutBurst(300, 630, pop(t, BR4.alert + 0.05, 0.4), '¡AHORA!', t, C.red, 230);
-  let s = cam(zoomIn(t, 0, 1.14, 0.22) * bump(t, [BR4.on, BR4.alert], 0.05), 540, 900, w);
-  const k1 = pop(t, 2.9, 0.5), k2 = pop(t, 3.1, 0.5);
-  s += big('El cerebro odia', 540, 265, 128, k1, lerp(-8, -3, k1));
-  s += big('perder una oportunidad', 540, 400, 112, k2, lerp(7, 2, k2), { fill: C.yel });
-  return s;
+  w += shadowOld(x, GROUND_OLD + 4, 26 * V2.sc) + placeOld(VENDOR, x, GROUND_OLD, V2.sc, o);
+  if (t > V2.tStop + 0.35) {
+    const [hx, hy] = oldPt(x, GROUND_OLD, V2.sc, ...oldHandPt(OL.shF, 58, 58), false);
+    w += glintOld(hx + 20, hy - 70 + o.bob * V2.sc, 30, pop(t, V2.tStop + 0.35, 0.3) * (1 + 0.2 * Math.sin(t * 15)));
+  }
+  let s = cam(zoomIn(t, 0, 1.12, 0.22), 540, 950, w);
+  const k = pop(t, 0.5, 0.6);
+  s += bigOld('Puerta a puerta', 540, 320, 150, k, lerp(-8, -3, k), { stroke: O.cream, sw: SW * 2.2, sd: 10, shadow: O.ink });
+  return oldFilm(s, T);
 };
 
-/* ---------- 5) Mitad derecha a pantalla completa: Lucía ve «Hasta el sábado», corre, campanilla, cola y «¡cha-ching!» ---------- */
-const S5 = { see: 1.0, wow: 1.25, run: 1.6, door: 2.45, inEnd: 2.95, ching: 5.0 };
-const DOORX5 = GS.door.x + GS.door.w * 0.45;
-const QUEUE5 = [{ i: 4, x: 700 }, { i: 1, x: 600 }, { i: 7, x: 500 }, { i: 11, x: 400 }, { i: 9, x: 300 }];
+/* ---------- 3) 1945 · Montaje de 3 puertas: ¡toc, toc!, abre un vecino, tornillo, monedas, saluda con la gorra ---------- */
+const V3 = { x: 395, sc: 3.4, nx: 770, nsc: 3.3 };
+const DOORS3 = [{ col: O.olive, num: 3, wall: O.dbeige }, { col: O.rust, num: 7, wall: O.creamS }, { col: O.grey, num: 12, wall: O.paper }];
+S[3] = (t, T, sc) => {
+  const D = (sc && sc.duration) || 5, d = D / 3, shot = Math.min(2, Math.floor(t / d)), u = t - shot * d;
+  const DR = DOORS3[shot], NB = OLDFOLK[shot];
+  const open = easeOut((u - 0.38) / 0.16);
+  let w = doorWall({ col: DR.col, num: DR.num, wall: DR.wall, open });
+  w += cobbles(GROUND_OLD);
+  // vecino en la puerta (mira a la izquierda)
+  const KN = 0.42, SHOW = 0.55, GIVE = 0.95, COINS = 1.05, CAP = 1.27;
+  const ng = { flip: true, expr: 'smile', armF: -4, bendF: 8, armB: 4, bendB: 6, bob: breathe(T + shot), head: 2 };
+  if (u < SHOW + 0.15) ng.expr = 'surprise';
+  if (u > GIVE - 0.1 && u < CAP) { const e = easeOut((u - GIVE + 0.1) / 0.15); ng.armF = lerp(-4, 62, e); ng.bendF = lerp(8, 30, e); ng.expr = 'talk'; }
+  if (u > CAP) { const e = easeOut((u - CAP) / 0.15); ng.armF = lerp(62, 150, e) + 10 * Math.sin((u - CAP) * 22); ng.bendF = 30; ng.expr = 'happy'; }
+  if (u > GIVE - 0.1 && u < COINS) ng.holdF = holdCoins(3);
+  if (u > GIVE + 0.16 && u < CAP + 0.05) ng.holdF = holdScrew(2.2);
+  if (open > 0.3) w += shadowOld(V3.nx, GROUND_OLD - 10, 24 * V3.nsc) + placeOld(NB, V3.nx, GROUND_OLD - 14, V3.nsc, ng);
+  // vendedor
+  const vo = { expr: 'smile', armB: -4, bendB: 8, legF: 0, legB: 0, bob: breathe(T), bb: 0 };
+  if (u < KN) {
+    const knock = Math.max(0, Math.sin(2 * PI * u / 0.2));
+    Object.assign(vo, { armF: 78, bendF: 42 - 30 * knock, expr: 'talk' });
+  } else if (u < GIVE) {
+    const e = easeOut((u - SHOW) / 0.15);
+    Object.assign(vo, { armF: lerp(20, 58, e), bendF: lerp(10, 58, e), expr: u > SHOW ? 'talk' : 'smile' });
+    if (u > SHOW) vo.holdF = holdScrew(2.4);
+  } else if (u < CAP) {
+    Object.assign(vo, { armF: 52, bendF: 18, expr: 'happy' });
+    if (u > COINS + 0.18) vo.holdF = holdCoins(3);
+  } else {
+    const e = easeOut((u - CAP) / 0.14);
+    Object.assign(vo, { armF: lerp(52, 165, e), bendF: lerp(18, 20, e), capOff: e > 0.6, expr: 'happy', head: -4 * e, bob: breathe(T) - 2 * e });
+    if (e > 0.6) vo.holdF = holdCap(VENDOR);
+  }
+  w += shadowOld(V3.x, GROUND_OLD + 4, 26 * V3.sc) + placeOld(VENDOR, V3.x, GROUND_OLD, V3.sc, vo);
+  // marcas del golpe en la puerta
+  if (u < KN && Math.sin(2 * PI * u / 0.2) > 0.4) w += `<path d="M615 880 l40 -30 M625 925 l52 0 M615 970 l40 30" stroke="${O.ink}" stroke-width="${f(SW)}" stroke-linecap="round"/>`;
+  // tornillo que pasa al vecino y monedas que pasan al vendedor
+  const vH = oldPt(V3.x, GROUND_OLD, V3.sc, ...oldHandPt(OL.shF, 58, 58), false);
+  const nH = oldPt(V3.nx, GROUND_OLD - 14, V3.nsc, ...oldHandPt(OL.shF, 62, 30), true);
+  if (u > GIVE && u < GIVE + 0.16) {
+    const e = easeInOut((u - GIVE) / 0.16), p = arcPath(vH, nH, 120)(e);
+    w += at(p[0], p[1] - 30, V3.sc, screwL(v => f(v * SW / (3 * V3.sc)), 0, 0, 2.4, -20 + 200 * e));
+  }
+  if (u > COINS && u < COINS + 0.2) {
+    const vC = oldPt(V3.x, GROUND_OLD, V3.sc, ...oldHandPt(OL.shF, 52, 18), false);
+    for (let i = 0; i < 3; i++) { const e = easeInOut(clamp((u - COINS - i * 0.03) / 0.15)), p = arcPath(nH, vC, 160)(e); w += oldCoin(p[0], p[1] - 20, 16, u * 30 + i); }
+  }
+  if (u > SHOW && u < GIVE) w += glintOld(vH[0] + 24, vH[1] - 80, 30, pop(u, SHOW + 0.05, 0.25) * (1 + 0.2 * Math.sin(u * 15)));
+  if (u > COINS + 0.18 && u < CAP) w += onoOld('¡clinc!', vH[0] - 20, vH[1] - 200, pop(u, COINS + 0.18, 0.2), -8, 80);
+  const cx = [540, 560, 520][shot];
+  let s = cam(zoomIn(u, 0, 1.14, 0.18) * [1, 1.03, 1.0][shot], cx, 950, w);
+  // ¡toc, toc! (letras de cómic) y ¡Tornillos! en la primera puerta
+  const kt = pop(u, 0.04, 0.25) * (1 - easeOut((u - SHOW) / 0.1));
+  s += onoOld('¡toc, toc!', 720, 640, kt, -8 + 3 * Math.sin(u * 20), 118);
+  if (shot === 0) {
+    const kb = pop(u, 0.5, 0.35) * (1 - easeOut((u - 1.25) / 0.1));
+    const hd = oldPt(V3.x, GROUND_OLD, V3.sc, 101, 28, false);
+    s += bubbleOld(400, 450, kb, '¡Tornillos!', hd[0] - 400 + 10, hd[1] - 450 - 40, 92);
+  }
+  return oldFilm(s, T);
+};
+
+/* ---------- 4) Salto de época: contador 1945 -> 2026; destello y paso a colores vivos ---------- */
+const YEARS4 = [[1945, 0], [1960, 0.42], [1990, 0.84], [2010, 1.26], [2026, 1.98]];
+S[4] = (t, T, sc) => {
+  const FL = (sc && sc.flash) || 1.8;
+  const old = t < FL;
+  const tt = old ? q15(t) : t, TT = T - t + tt;
+  let idx = 0;
+  YEARS4.forEach(([, t0], i) => { if (tt >= t0) idx = i; });
+  const [year, t0] = YEARS4[idx];
+  const k = pop(tt, t0, 0.32);
+  let s;
+  if (old) {
+    s = paperBg();
+    s += filmLeader(540, 860, 360, (tt * 900) % 360);
+    s += bigOld(String(year), 540, 870, 300, 0.7 + 0.3 * k, lerp(-8, 0, k), { sd: 10, maxW: 640 });
+    s += speedLinesV(tt);
+    s = oldFilm(cam(bump(tt, YEARS4.slice(1, 4).map(y => y[1]), 0.05), 540, 860, s), TT);
+  } else {
+    const u = t - FL;
+    s = `<rect width="${W}" height="${H}" fill="${C.sky}"/>` + rays(540, 860, 18, t * 14, C.skyL);
+    s += whiteClouds(T, [{ x0: 40, y: 360, s: 0.8, v: 30 }, { x0: 700, y: 1250, s: 0.9, v: 40 }, { x0: 1200, y: 600, s: 0.7, v: 22 }]);
+    const slam = idx === 4;
+    if (slam && tt < t0 + 0.35) s += impactLines(540, 860, t, 34, 520);
+    s += burst(540, 860, 360 * (0.85 + 0.15 * k), t * 10, slam ? C.yel : C.pink);
+    s += big(String(year), 540, 875, 300, 0.75 + 0.25 * k, lerp(-10, -3, k), { fill: '#FFFFFF', maxW: 640 });
+    if (slam) [[210, 520, 40, 0.1], [880, 560, 34, 0.18], [220, 1220, 30, 0.26], [870, 1190, 38, 0.34]].forEach(([x, y, r, d], i) => { s += sparkle(x, y, r, pop(t, t0 + d, 0.35) * (1 + 0.2 * Math.sin(t * 14 + i))); });
+    s = cam(bump(t, [t0], 0.06) * (u < 0.2 ? lerp(1.15, 1, easeOut(u / 0.2)) : 1), 540, 860, s, slam && tt < t0 + 0.3 ? 6 * Math.sin(t * 90) : 0);
+    // destello blanco
+    if (u < 0.28) s += `<rect width="${W}" height="${H}" fill="#FFFFFF" opacity="${f(1 - easeOut(u / 0.28))}"/>`;
+  }
+  return s;
+};
+// líneas de velocidad (sepia) mientras corren los años
+function speedLinesV(t) {
+  let s = '';
+  for (let i = 0; i < 10; i++) {
+    const y = ((hash(i * 3.3) * 1400 + t * 2600) % 1400) + 200, x = i < 5 ? 80 + i * 18 : 1000 - (i - 5) * 18;
+    s += `<line x1="${x}" y1="${f(y)}" x2="${x}" y2="${f(y + 120)}" stroke="${O.brown}" stroke-width="5" stroke-linecap="round" opacity="0.6"/>`;
+  }
+  return s;
+}
+
+/* ---------- 5) 2026 · Calle moderna; «2026», «Ya no hace falta ir puerta a puerta»; móvil flotando con ondas ---------- */
+const SHOPS5 = [{ facade: C.cream, item: 'dress' }, { facade: C.pink, item: 'bread' }, { facade: C.navy, item: 'flowers' }, { facade: C.cream, item: 'gift' }];
 S[5] = (t, T) => {
-  let w = day(T, { band: 1000, sx: 950, sy: 250, sr: 50 });
-  w += sideWalls();
-  const open = easeOut((t - S5.door) / 0.22) * (1 - easeInOut((t - 3.05) / 0.3));
-  const bell = t > S5.door ? 30 * damp(t - S5.door, 18, 2.2) : 0;
-  const drawer = t > S5.ching ? easeOut((t - S5.ching) / 0.2) : 0;
-  const ribK = 1 + 0.14 * (t > S5.wow ? Math.max(0, damp(t - S5.wow, 12, 4)) : 0);
-  // Lucía entrando por la puerta (recortada al hueco)
-  const inside = d => {
-    if (t < S5.door || t > S5.inEnd) return '';
-    const u = clamp((t - S5.door) / (S5.inEnd - S5.door));
-    const id = 'dr' + (uid++), sc = lerp(LUC.sc, 3.1, u);
-    const o = Object.assign(walkL(t), { who: 'lucia', expr: 'wow', look: [0.6, 0], head: -3 });
-    return `<clipPath id="${id}"><rect x="${f(d.x + 4)}" y="${f(d.y + 4)}" width="${f(d.w - 8)}" height="${f(d.h)}"/></clipPath><g clip-path="url(#${id})">` +
-      place(lerp(DOORX5, DOORX5 + 50, u), lerp(LUC.feet, 1300, u), 190, 204, sc, o) + `</g>`;
-  };
-  w += tiendaShop(SHOP.x, SHOP.base, SHOP.w, SHOP.h, { pct: 1, rib: 1, ribK, page: 12, bell, open, inside, drawer, t: T });
-  w += ground(SHOP.base, 0, { sp: 230 });
-  if (t > S5.wow && t < S5.wow + 0.9) {
-    w += sparkle(GS.rib.x - 260, GS.pct.y + 140, 30, pop(t, S5.wow, 0.3) * (1 + 0.2 * Math.sin(t * 15)));
-    w += sparkle(GS.rib.x + 250, GS.pct.y + 80, 24, pop(t, S5.wow + 0.08, 0.3) * (1 + 0.2 * Math.sin(t * 13)));
-  }
-  // cola de gente que llega a la puerta
-  QUEUE5.forEach((q, j) => {
-    const t0 = 2.75 + j * 0.3, u = clamp((t - t0) / 1.25);
-    if (t < t0) return;
-    const x = lerp(-170, q.x, u), walking = u < 1;
-    const p = walking ? walkPose(2 * PI * (t - t0) / 0.8 + j, 0.85) : { legF: 0, legB: 0, armF: 0, armB: 0, bob: breathe(T + j) };
-    delete p.pony;
-    const look = t > S5.ching ? [1, -0.6] : [0.8, -0.2];
-    w += shadowEll(x, 1418, 26 * 2.75) + placeFolk(q.i, x, 1418, 2.75, Object.assign(p, { expr: t > S5.ching ? 'sparkle' : (j % 2 ? 'smile' : 'happy'), look, head: -3 }));
-  });
-  // Lucía fuera
-  if (t < S5.door) {
-    let lx, o;
-    if (t < S5.see) { lx = lerp(-160, LUC.stop, t / S5.see); o = Object.assign(walkL(t), { expr: 'happy', look: [0.4, 0] }); }
-    else if (t < S5.run) {
-      lx = LUC.stop;
-      const dm = damp(t - S5.see, 14, 5), wow = t >= S5.wow, hop = wow ? Math.max(0, Math.sin(clamp((t - S5.wow) / 0.3) * PI)) * 7 : 0;
-      o = { legF: -10 * dm, legB: 10 * dm, armF: wow ? -30 : 12 * dm, armB: wow ? 30 : -12 * dm, bob: -hop, expr: wow ? 'wow' : 'curious', look: [1, -1.1], head: -8 };
-    } else {
-      lx = lerp(LUC.stop, DOORX5, clamp((t - S5.run) / (S5.door - S5.run)));
-      o = Object.assign(runL(t - S5.run), { expr: 'wow', look: [0.8, 0], head: -4 });
+  let w = day(T, { band: 1000, sx: 930, sy: 300, sr: 54 });
+  for (let i = -1; i < 3; i++) w += shop(i * 460 + 60, 1330, 420, 520, Object.assign({ sign: 'TIENDA' }, SHOPS5[(i + 1) % 4]));
+  w += ground(1330, 0, { sp: 230 });
+  // móvil flotando con ondas
+  const kp = pop(t, 0.7, 0.55), fy = 10 * Math.sin(t * 2.6);
+  if (kp > 0.01) {
+    w += vibeRings(540, 1070 + fy, t, 230, 3);
+    const X = 385, Y = 800, PW = 310, PH = 540;
+    const ph = portalPhone(X, Y, PW, PH, (sx, sy, sw_) => {
+      let g = '';
+      CARD9.forEach((c, i) => { g += at(sx + sw_ / 2, sy + 70 + i * 110, pop(t, 1.1 + i * 0.15, 0.4), pill(0, 0, sw_ - 50, 80, c.col, c.label, { size: 44 })); });
+      return g;
+    }, { hh: 120 });
+    w += at(540, 1070 + fy, kp, `<g transform="translate(-540 -1070)">${ph}</g>`, lerp(-12, -4, kp) + 2 * Math.sin(t * 2));
+    // ondas tipo señal a los lados
+    for (let j = 0; j < 3; j++) {
+      const a = 0.4 + 0.6 * ((Math.sin(t * 6 - j) + 1) / 2);
+      w += `<path d="M${f(330 - j * 40)} ${f(980 + fy)} q-36 90 0 180 M${f(750 + j * 40)} ${f(980 + fy)} q36 90 0 180" fill="none" stroke="${INK}" stroke-width="${f(SW * 1.1)}" stroke-linecap="round" opacity="${f(a * kp)}"/>`;
     }
-    w += lucia(lx, o);
-    if (t > S5.run) w += speedLinesH(lx - 150, LUC.feet - 420, 160, 4, 90);
-    if (t > S5.wow && t < S5.run + 0.2) w += mark('!', LUC.stop + 140, 760, pop(t, S5.wow, 0.3), -8 + 4 * Math.sin(t * 9), 170);
+    if (t > 1.0) { w += sparkle(270, 860, 28, pop(t, 1.0, 0.35) * (1 + 0.2 * Math.sin(t * 15))); w += sparkle(820, 1300, 24, pop(t, 1.1, 0.35)); }
   }
-  // campanilla
-  if (t > S5.door && t < S5.door + 0.9) {
-    const bx = GS.door.x + GS.door.w * 0.84, by = GS.door.y + 20;
-    for (let i = 0; i < 2; i++) w += `<path d="M${f(bx + 40 + i * 26)} ${f(by - 40)} q18 30 0 60" fill="none" stroke="${INK}" stroke-width="${f(SW * (1 - (t - S5.door) / 0.9))}" stroke-linecap="round"/>`;
-    w += at(bx - 20, by - 120, pop(t, S5.door + 0.05, 0.35) * (1 - easeOut((t - S5.door - 0.7) / 0.2)), text('¡din!', 0, 0, { size: 80, font: 'G', fill: C.yel, sw: SW * 1.6, sd: 5 }), 10);
-  }
-  // «¡cha-ching!» sobre la caja y monedas
-  if (t > S5.ching && t < S5.ching + 1.2) for (let i = 0; i < 4; i++) {
-    const u = (t - S5.ching - i * 0.08) / 0.9;
-    if (u <= 0 || u >= 1) continue;
-    w += coin(800 + (i - 1.5) * 50 + u * (i - 1.5) * 90, 640 - 300 * u + 420 * u * u, 24, t * 12 + i);
-  }
-  w += chaChing(800, 690, pop(t, S5.ching, 0.4) * 0.62, t);
-  let s = cam(zoomIn(t, 0, 1.28, 0.3) * bump(t, [S5.wow, S5.ching], 0.035), 540, 900, w);
-  if (t < 0.3) s += speedLinesRadial(540, 900, 1 - t / 0.3);
-  const k = pop(t, 1.4, 0.5);
-  s += big('¡Voy ahora mismo!', 540, 270, 132, k, lerp(-8, -3, k));
+  let s = cam(zoomIn(t, 0, 1.16, 0.22) * bump(t, [0.15], 0.04), 540, 900, w);
+  const k1 = pop(t, 0.1, 0.5);
+  s += big('2026', 540, 330, 260, k1, lerp(-10, -3, k1), { fill: C.yel, sd: 12, sw: SW * 2.6 });
+  const k2 = pop(t, 0.45, 0.5), k3 = pop(t, 0.62, 0.5);
+  s += big('Ya no hace falta', 540, 540, 108, k2, lerp(7, 2, k2));
+  s += big('ir puerta a puerta', 540, 665, 108, k3, lerp(-6, -2, k3));
   return s;
 };
 
-/* ---------- 6) Primer plano del móvil: tarjeta con «Hasta el sábado»; «Publicar» -> tic verde «Publicada» ---------- */
-const PH6 = { X: 190, Y: 410, PW: 700, PH: 990 };
-const BTN6 = { x: 540, y: 1268, w: 540, h: 124 }, PRESS6 = 2.6;
+/* ---------- 6) Interior de la tienda: Mari Carmen publica; salen «Novedad», «Oferta» y «Evento»; «Publicar» -> tic verde ---------- */
+const MC6 = { x: 300, y: 1560, sc: 6.6 };
+const SLOT6 = [[790, 420], [790, 650], [790, 880]], FLY6 = [1.45, 1.95, 2.45], CARD6K = 0.9;
+const BTN6 = { x: 790, y: 1090, w: 440, h: 116 }, PRESS6 = 3.75;
 S[6] = (t, T) => {
-  let w = day(T, { band: 1150, sx: 975, sy: 470, sr: 48 });
-  w += ground(1500, 0, { sp: 230 });
-  const hd = holdHand(PH6.X, PH6.Y, PH6.PW, PH6.PH);
-  let ph = hd.back;
-  const kc = pop(t, 0.2, 0.55), tagK = pop(t, 1.0, 0.5) * (1 + 0.08 * (t > 1.4 ? Math.max(0, damp(t - 1.4, 10, 3)) : 0));
-  ph += portalPhone(PH6.X, PH6.Y, PH6.PW, PH6.PH, (sx, sy, sw_) => {
-    let g = '';
-    const cx = sx + 28, cy = sy + 28, cw = sw_ - 56;
-    if (kc > 0.01) g += `<g transform="translate(540 ${f(cy + 280)}) scale(${f(kc)}) translate(-540 ${f(-(cy + 280))})">` + offerCard8(cx, cy, cw, 560, { kPct: pop(t, 0.55, 0.5), kTag: tagK }, t) + `</g>`;
-    const kb = pop(t, 1.35, 0.45), done = t >= PRESS6;
-    const sq = t >= PRESS6 - 0.05 && t < PRESS6 + 0.1 ? 0.92 : 1 + (done ? 0.06 * Math.max(0, damp(t - PRESS6 - 0.1, 16, 6)) : 0);
-    if (kb > 0.01) {
-      let b = `<rect x="${-BTN6.w / 2 + 9}" y="${-BTN6.h / 2 + 9}" width="${BTN6.w}" height="${BTN6.h}" rx="${BTN6.h / 2}" fill="${INK}"/>`;
-      b += `<rect x="${-BTN6.w / 2}" y="${-BTN6.h / 2}" width="${BTN6.w}" height="${BTN6.h}" rx="${BTN6.h / 2}" fill="${done ? C.green : C.red}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-      if (!done) b += text('Publicar', 0, 4, { size: 74, sw: SW * 1.8, sd: 5 });
-      else { b += checkCircle(-150, 0, 48, pop(t, PRESS6 + 0.05, 0.4)); b += text('Publicada', 50, 4, { size: 70, sw: SW * 1.8, sd: 5 }); }
-      g += at(BTN6.x, BTN6.y, kb * sq, b);
-    }
-    return g;
-  }, { hh: 150 });
-  ph += hd.front;
-  const rise = lerp(140, 0, easeOut(t / 0.4));
-  w += `<g transform="translate(0 ${f(rise)})">${ph}</g>`;
-  if (t > 1.05 && t < 1.9) { w += sparkle(780, 1080, 28, pop(t, 1.05, 0.3) * (1 + 0.2 * Math.sin(t * 15))); w += sparkle(250, 1150, 22, pop(t, 1.15, 0.3)); }
+  let w = dotWall();
+  w += shopSign9(300, 320, 420, 128, 'TIENDA');
+  w += at(110, 560, 1, clockFace(62, 10 * 60 + 5 + T * 0.5));
+  w += lamp(560, 190, 1.2 * Math.sin(T * 1.6));
+  // Mari Carmen: bolsillo -> saca el móvil -> teclea -> satisfecha
+  const toPocket = easeInOut(clamp((t - 0.1) / 0.35)), up = easeOut(clamp((t - 0.5) / 0.35)), upB = easeOut(clamp((t - 0.7) / 0.3));
+  const armF = t < 0.5 ? lerp(-4, 24, toPocket) : lerp(24, -55, up);
+  const armB = lerp(-2, -80, upB);
+  const both = t >= 1.0 || upB >= 0.95, typing = t > 1.0 && t < PRESS6;
+  const done = t >= PRESS6 + 0.1;
+  const expr = done ? 'proud' : (t < 0.95 ? 'happy' : 'focus');
+  const lookDown = done ? lerp(1, 0.2, easeOut((t - PRESS6 - 0.1) / 0.3)) : easeOut(clamp((t - 0.6) / 0.4));
+  const fh = mcHand(MCF, armF), bh = mcHand(MCB, armB);
+  const holdPhone = t > 0.5 && !both;
+  w += placeMC(MC6.x, MC6.y, MC6.sc, Object.assign(MCB_(T), {
+    expr, look: done ? [0.8, -0.4] : [0.8 * lookDown, 1.6 * lookDown], head: done ? -4 : 7 * lookDown,
+    armF, armB,
+    handF: holdPhone ? (w2 => mcPhoneSmall(w2, 205.5, 134, -10 - 50 * up, 'app') + mHand(w2)) : (both ? null : (w2 => mHand(w2))),
+    handB: both ? null : (w2 => mHand(w2, 175.5, 143, C.skinS)),
+    front: both ? (w2 => phone9(w2, t * 3.2, typing, fh[0], fh[1], bh[0] + 2, bh[1] + 2, done ? 'ok' : 'app')) : null,
+    pocketItem: t < 0.5 ? (w2 => `<rect x="189" y="125" width="8" height="8" rx="1.5" fill="${INK}"/>`) : null
+  }));
+  // mostrador en primer plano
+  w += `<rect x="-20" y="1236" width="${W + 40}" height="${H}" fill="${C.wood}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  w += `<rect x="-20" y="1214" width="${W + 40}" height="36" rx="10" fill="#C98A4B" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  for (let x = 60; x < W; x += 150) w += `<rect x="${x}" y="1252" width="44" height="${H}" fill="${C.woodS}" opacity="0.5"/>`;
+  const [px, py] = mcPt(MC6.x, MC6.y, MC6.sc, (fh[0] + bh[0]) / 2, (fh[1] + bh[1]) / 2 - 10);
+  if (typing && t < 1.45) for (let i = 0; i < 3; i++) { const tt = (t * 3.2 + i / 3) % 1; w += sparkle(px + (i - 1) * 100, py - 120 - tt * 80, 16 + 6 * (1 - tt), 1 - tt * 0.6); }
+  let s = cam(zoomIn(t, 0, 1.14, 0.22) * bump(t, [PRESS6], 0.03), 540, 900, w);
+  // tarjetas que salen volando del móvil con estela
+  FLY6.forEach((t0, i) => {
+    if (t < t0) return;
+    const e = easeOut(clamp((t - t0) / 0.42)), [tx, ty] = SLOT6[i];
+    const path = arcPath([px, py - 20], [tx, ty], 260);
+    if (e < 1) s += trail(path, e, 0.35, 40);
+    const [cx, cy] = path(e);
+    const land = pop(t, t0 + 0.38, 0.35);
+    const k = e < 1 ? lerp(0.15, CARD6K, e) : CARD6K * (0.92 + 0.08 * land);
+    const fl = t > t0 + 0.6 ? 6 * Math.sin((t - t0) * 2.4 + i) : 0;
+    s += card9(i, cx, cy + fl, k, lerp(-25 + i * 10, [-3, 2, -2][i], e), t, { done: t > PRESS6 + 0.15 + i * 0.1 ? pop(t, PRESS6 + 0.15 + i * 0.1, 0.35) : 0 });
+  });
+  // botón «Publicar» -> tic verde «Publicado»
+  const kb = pop(t, 3.0, 0.45), pressed = t >= PRESS6;
+  const sq = t >= PRESS6 - 0.05 && t < PRESS6 + 0.1 ? 0.92 : 1 + (pressed ? 0.06 * Math.max(0, damp(t - PRESS6 - 0.1, 16, 6)) : 0);
+  if (kb > 0.01) {
+    let b = `<rect x="${-BTN6.w / 2 + 9}" y="${-BTN6.h / 2 + 9}" width="${BTN6.w}" height="${BTN6.h}" rx="${BTN6.h / 2}" fill="${INK}"/>`;
+    b += `<rect x="${-BTN6.w / 2}" y="${-BTN6.h / 2}" width="${BTN6.w}" height="${BTN6.h}" rx="${BTN6.h / 2}" fill="${pressed ? C.green : C.red}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+    if (!pressed) b += text('Publicar', 0, 4, { size: 70, sw: SW * 1.8, sd: 5 });
+    else { b += checkCircle(-128, 0, 44, pop(t, PRESS6 + 0.05, 0.4)); b += text('Publicado', 44, 4, { size: fit('Publicado', 64, 270), sw: SW * 1.8, sd: 5 }); }
+    s += at(BTN6.x, BTN6.y, kb * sq, b);
+  }
   if (t > PRESS6 && t < PRESS6 + 0.6) {
     const v = (t - PRESS6) / 0.6;
-    for (let j = 0; j < 2; j++) { const u = clamp(v - j * 0.25); if (u > 0) w += `<circle cx="${BTN6.x + 120}" cy="${BTN6.y}" r="${f(30 + u * 200)}" fill="none" stroke="${INK}" stroke-width="${f(SW * (1.2 - u))}"/>`; }
+    for (let j = 0; j < 2; j++) { const u = clamp(v - j * 0.25); if (u > 0) s += `<circle cx="${BTN6.x + 110}" cy="${BTN6.y}" r="${f(30 + u * 190)}" fill="none" stroke="${INK}" stroke-width="${f(SW * (1.2 - u))}"/>`; }
   }
-  if (t > PRESS6 + 0.1) [[150, 1130, 34, 0.1], [930, 1150, 30, 0.18], [120, 640, 28, 0.26], [960, 700, 30, 0.34]].forEach(([x, y, r, d], i) => { w += sparkle(x, y, r, pop(t, PRESS6 + d, 0.35) * (1 + 0.2 * Math.sin(t * 14 + i))); });
+  if (t > PRESS6 + 0.1) [[560, 1020, 30, 0.1], [1020, 1180, 28, 0.18], [120, 760, 30, 0.26], [560, 300, 26, 0.34]].forEach(([x, y, r, d], i) => { s += sparkle(x, y, r, pop(t, PRESS6 + d, 0.35) * (1 + 0.2 * Math.sin(t * 14 + i))); });
   // dedo que pulsa
-  const fin = easeOut(clamp((t - 1.95) / 0.5)), out = easeInOut(clamp((t - PRESS6 - 0.35) / 0.4));
-  const fx = lerp(1350, BTN6.x + 120, fin) + out * 900, fy = lerp(1340, BTN6.y + 10, fin) + (t > PRESS6 - 0.05 && t < PRESS6 + 0.1 ? 8 : 0);
-  if (t > 1.95 && fx < 1340) w += finger(fx, fy, -14);
-  let s = cam(zoomIn(t, 0, 1.18, 0.24) * bump(t, [PRESS6], 0.03), 540, 860, w);
-  const k = pop(t, 0.3, 0.5);
-  s += big('Tú pones la fecha', 540, 268, 128, k, lerp(-8, -3, k));
+  const fin = easeOut(clamp((t - 3.2) / 0.45)), out = easeInOut(clamp((t - PRESS6 - 0.3) / 0.4));
+  const fx = lerp(1350, BTN6.x + 110, fin) + out * 900, fy = lerp(1300, BTN6.y + 10, fin) + (t > PRESS6 - 0.05 && t < PRESS6 + 0.1 ? 8 : 0);
+  if (t > 3.2 && fx < 1340) s += finger(fx, fy, -14);
   return s;
 };
 
-/* ---------- 7) Calle llena de gente: vibran los móviles, los sacan y ven la oferta con fecha ---------- */
+/* ---------- 7) Calle llena de gente: vibran los móviles y ven Novedad, Oferta y Evento ---------- */
 const CROWD7 = [
   { i: 3, x: 95, foot: 1250, sc: 2.6 }, { i: 6, x: 275, foot: 1250, sc: 2.6 }, { i: 0, x: 455, foot: 1250, sc: 2.6 },
   { i: 9, x: 635, foot: 1250, sc: 2.6 }, { i: 7, x: 815, foot: 1250, sc: 2.6 }, { i: 8, x: 990, foot: 1250, sc: 2.6 },
-  { i: 1, x: 170, foot: 1420, sc: 3.2 }, { i: F_ROSA, x: 415, foot: 1420, sc: 3.1 }, { i: 4, x: 665, foot: 1420, sc: 3.2 }, { i: F_CUADROS, x: 905, foot: 1420, sc: 3.15 }
+  { i: 1, x: 170, foot: 1392, sc: 3.1 }, { i: F_ROSA, x: 415, foot: 1392, sc: 3.0 }, { i: 4, x: 665, foot: 1392, sc: 3.1 }, { i: F_CUADROS, x: 905, foot: 1392, sc: 3.05 }
 ];
 const FACADES7 = [C.cream, C.pink, C.navy, C.cream];
 const VIB7 = 0.7, UP7 = 1.3;
@@ -253,8 +285,9 @@ S[7] = (t, T) => {
     const armF = lerp(-22, -58, up) + (vib ? 4 * Math.sin(t * 70 + n) : 0) + (walking ? 6 * Math.sin(2 * PI * t / 0.8 + n) : 0);
     const expr = up > 0.4 ? (n % 3 === 1 ? 'smile' : 'sparkle') : (vib ? 'surprise' : 'happy');
     const o = { flip, expr, look: up > 0.4 ? [1, 1.6] : [0.4, 0], head: lerp(0, 13, up), armF, armB: wp.armB, legF: wp.legF, legB: wp.legB,
-      bob: (wp.bob || 0) + (up > 0 ? -3 * Math.max(0, damp(t - UP7, 14, 5)) : 0), shake, lit: t > VIB7, rot: lerp(-12, -6, up) };
-    const r = streetPerson8(c.i, x, c.foot, c.sc, o);
+      bob: (wp.bob || 0) + (up > 0 ? -3 * Math.max(0, damp(t - UP7, 14, 5)) : 0), shake, lit: t > VIB7, rot: lerp(-12, -6, up), card: n % 3 };
+    delete wp.pony;
+    const r = streetPerson9(c.i, x, c.foot, c.sc, o);
     w += r.svg;
     if (vib) {
       w += vibeRings(r.phone[0], r.phone[1], t, 30);
@@ -263,22 +296,25 @@ S[7] = (t, T) => {
     if (up > 0.4) w += sparkle(r.head[0] + (flip ? -1 : 1) * 70, r.head[1] - 40, 20, pop(t, UP7 + 0.3, 0.35) * (1 + 0.2 * Math.sin(t * 16 + n)));
   });
   let s = cam(zoomIn(t, 0, 1.12, 0.22) * bump(t, [VIB7, UP7 + 0.4], 0.035), 540, 1000, w);
-  const kc = pop(t, UP7 + 0.35, 0.55);
-  s += at(540, 690 + 6 * Math.sin(t * 2.4), kc * 0.95, offerMini8(t), lerp(-8, -2, kc));
+  // abanico con las tres tarjetas
+  [[230, 700, -8], [540, 672, 0], [850, 700, 8]].forEach(([x, y, r], i) => {
+    const k = pop(t, UP7 + 0.3 + i * 0.12, 0.5);
+    s += card9(i, x, y + 6 * Math.sin(t * 2.4 + i), k * 0.62, lerp(r * 2.5, r, k), t);
+  });
   const k1 = pop(t, 0.2, 0.5), k2 = pop(t, 0.4, 0.5);
-  s += big('Nosotros la llevamos', 540, 270, 122, k1, lerp(-8, -3, k1));
-  s += big('a la mano de tus clientes', 540, 400, 104, k2, lerp(7, 2, k2), { fill: C.yel });
+  s += big('A la mano de', 540, 270, 130, k1, lerp(-8, -3, k1));
+  s += big('tus futuros clientes', 540, 410, 118, k2, lerp(7, 2, k2), { fill: C.yel });
   return s;
 };
 
-/* ---------- 8) ¿Tienes un negocio? Escríbenos + sobre con el correo; tarjeta final roja ---------- */
-const BIRDS8 = [{ t0: 0.2, d: 4.0, dir: 1, y: 470, a: 36 }, { t0: 1.4, d: 4.4, dir: -1, y: 1350, a: 30 }, { t0: 2.6, d: 3.6, dir: 1, y: 700, a: 32 }];
+/* ---------- 8) ¿Eres comercio? Comenta ALTA y te enviamos la solicitud; tarjeta final roja con el logo ---------- */
+const BIRDS8 = [{ t0: 0.2, d: 4.0, dir: 1, y: 1010, a: 36 }, { t0: 1.4, d: 4.4, dir: -1, y: 1340, a: 30 }, { t0: 2.6, d: 3.6, dir: 1, y: 960, a: 32 }];
 S[8] = (t, T, sc) => {
   const cut = (sc && sc.cut) || 6;
   if (t < cut) {
-    let s = day(T, { band: 1180, sx: 150, sy: 770, sr: 52, clouds: [
+    let s = day(T, { band: 1180, sx: 150, sy: 1000, sr: 52, clouds: [
       { x0: 60, y: 240, s: 0.75, v: 16 }, { x0: 700, y: 1390, s: 0.85, v: 24 }, { x0: 300, y: 1470, s: 0.6, v: 11 },
-      { x0: 1250, y: 720, s: 0.9, v: 19 }, { x0: 1650, y: 430, s: 0.7, v: 14 }] });
+      { x0: 1250, y: 1030, s: 0.9, v: 19 }, { x0: 1650, y: 430, s: 0.7, v: 14 }] });
     BIRDS8.forEach((b, i) => {
       const u = (t - b.t0) / b.d;
       if (u < 0 || u > 1) return;
@@ -286,20 +322,19 @@ S[8] = (t, T, sc) => {
       s += bird(x, Math.min(1370, b.y + Math.sin(u * 7 + i) * 14), b.a, 0.35 + 0.65 * Math.sin(t * 2 * PI / 0.34 + i * 2));
     });
     const k1 = pop(t, 0.15, 0.5);
-    s += big('¿Tienes un negocio?', 540, 330, 135, k1, lerp(-8, -3, k1));
+    s += big('¿Eres comercio?', 540, 330, 150, k1, lerp(-8, -3, k1));
     const ks = pop(t, 0.6, 0.6);
     let st = `<rect x="-640" y="-90" width="1280" height="180" transform="translate(0 14)" fill="${INK}"/><rect x="-640" y="-90" width="1280" height="180" fill="${C.red}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
-    st += text('Escríbenos y te informamos', 0, 2, { size: fit('Escríbenos y te informamos', 96, 960), sw: SW * 2, sd: 6 });
-    const ke = pop(t, 1.1, 0.55), open = easeOut((t - 1.8) / 0.4);
-    s += envelope(540, 880 + 8 * Math.sin(t * 3), 440, ke, open, lerp(-14, -4, ke) + 2 * Math.sin(t * 2.4));
-    s += `<g transform="translate(${f(540 + (1 - ks) * -1500)} 545) rotate(-3)">${st}</g>`;
-    if (t > 1.9) { s += sparkle(300, 760, 30, pop(t, 1.9, 0.4) * (1 + 0.2 * Math.sin(t * 15))); s += sparkle(790, 720, 24, pop(t, 2.0, 0.4)); }
-    const k4 = pop(t, 1.5, 0.5), mail = 'info@escaparatetudela.es', ms = fit(mail, 74, 880);
-    const pulse = t > 2.4 ? 1 + 0.025 * Math.sin((t - 2.4) * 2 * PI / 1.1) : 1;
-    s += at(540, 1130, k4 * pulse, `<rect x="-480" y="-70" width="960" height="140" rx="70" transform="translate(12 12)" fill="${INK}"/><rect x="-480" y="-70" width="960" height="140" rx="70" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>` +
-      text(mail, 0, 2, { size: ms, fill: C.red, sw: SW * 1.6, sd: 4 }));
-    const k5 = pop(t, 1.9, 0.5);
-    s += at(540, 1290, k5, text('escaparatetudela.es', 0, 0, { size: 62, fill: INK, stroke: null }));
+    st += text('Comenta', -120, 2, { size: 100, sw: SW * 2, sd: 6 });
+    st += at(250, 0, 1 + 0.05 * Math.sin(Math.max(0, t - 1.2) * 2 * PI / 1.1), `<rect x="-150" y="-66" width="300" height="132" rx="24" transform="translate(9 9)" fill="${INK}"/><rect x="-150" y="-66" width="300" height="132" rx="24" fill="${C.yel}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text('ALTA', 0, 6, { size: 110, font: 'G', fill: C.red, sw: SW * 2, sd: 6, ls: 4 }), 4);
+    s += `<g transform="translate(${f(540 + (1 - ks) * -1500)} 560) rotate(-3)">${st}</g>`;
+    const k3 = pop(t, 1.1, 0.5);
+    s += big('y te enviamos la solicitud', 540, 760, 92, k3, lerp(6, 2, k3));
+    const k4 = pop(t, 1.4, 0.5);
+    s += at(540, 875, k4, text('escaparatetudela.es', 0, 0, { size: 60, fill: INK, stroke: null }));
+    const ke = pop(t, 1.7, 0.55), open = easeOut((t - 2.4) / 0.4);
+    s += envelope(540, 1150 + 8 * Math.sin(t * 3), 400, ke, open, lerp(-14, -4, ke) + 2 * Math.sin(t * 2.4));
+    if (t > 2.5) { s += sparkle(290, 1060, 30, pop(t, 2.5, 0.4) * (1 + 0.2 * Math.sin(t * 15))); s += sparkle(800, 1010, 24, pop(t, 2.6, 0.4)); }
     return cam(zoomIn(t, 0, 1.1, 0.2), 540, 850, s);
   }
   // tarjeta final: fondo rojo, logo blanco (logo_blanco.png, con «Escaparate de Tudela») y la web
@@ -336,5 +371,7 @@ window.init = async function (cfg, fonts, logos) {
 window.renderFrame = function (sceneId, t, T) {
   uid = 0;
   const sc = CFG.scenes.find(s => s.id === sceneId);
+  // parte antigua: 15 fps efectivos (cada fotograma se repite 2 veces)
+  if (sc.old) { const tq = q15(t); T = T - t + tq; t = tq; }
   document.getElementById('dyn').innerHTML = S[sceneId](t, T, sc);
 };

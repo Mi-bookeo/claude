@@ -1,18 +1,18 @@
 {
-  "title": "Dos carteles",
-  "output": "dos_carteles.mp4",
+  "title": "De puerta en puerta",
+  "output": "de_puerta_en_puerta.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
   "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
   "scenes": [
-    { "id": 1, "name": "Gancho: calle con dos tiendas iguales y el cartel «%»; «¿Por qué tu oferta no vende?»", "duration": 4.0, "still": 1.6 },
-    { "id": 2, "name": "Pantalla partida: izquierda «%» + SIN FECHA (X); derecha «%» + cinta «Hasta el sábado» + CON FECHA (tic)", "duration": 4.0, "still": 2.4 },
-    { "id": 3, "name": "Mitad izquierda: Lucía pasa, sonríe, se encoge de hombros, «Otro día…»; calendario vuela, el cartel se apaga, telaraña", "duration": 6.0, "still": 2.8 },
-    { "id": 4, "name": "El cerebro: «Ya veré…» -> reloj de cuenta atrás -> salta alerta «¡AHORA!»; «El cerebro odia perder una oportunidad»", "duration": 5.0, "still": 3.6 },
-    { "id": 5, "name": "Mitad derecha: Lucía ve «Hasta el sábado», corre a la puerta (campanilla), cola en la puerta, «¡cha-ching!»; «¡Voy ahora mismo!»", "duration": 7.0, "still": 5.4 },
-    { "id": 6, "name": "Primer plano del móvil: tarjeta «Oferta» + «Hasta el sábado»; «Publicar» -> tic verde «Publicada»; «Tú pones la fecha»", "duration": 5.0, "still": 3.2 },
-    { "id": 7, "name": "Calle llena de gente: vibran los móviles, ven la oferta; «Nosotros la llevamos a la mano de tus clientes»", "duration": 5.0, "still": 2.8 },
-    { "id": 8, "name": "¿Tienes un negocio? Escríbenos + sobre con el correo + web; tarjeta final roja con el logo", "duration": 8.0, "still": 3.0, "cut": 6.0 }
+    { "id": 1, "name": "1945 · Cartón de título: «1945» con rebote; «Después de la guerra»", "duration": 4.0, "still": 1.6, "old": true },
+    { "id": 2, "name": "1945 · Calle antigua: el vendedor entra con la cestilla de tornillos; «Puerta a puerta»", "duration": 5.0, "still": 3.9, "old": true },
+    { "id": 3, "name": "1945 · Montaje de 3 puertas: ¡toc, toc!, abre un vecino, tornillo, monedas, saluda con la gorra; «¡Tornillos!»", "duration": 5.0, "still": 0.8, "old": true },
+    { "id": 4, "name": "Salto de época: contador 1945-1960-1990-2010-2026; destello y paso a colores vivos", "duration": 4.0, "still": 2.6, "flash": 1.8 },
+    { "id": 5, "name": "2026 · Calle moderna: «2026», «Ya no hace falta ir puerta a puerta»; móvil flotando con ondas", "duration": 4.0, "still": 2.4 },
+    { "id": 6, "name": "Tienda: Mari Carmen publica; salen «Novedad», «Oferta» y «Evento»; «Publicar» -> tic verde", "duration": 6.0, "still": 4.4 },
+    { "id": 7, "name": "Calle llena de gente: vibran los móviles y ven las tarjetas; «A la mano de tus futuros clientes»", "duration": 5.0, "still": 2.8 },
+    { "id": 8, "name": "¿Eres comercio? Comenta ALTA y te enviamos la solicitud + web; tarjeta final roja con el logo", "duration": 8.0, "still": 3.2, "cut": 6.0 }
   ]
 }

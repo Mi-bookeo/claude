@@ -35,7 +35,9 @@ async function openPage(browser) {
   await page.goto('file://' + path.join(ROOT, 'src', 'index.html'));
   const fonts = [
     ['Baloo2', 800, fs.readFileSync(path.join(ROOT, 'fonts', 'Baloo2-ExtraBold.ttf')).toString('base64')],
-    ['Bangers', 400, fs.readFileSync(path.join(ROOT, 'fonts', 'Bangers-Regular.ttf')).toString('base64')]
+    ['Bangers', 400, fs.readFileSync(path.join(ROOT, 'fonts', 'Bangers-Regular.ttf')).toString('base64')],
+    ['Rye', 400, fs.readFileSync(path.join(ROOT, 'fonts', 'Rye-Regular.ttf')).toString('base64')],
+    ['Abril', 400, fs.readFileSync(path.join(ROOT, 'fonts', 'AbrilFatface-Regular.ttf')).toString('base64')]
   ];
   const logos = [
     // logos de la raíz (1000x1000, fondo opaco) con el fondo quitado por tools/key_logos.py
@@ -91,7 +93,7 @@ async function stills(browser, ids, dir) {
   const page = await openPage(browser);
   fs.mkdirSync(dir, { recursive: true });
   for (const sc of sceneTiming().filter(s => ids.includes(s.id))) {
-    const fr = Math.min(sc.frames - 1, Math.round(sc.still * FPS));
+    const fr = Math.min(sc.frames - 1, Math.round((process.env.STILL_AT ? Number(process.env.STILL_AT) : sc.still) * FPS));
     const t = fr / FPS;
     const buf = await frame(page, sc.id, t, sc.start + t);
     const out = path.join(dir, `still_scene_${pad(sc.id)}.png`);
