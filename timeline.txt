@@ -1,11 +1,11 @@
-Dos carteles — timeline (1080x1920, 30 fps)
+De puerta en puerta — timeline (1080x1920, 30 fps)
 escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
-01	0.000	4.000	4.000	120	Gancho: calle con dos tiendas iguales y el cartel «%»; «¿Por qué tu oferta no vende?»
-02	4.000	8.000	4.000	120	Pantalla partida: izquierda «%» + SIN FECHA (X); derecha «%» + cinta «Hasta el sábado» + CON FECHA (tic)
-03	8.000	14.000	6.000	180	Mitad izquierda: Lucía pasa, sonríe, se encoge de hombros, «Otro día…»; calendario vuela, el cartel se apaga, telaraña
-04	14.000	19.000	5.000	150	El cerebro: «Ya veré…» -> reloj de cuenta atrás -> salta alerta «¡AHORA!»; «El cerebro odia perder una oportunidad»
-05	19.000	26.000	7.000	210	Mitad derecha: Lucía ve «Hasta el sábado», corre a la puerta (campanilla), cola en la puerta, «¡cha-ching!»; «¡Voy ahora mismo!»
-06	26.000	31.000	5.000	150	Primer plano del móvil: tarjeta «Oferta» + «Hasta el sábado»; «Publicar» -> tic verde «Publicada»; «Tú pones la fecha»
-07	31.000	36.000	5.000	150	Calle llena de gente: vibran los móviles, ven la oferta; «Nosotros la llevamos a la mano de tus clientes»
-08	36.000	44.000	8.000	240	¿Tienes un negocio? Escríbenos + sobre con el correo + web; tarjeta final roja con el logo
-TOTAL	0.000	44.000
+01	0.000	4.000	4.000	120	1945 · Cartón de título: «1945» con rebote; «Después de la guerra»
+02	4.000	9.000	5.000	150	1945 · Calle antigua: el vendedor entra con la cestilla de tornillos; «Puerta a puerta»
+03	9.000	14.000	5.000	150	1945 · Montaje de 3 puertas: ¡toc, toc!, abre un vecino, tornillo, monedas, saluda con la gorra; «¡Tornillos!»
+04	14.000	18.000	4.000	120	Salto de época: contador 1945-1960-1990-2010-2026; destello y paso a colores vivos
+05	18.000	22.000	4.000	120	2026 · Calle moderna: «2026», «Ya no hace falta ir puerta a puerta»; móvil flotando con ondas
+06	22.000	28.000	6.000	180	Tienda: Mari Carmen publica; salen «Novedad», «Oferta» y «Evento»; «Publicar» -> tic verde
+07	28.000	33.000	5.000	150	Calle llena de gente: vibran los móviles y ven las tarjetas; «A la mano de tus futuros clientes»
+08	33.000	41.000	8.000	240	¿Eres comercio? Comenta ALTA y te enviamos la solicitud + web; tarjeta final roja con el logo
+TOTAL	0.000	41.000

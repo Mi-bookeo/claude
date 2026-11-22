@@ -122,7 +122,7 @@ S[3] = (t, T, sc) => {
 };
 
 /* ---------- 4) Salto de época: contador 1945 -> 2026; destello y paso a colores vivos ---------- */
-const YEARS4 = [[1945, 0], [1960, 0.42], [1990, 0.84], [2010, 1.26], [2026, 1.98]];
+const YEARS4 = [[1945, 0], [1960, 1.0], [1990, 1.4], [2010, 1.8], [2026, 2.1]];
 S[4] = (t, T, sc) => {
   const FL = (sc && sc.flash) || 1.8;
   const old = t < FL;
