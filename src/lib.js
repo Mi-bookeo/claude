@@ -431,7 +431,7 @@ function person(o) {
   else if (!o.noLegs) g += leg(o.legB || 0, true) + leg(o.legF || 0, false);
   g += `<g transform="translate(0 ${f(o.bob || 0)})">`;
   if (o.behind) g += o.behind(w); // objetos detrás del cuerpo (caja bajo el brazo)
-  g += arm(ARM_B, o.armB || 0, true, o.handB ? o.handB(w) : '');
+  if (!o.noArmB) g += arm(ARM_B, o.armB || 0, true, o.handB ? o.handB(w) : '');
   // pelo trasero
   const head = [];
   if (isM) head.push(`<g transform="rotate(${f(o.pony || 0)} 178 70)"><path d="M180 66 Q154 66 158 94 Q160 104 166 108 Q170 90 182 78Z" fill="${C.hair}" ${st()}/></g>`);
@@ -470,12 +470,12 @@ function person(o) {
   if (isB) hd += `<path d="M176.5 80 Q174 86 178 90 L181 80Z" fill="${C.hair}" ${st(2.4)}/>
     <path d="M175 77 Q174 57 191 58.5 Q207 59.5 205.5 73 Q191 66 175 77Z" fill="${C.red}" ${st()}/>
     <circle cx="183" cy="64" r="1.6" fill="#FFFFFF"/><circle cx="191.5" cy="62" r="1.6" fill="#FFFFFF"/><circle cx="199.5" cy="64.5" r="1.5" fill="#FFFFFF"/><circle cx="179" cy="71" r="1.4" fill="#FFFFFF"/><circle cx="188" cy="68.5" r="1.3" fill="#FFFFFF"/>`;
-  hd += face(o, w);
+  hd += o.faceFn ? o.faceFn(o, w) : face(o, w); // (vídeo 11) cara a cámara con boca que habla
   if (o.phone) hd += miniPhone(229, 88.5, w) + hand(227.4, 93, w);
   g += head[0] ? `<g transform="rotate(${f(o.head || 0)} 190 94)">${head[0]}</g>` : '';
   g += torso;
   if (o.front0) g += o.front0(w);
-  g += arm(ARM_F, o.armF || 0, false, o.handF ? o.handF(w) : '');
+  if (!o.noArmF) g += arm(ARM_F, o.armF || 0, false, o.handF ? o.handF(w) : '');
   g += `<g transform="rotate(${f(o.head || 0)} 190 94)">${hd}</g>`;
   if (o.front) g += o.front(w);
   g += `</g>`;
