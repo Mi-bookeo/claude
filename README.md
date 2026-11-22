@@ -4,6 +4,7 @@ Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 48,8 s (escenas ajus
 para estar en el canal (el cuarto, «El mejor»: apoyas al comercio local). Dirigido al público.
 
 - `marta_cuatro_motivos.mp4` — vídeo sin audio · `marta_cuatro_motivos_con_audio.mp4` — misma imagen (-c:v copy) + sonido
+- `marta_cuatro_motivos_subtitulado.mp4` — con subtítulos dibujados en la franja inferior + la misma pista de sonido · `marta_cuatro_motivos.srt` y `subtitles.json` — tiempos (`python3 audio/subtitulos.py`, luego `node render.js subs`)
 - `scenes/` una escena por archivo · `stills/` un fotograma por escena · `timeline.txt` inicio/fin de cada escena
 - `config.json` — duración de cada escena, tramos de los planos (`shots`: A/B/C, P1/P2/FIN) y tramos en que Marta
   mueve la boca (`talk`), en segundos locales de la escena

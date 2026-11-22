@@ -189,6 +189,26 @@ S[7] = (t, T, sc) => {
   return s;
 };
 
+/* ---------- subtítulos (solo en la versión subtitulada: node render.js subs) ---------- */
+function wrapLines(str, size, maxW) {
+  const words = str.split(' '); const lines = [];
+  let cur = '';
+  words.forEach(wd => { const tr = cur ? cur + ' ' + wd : wd; if (measure(tr, size) <= maxW || !cur) cur = tr; else { lines.push(cur); cur = wd; } });
+  if (cur) lines.push(cur);
+  return lines;
+}
+function subtitle(T) {
+  const c = SUBS.find(q => T >= q.start - 1e-6 && T < q.end);
+  if (!c) return '';
+  let size = 76, lines = wrapLines(c.text, size, 940);
+  while (lines.length > 2 && size > 50) { size -= 4; lines = wrapLines(c.text, size, 940); }
+  const lh = size * 1.18, wMax = Math.max(...lines.map(l => measure(l, size)));
+  const bw = Math.min(1040, wMax + 90), bh = lines.length * lh + 50, cy = 1640;
+  let s = `<rect x="${f(540 - bw / 2)}" y="${f(cy - bh / 2)}" width="${f(bw)}" height="${f(bh)}" rx="30" fill="${INK}" fill-opacity="0.86"/>`;
+  lines.forEach((l, i) => { s += text(l, 540, cy - (lines.length - 1) * lh / 2 + i * lh + size * 0.04, { size, fill: '#FFFFFF', sw: size * 0.14, shadow: false }); });
+  return s;
+}
+
 /* ---------- API para el renderizador ---------- */
 window.init = async function (cfg, fonts, logos, subs) {
   CFG = cfg; SUBS = subs || null;
@@ -217,5 +237,6 @@ window.renderFrame = function (sceneId, t, T) {
   // cabecera fija encima de todo (pulso al empezar la escena), salvo en la tarjeta final
   const fin = sc.shots && sc.shots.FIN && t >= sc.shots.FIN[0];
   if (!fin) s += header11(t);
+  if (SUBS) s += subtitle(T);
   document.getElementById('dyn').innerHTML = s;
 };
