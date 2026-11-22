@@ -27,6 +27,7 @@ function shotA(t, T, u, sc, n, word) {
     arm.h = [arm.h[0], arm.h[1] + (1 - kk) * 30];
   } else { arm = POSE.heart; expr = 'sparkle'; }
   let s = bg11(T, n === 4 ? { birds: { time: t, t0: 0.1, d: 4.2, y: 640 } } : {});
+  if (n === 4) s += at(780, 640, pop(u, 0.08, 0.55), `<g opacity="${f(0.55 * pop(u, 0.3, 0.6))}">${rays(0, 0, 14, T * 30, C.yel, 350)}</g>`);
   s += marta11(px, FOOT, M, mState(t, T, M, ranges, { expr, armF: arm, nod: n === 4 ? -4 * Math.sin(PI * clamp(u / 0.8)) : 0 }));
   if (n === 4) {
     const [hx, hy] = mPt(px, FOOT, M, 193, 108);
@@ -38,7 +39,7 @@ function shotA(t, T, u, sc, n, word) {
     s += bigNumber(800, 610, 150, n, k, -12 * (1 - k), T);
     s += label11(word, 800, 860, pop(u, 0.35, 0.5), -3);
   } else {
-    s += bigNumber(780, 640, 200, 4, k, -12 * (1 - k), T, pop(u, 0.3, 0.6));
+    s += bigNumber(780, 640, 200, 4, k, -12 * (1 - k), T, 0);
     s += sealMejor(960, 470, 92, pop(u, 0.6, 0.5), 12, T);
     s += label11(word, 780, 940, pop(u, 0.4, 0.5), -3, { fill: C.yel });
     s += sparkle(600, 440, 30, 0.5 + 0.5 * Math.sin(T * 9)) + sparkle(990, 760, 26, 0.5 + 0.5 * Math.sin(T * 8 + 2)) + sparkle(640, 820, 22, 0.5 + 0.5 * Math.sin(T * 7 + 1));
@@ -147,7 +148,8 @@ S[7] = (t, T, sc) => {
   if (k === 'FIN') {
     let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + `<g opacity="0.35">${rays(540, 760, 16, u * 12, C.redS)}</g>`;
     const kl = pop(u, 0.02, 0.6);
-    s += logoBadge(540, 740, 620, -4 * (1 - kl), kl, 'logoW');
+    s += at(540, 740, kl, `<circle cx="14" cy="14" r="300" fill="${INK}"/><circle r="300" fill="${C.cream}" ${st11(1.2)}/>`, 0);
+    s += logoPng11(540, 735, 470, -4 * (1 - kl), kl);
     s += bigT('Escaparate Tudela', 540, 1120, 104, pop(u, 0.3, 0.5), -2, { fill: '#FFFFFF' });
     const kw = pop(u, 0.5, 0.5);
     s += at(540, 1250, kw, `<rect x="-300" y="-46" width="600" height="92" rx="46" transform="translate(8 8)" fill="${INK}"/><rect x="-300" y="-46" width="600" height="92" rx="46" fill="${C.cream}" ${st11()}/>` +

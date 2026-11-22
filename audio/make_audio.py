@@ -172,6 +172,11 @@ mus *= 10 ** (-38 / 20) / max(np.sqrt((mus ** 2).mean()), 1e-9)
 env = np.abs(voice); win = int(0.25 * SR); env = np.convolve(env, np.ones(win) / win, 'same')
 duck = 10 ** (-2 * np.clip(env / 0.02, 0, 1) / 20)
 mus *= duck[:, None]
+# plano del bar (escena 4, plano B): música 5 dB más baja para que se oiga la guitarra y el ambiente
+BAR_DB = -5.0
+g = np.ones(N); b0, b1 = shot(4, 'B'), SC[3]['start'] + SC[3]['shots']['B'][1]; tt = np.arange(N) / SR
+g = 10 ** (BAR_DB * np.clip(np.minimum((tt - b0 + 0.25) / 0.25, (b1 + 0.25 - tt) / 0.25), 0, 1) / 20)
+mus *= g[:, None]
 print(f'música: {os.path.relpath(mp, ROOT)}  RMS {db(np.sqrt((mus ** 2).mean())):.1f} dBFS')
 
 mix = mus + (voice + fx)[:, None] * np.array([1.0, 1.0])

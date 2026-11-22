@@ -176,13 +176,18 @@ function vBirds(T, o) {
 }
 
 /* ===================== CABECERA FIJA ===================== */
+// logo.png (solo el icono, sin letras): se usa siempre que al lado ya pone «Escaparate Tudela»
+function logoPng11(cx, cy, size, rot = 0, sc = 1) {
+  const h = size / 2;
+  return at(cx, cy, sc, `<svg x="${f(-h)}" y="${f(-h)}" width="${f(size)}" height="${f(size)}" viewBox="35 28.5 430 430"><use href="#logoI"/></svg>`, rot);
+}
 function header11(t) {
   const k = 1 + 0.05 * Math.sin(PI * clamp(t / 0.32));
   const ts = 44, tw = measure('Escaparate Tudela', ts), pw = 28 + 72 + 16 + tw + 32, ph = 90;
   const x0 = -pw / 2;
   let g = `<rect x="${f(x0 + 8)}" y="${f(-ph / 2 + 8)}" width="${f(pw)}" height="${ph}" rx="45" fill="${INK}"/>`;
   g += `<rect x="${f(x0)}" y="${f(-ph / 2)}" width="${f(pw)}" height="${ph}" rx="45" fill="${C.cream}" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;
-  g += logoBadge(x0 + 28 + 36, 0, 72, 0, 1, 'logoR');
+  g += logoPng11(x0 + 28 + 36, 0, 72);
   g += text('Escaparate Tudela', x0 + 28 + 72 + 16, 3, { size: ts, anchor: 'start', fill: C.red, stroke: null });
   return at(540, 245, k, g);
 }
