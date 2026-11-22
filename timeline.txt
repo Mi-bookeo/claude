@@ -1,0 +1,12 @@
+Carmen y María — timeline (1080x1920, 30 fps)
+escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
+01	0.000	4.000	4.000	120	Pantalla partida: avenida de Carmen (arriba) y callejuela de María (abajo); «Dos tiendas de moda. Dos calles muy distintas.»
+02	4.000	9.000	5.000	150	Avenida de Carmen: la gente pasa de largo; zoom a Carmen; «Mucha gente pasa… pero nadie entra»
+03	9.000	14.000	5.000	150	Callejuela de María: tiendas cerradas, gato, una persona al fondo; «Aquí casi no pasa nadie»
+04	14.000	18.000	4.000	120	Interior de la tienda de María, llena de gente; «Pero siempre llena»
+05	18.000	23.000	5.000	150	Viñetas de Carmen y María; «No basta con que te vean» / «Tienen que saber que existes»
+06	23.000	28.000	5.000	150	María publica: «Novedad» y «Oferta» salen del móvil; «Publicar» -> tic verde
+07	28.000	33.000	5.000	150	Avenida: vibran los móviles, ven las tarjetas y echan a andar juntos; Carmen sorprendida; «A la mano de tus clientes»
+08	33.000	40.000	7.000	210	«Escaparate de Tudela hace que existas»; «¿Tienes un comercio?»; «Comenta ALTA y te enviamos la solicitud»; web
+09	40.000	47.000	7.000	210	El susurro: María se acerca, mano en la boca, mira a los lados y guiña; «Gratis hasta el 31 de enero»; tarjeta final roja
+TOTAL	0.000	47.000
