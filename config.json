@@ -10,63 +10,167 @@
     "preset": "medium",
     "pix_fmt": "yuv420p"
   },
-  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena. 'shots' = tramos de cada plano (tiempo local de la escena, desde 0). 'talk' = tramos en que Marta mueve la boca (tiempo local). 'still' = instante del PNG de stills/. Si cambias una duración, ajusta también los tramos de esa escena.",
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena. 'shots' = tramos de cada plano (tiempo local de la escena, desde 0). 'talk' = tramos en que Marta mueve la boca (tiempo local; los calcula audio/cortar_voces.py a partir de la voz). 'voice' = frase de Marta de la escena (empieza en 'start'). 'cues' = momentos de aparición de textos sincronizados con la voz. 'still' = instante del PNG de stills/. Si cambias una duración, ajusta también los tramos de esa escena.",
   "scenes": [
     {
       "id": 1,
       "name": "Marta saluda; «4 motivos para estar en el canal»; círculos 1-4 (el 4 más grande y brillante)",
-      "duration": 5.5,
-      "still": 4.6,
-      "shots": { "A": [0, 5.5] },
-      "talk": [[0.25, 2.5], [2.8, 5.1]]
+      "duration": 7.5,
+      "still": 6.9,
+      "shots": {
+        "A": [0, 7.5]
+      },
+      "talk": [
+        [0.15, 3.03],
+        [3.51, 3.78],
+        [3.99, 4.85],
+        [5.07, 6.16],
+        [6.39, 7.16]
+      ],
+      "cues": {
+        "title1": 0.2,
+        "title2": 0.6,
+        "waveEnd": 2.4,
+        "circles": 3.9,
+        "four": 6.3
+      },
+      "voice": {
+        "file": "audio/voces/marta_1.wav",
+        "start": 0.15,
+        "duration": 7.05
+      }
     },
     {
       "id": 2,
       "name": "Motivo 1 «Novedades»: A número 1 / B trastienda con caja y móvil «Antes de estar en la tienda» / C pulgar arriba",
-      "duration": 7.0,
-      "still": 4.5,
-      "shots": { "A": [0, 1.5], "B": [1.5, 6.0], "C": [6.0, 7.0] },
-      "talk": [[0.15, 1.4], [1.6, 5.8], [6.1, 6.8]]
+      "duration": 6.4,
+      "still": 4.2,
+      "shots": {
+        "A": [0, 1.5],
+        "B": [1.5, 5.4],
+        "C": [5.4, 6.4]
+      },
+      "talk": [
+        [0.15, 0.42],
+        [0.93, 1.5],
+        [1.67, 2.7],
+        [2.89, 5.18]
+      ],
+      "voice": {
+        "file": "audio/voces/marta_2.wav",
+        "start": 0.15,
+        "duration": 5.07
+      }
     },
     {
       "id": 3,
       "name": "Motivo 2 «Descuentos»: A número 2 / B fachada con cartel 2x1 «Descuentos y promociones» / C guiño",
-      "duration": 7.0,
-      "still": 4.5,
-      "shots": { "A": [0, 1.5], "B": [1.5, 6.0], "C": [6.0, 7.0] },
-      "talk": [[0.15, 1.4], [1.6, 5.8], [6.1, 6.8]]
+      "duration": 6.3,
+      "still": 4.2,
+      "shots": {
+        "A": [0, 1.5],
+        "B": [1.5, 5.3],
+        "C": [5.3, 6.3]
+      },
+      "talk": [
+        [0.15, 0.61],
+        [1.05, 2.33],
+        [2.54, 5.09]
+      ],
+      "voice": {
+        "file": "audio/voces/marta_3.wav",
+        "start": 0.15,
+        "duration": 4.98
+      }
     },
     {
       "id": 4,
       "name": "Motivo 3 «Eventos»: A número 3 / B bar con músico y cata de vinos «Eventos que no sabías que existían» / C saludo",
-      "duration": 5.5,
-      "still": 3.8,
-      "shots": { "A": [0, 1.5], "B": [1.5, 4.5], "C": [4.5, 5.5] },
-      "talk": [[0.15, 1.4], [1.6, 4.3], [4.6, 5.3]]
+      "duration": 4.9,
+      "still": 3.3,
+      "shots": {
+        "A": [0, 1.4],
+        "B": [1.4, 3.9],
+        "C": [3.9, 4.9]
+      },
+      "talk": [
+        [0.15, 0.53],
+        [0.92, 3.5]
+      ],
+      "voice": {
+        "file": "audio/voces/marta_4.wav",
+        "start": 0.15,
+        "duration": 3.39
+      }
     },
     {
       "id": 5,
       "name": "Motivo 4 «El mejor»: A mano en el corazón y 4 gigante con sello / B calle festiva «Apoyas al comercio local» / C corazones",
-      "duration": 10.0,
-      "still": 6.5,
-      "shots": { "A": [0, 2.0], "B": [2.0, 8.5], "C": [8.5, 10.0] },
-      "talk": [[0.2, 1.9], [2.1, 8.3], [8.6, 9.6]]
+      "duration": 9.6,
+      "still": 6.0,
+      "shots": {
+        "A": [0, 2.1],
+        "B": [2.1, 8.1],
+        "C": [8.1, 9.6]
+      },
+      "talk": [
+        [0.15, 0.69],
+        [0.92, 2.01],
+        [2.23, 3.82],
+        [4.12, 6.52]
+      ],
+      "voice": {
+        "file": "audio/voces/marta_5.wav",
+        "start": 0.15,
+        "duration": 6.41
+      }
     },
     {
       "id": 6,
       "name": "Marta señala abajo con el móvil en la otra mano; «Comenta CANAL» y te enviamos el enlace; Canal de WhatsApp",
-      "duration": 7.0,
-      "still": 5.5,
-      "shots": { "A": [0, 7.0] },
-      "talk": [[0.2, 3.2], [3.5, 6.7]]
+      "duration": 6.2,
+      "still": 5.6,
+      "shots": {
+        "A": [0, 6.2]
+      },
+      "talk": [
+        [0.15, 3.09],
+        [3.33, 4.23],
+        [4.41, 5.48]
+      ],
+      "cues": {
+        "pill": 0.9,
+        "comenta": 3.25,
+        "bubble": 3.45,
+        "enviamos": 4.45,
+        "enlace": 4.65,
+        "arrow": 4.95
+      },
+      "voice": {
+        "file": "audio/voces/marta_6.wav",
+        "start": 0.15,
+        "duration": 5.37
+      }
     },
     {
       "id": 7,
       "name": "Plano 1 «Compártelo en los grupos de tus amigos» (burbujas y reacciones) / plano 2 «Para que ellos también se beneficien» / tarjeta final",
-      "duration": 9.0,
-      "still": 3.6,
-      "shots": { "P1": [0, 4.0], "P2": [4.0, 7.0], "FIN": [7.0, 9.0] },
-      "talk": [[0.2, 3.8], [4.15, 6.8]]
+      "duration": 7.9,
+      "still": 2.7,
+      "shots": {
+        "P1": [0, 2.85],
+        "P2": [2.85, 5.9],
+        "FIN": [5.9, 7.9]
+      },
+      "talk": [
+        [0.15, 2.77],
+        [2.93, 5.64]
+      ],
+      "voice": {
+        "file": "audio/voces/marta_7.wav",
+        "start": 0.15,
+        "duration": 5.53
+      }
     }
   ]
 }

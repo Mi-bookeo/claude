@@ -1,6 +1,6 @@
 # 4 motivos para estar en el canal (vídeo 11 · Escaparate Tudela)
 
-Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 51,0 s. Marta habla a cámara y enumera cuatro motivos
+Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 48,8 s (escenas ajustadas a la voz de Marta). Marta habla a cámara y enumera cuatro motivos
 para estar en el canal (el cuarto, «El mejor»: apoyas al comercio local). Dirigido al público.
 
 - `marta_cuatro_motivos.mp4` — vídeo sin audio · `marta_cuatro_motivos_con_audio.mp4` — misma imagen (-c:v copy) + sonido
@@ -15,11 +15,13 @@ para estar en el canal (el cuarto, «El mejor»: apoyas al comercio local). Diri
 node render.js stills 2,5,7     # fotogramas de prueba
 node render.js scenes 3         # volver a renderizar solo una escena
 node render.js all              # escenas + stills + concatenado + timeline
+python3 audio/cortar_voces.py   # corta audio/voces/original_marta.mp3 en marta_1…7 y escribe los tramos «talk» en config.json
 python3 audio/make_audio.py     # voces + efectos + música -> marta_cuatro_motivos_con_audio.mp4 (imagen con -c:v copy)
 ```
 
 ## Sonido
-- Voces: `audio/voces/marta_<n>.(wav|mp3|m4a|ogg|flac)` al inicio de la escena n (1…7), igualadas a -20 dBFS RMS.
+- Voz original: `audio/voces/original_marta.mp3` (ElevenLabs, «Sofia»), cortada en las 7 frases del guion.
+- Voces: `audio/voces/marta_<n>.(wav|mp3|m4a|ogg|flac)` al inicio de la escena n (1…7), igualadas a -20 dBFS RMS; cada una empieza 0,15 s después del inicio de su escena.
   Las que falten quedan en silencio (el script avisa). Si una frase dura más que su escena, el script lo indica:
   ajusta `duration`, `shots` y `talk` de esa escena en `config.json` y ejecuta `node render.js scenes <n>` y
   `node render.js concat` antes de volver a mezclar.
@@ -27,4 +29,4 @@ python3 audio/make_audio.py     # voces + efectos + música -> marta_cuatro_moti
   cling, latido, aplausos, risas, confeti, tachan, whoosh); si no, se sintetizan con código (básicos).
 - Música: `audio/musica.mp3` si existe; si no, música original suave sintetizada por `audio/make_music.py`
   (pop a 112 BPM, stingers en cada número, sube en la escena 5, acorde final en la tarjeta). Queda ~18 dB bajo
-  la voz y baja 4 dB más mientras habla Marta.
+  la voz y baja 2 dB más mientras habla Marta.

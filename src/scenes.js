@@ -104,16 +104,17 @@ function benefit(n, word) {
 S[1] = (t, T, sc) => {
   const M = 5, px = 540;
   let s = bg11(T, { sunX: 930, sunY: 1000 });
-  const arm = t < 3.0 ? POSE.wave(2 * PI * t * 2) : POSE.pointUp;
-  const extra = { expr: t < 3.0 ? 'happy' : 'sparkle', armF: arm, nod: t < 0.5 ? 0 : 0 };
+  const c = Object.assign({ title1: 0.2, title2: 0.5, waveEnd: 3.0, circles: 1.1, four: 1.85 }, sc.cues);
+  const arm = t < c.waveEnd ? POSE.wave(2 * PI * t * 2) : t < c.circles - 0.1 ? POSE.restF : POSE.pointUp;
+  const extra = { expr: t < c.four ? 'happy' : 'sparkle', armF: arm };
   s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, extra));
   s = cam(comicZoom(t, 1.1), 540, 900, s);
   // título
-  s += bigT('4 motivos', 540, 378, 150, pop(t, 0.2, 0.55), -3, { fill: C.yel });
-  s += bigT('para estar en el canal', 540, 488, 84, pop(t, 0.5, 0.55), 2, { fill: '#FFFFFF' });
+  s += bigT('4 motivos', 540, 378, 150, pop(t, c.title1, 0.55), -3, { fill: C.yel });
+  s += bigT('para estar en el canal', 540, 488, 84, pop(t, c.title2, 0.55), 2, { fill: '#FFFFFF' });
   // círculos 1-4 (el 4 más grande y brillando)
-  [[270, 48], [410, 48], [550, 48]].forEach(([x, r], i) => { s += bigNumber(x, 600, r, i + 1, pop(t, 1.1 + 0.22 * i, 0.45), 0, T); });
-  const k4 = pop(t, 1.85, 0.6), pulse = t > 2.5 ? 1 + 0.07 * Math.max(0, Math.sin((t - 2.5) * 2 * PI * 1.2)) : 1;
+  [[270, 48], [410, 48], [550, 48]].forEach(([x, r], i) => { s += bigNumber(x, 600, r, i + 1, pop(t, c.circles + 0.22 * i, 0.45), 0, T); });
+  const k4 = pop(t, c.four, 0.6), pulse = t > c.four + 0.6 ? 1 + 0.07 * Math.max(0, Math.sin((t - c.four - 0.6) * 2 * PI * 1.2)) : 1;
   s += bigNumber(740, 600, 74, 4, k4 * pulse, 6 * Math.sin(T * 2), T, k4);
   s += sparkle(830, 530, 22, k4 * (0.6 + 0.4 * Math.sin(T * 9))) + sparkle(660, 670, 16, k4 * (0.6 + 0.4 * Math.sin(T * 8 + 2)));
   return s;
@@ -125,17 +126,18 @@ S[5] = benefit(4, 'El mejor');
 
 /* ---------- 6) Comenta CANAL ---------- */
 S[6] = (t, T, sc) => {
+  const c = Object.assign({ pill: 2.1, comenta: 0.2, bubble: 0.75, enviamos: 1.4, enlace: 1.6, arrow: 2.5 }, sc.cues);
   const M = 6, px = 255;
   let s = bg11(T, { sunX: 110, sunY: 1190 });
   const pd = Object.assign({}, POSE.pointDown, { h: [POSE.pointDown.h[0], POSE.pointDown.h[1] - 3 * Math.max(0, Math.sin(t * 2 * PI * 1.4))] });
   s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: 'happy', armF: pd, armB: POSE.phoneB }));
   s = cam(comicZoom(t, 1.1), 540, 900, s);
-  s += bigT('Comenta CANAL', 540, 368, 124, pop(t, 0.2, 0.55), -3, { fill: '#FFFFFF' });
-  s += commentBubble(770, 565, pop(t, 0.75, 0.55), -3, t);
-  s += bigT('y te enviamos', 770, 770, 80, pop(t, 1.4, 0.5), 2, { fill: C.yel, maxW: 520 });
-  s += bigT('el enlace', 770, 862, 80, pop(t, 1.6, 0.5), 2, { fill: C.yel, maxW: 520 });
-  s += channelPill(770, 990, pop(t, 2.1, 0.5));
-  s += arrowDown(965, 1110, 170, pop(t, 2.5, 0.5), t);
+  s += bigT('Comenta CANAL', 540, 368, 124, pop(t, c.comenta, 0.55), -3, { fill: '#FFFFFF' });
+  s += commentBubble(770, 565, pop(t, c.bubble, 0.55), -3, t);
+  s += bigT('y te enviamos', 770, 770, 80, pop(t, c.enviamos, 0.5), 2, { fill: C.yel, maxW: 520 });
+  s += bigT('el enlace', 770, 862, 80, pop(t, c.enlace, 0.5), 2, { fill: C.yel, maxW: 520 });
+  s += channelPill(770, 990, pop(t, c.pill, 0.5));
+  s += arrowDown(965, 1110, 170, pop(t, c.arrow, 0.5), t);
   return s;
 };
 
@@ -155,21 +157,21 @@ S[7] = (t, T, sc) => {
   }
   const M = 6;
   if (k === 'P1') {
-    const px = 255;
+    const px = 255, q = (sc.shots.P1[1] - sc.shots.P1[0]) / 4, uu = u / q;
     let s = bg11(T, { sunX: 950, sunY: 1250 });
-    s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: u > 2.4 ? 'sparkle' : 'happy', armF: Object.assign({}, POSE.phoneF, { screen: 'chat' }) }));
+    s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: uu > 2.4 ? 'sparkle' : 'happy', armF: Object.assign({}, POSE.phoneF, { screen: 'chat' }) }));
     s = cam(comicZoom(u, 1.1), 540, 900, s);
     const [phx, phy] = mPt(px, FOOT, M, 216, 116 - 16);
-    s += shareIcon(phx - 5, phy - 165, 62, pop(u, 0.45, 0.45));
+    s += shareIcon(phx - 5, phy - 165, 62, pop(uu, 0.45, 0.45));
     // el avioncito vuela del móvil a cada burbuja
     const BY = [585, 745, 905, 1065];
     BY.forEach((by, i) => {
-      const t0 = 0.85 + i * 0.32, p = clamp((u - t0) / 0.35);
+      const t0 = 0.85 + i * 0.32, p = clamp((uu - t0) / 0.35);
       if (p > 0 && p < 1) {
         const x = lerp(phx - 5, 640, p), y = lerp(phy - 165, by, p) - 90 * Math.sin(PI * p);
         s += paperPlane(x, y, 0.75, 20 - 40 * p);
       }
-      s += chatBubble(815, by, pop(u, t0 + 0.3, 0.45), i, u, pop(u, 2.2 + i * 0.28, 0.45));
+      s += chatBubble(815, by, pop(uu, t0 + 0.3, 0.45), i, u, pop(uu, 2.2 + i * 0.28, 0.45));
     });
     s += bigT('Compártelo en los grupos', 540, 365, 84, pop(u, 0.15, 0.5), -2, { fill: '#FFFFFF' });
     s += bigT('de tus amigos', 540, 460, 84, pop(u, 0.35, 0.5), -2, { fill: C.yel });

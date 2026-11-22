@@ -5,7 +5,7 @@
       para ajustar config.json (duración, planos y tramos «talk») y volver a renderizar esa escena.
    2) Efectos: audio/sfx/<nombre>.wav si existe; si no, se sintetizan (básicos) -> audio/efectos.wav.
    3) Música: audio/musica.mp3 si existe; si no, audio/musica.wav (make_music.py, sintetizada).
-      Queda ~18 dB por debajo de la voz y baja 4 dB más mientras habla Marta.
+      Queda ~18 dB por debajo de la voz y baja 2 dB más mientras habla Marta.
    Salida: audio/mezcla.wav y marta_cuatro_motivos_con_audio.mp4 (AAC 192 kb/s)."""
 import json, os, subprocess, wave
 import numpy as np
@@ -41,8 +41,8 @@ for i in range(1, 8):
     if not f: missing.append(f'marta_{i}'); continue
     v = load(f); v *= 10 ** (-20 / 20) / max(rms_active(v), 1e-6)
     d, sd = len(v) / SR, SC[i - 1]['duration']
-    info.append(f'marta_{i}: {d:.2f} s en escena {i} ({sd:.2f} s)' + ('  <-- MÁS LARGA QUE LA ESCENA: ajusta config.json' if d > sd - 0.05 else ''))
-    a = int(st(i) * SR); voice[a:a + len(v)] += v[: N - a]
+    info.append(f'marta_{i}: {d:.2f} s en escena {i} ({sd:.2f} s)' + ('  <-- MÁS LARGA QUE LA ESCENA: ajusta config.json' if d + 0.15 > sd else ''))
+    a = int((st(i) + SC[i - 1].get('voice', {}).get('start', 0.15)) * SR); voice[a:a + len(v)] += v[: N - a]
 if missing: print('AVISO: faltan voces (quedan en silencio):', ', '.join(missing))
 for l in info: print(l)
 
@@ -126,9 +126,10 @@ fx = np.zeros(N)
 EV = []
 def ev(name, t, g_db=0.0): EV.append((name, t, g_db))
 # 1) pop en el título y en cada círculo
-ev('pop', st(1) + 0.2, -4); ev('pop_s', st(1) + 0.5, -6)
-for k in range(3): ev('pop', st(1) + 1.1 + 0.22 * k, -3)
-ev('pop', st(1) + 1.85, 0); ev('ding', st(1) + 1.9, -10)
+cue = lambda i, k, d: SC[i - 1].get('cues', {}).get(k, d)
+ev('pop', st(1) + cue(1, 'title1', 0.2), -4); ev('pop_s', st(1) + cue(1, 'title2', 0.5), -6)
+for k in range(3): ev('pop', st(1) + cue(1, 'circles', 1.1) + 0.22 * k, -3)
+ev('pop', st(1) + cue(1, 'four', 1.85), 0); ev('ding', st(1) + cue(1, 'four', 1.85) + 0.05, -10)
 # 2-5) ding brillante en cada número (y pop del rótulo)
 for i in (2, 3, 4, 5): ev('ding', st(i) + 0.1, -4); ev('pop_s', st(i) + 0.38, -8)
 # 2) cartón que se abre y «ting» de notificación
@@ -146,11 +147,12 @@ ev('aplausos', B5 + 0.3, -13); ev('risas', B5 + 0.6, -18); ev('confeti', B5 + 0.
 ev('pop', B5 + 0.35, -8); ev('pop', B5 + 0.55, -8); ev('tachan', B5 + 1.0, -9)
 ev('latido', C5 + 0.1, -10)
 # 6) whoosh + pop del globo «CANAL»
-ev('pop_s', st(6) + 0.2, -8); ev('whoosh', st(6) + 0.55, -6); ev('pop', st(6) + 0.78, -2); ev('pop_s', st(6) + 2.1, -9)
+ev('pop_s', st(6) + cue(6, 'comenta', 0.2), -8); ev('whoosh', st(6) + cue(6, 'bubble', 0.75) - 0.2, -6); ev('pop', st(6) + cue(6, 'bubble', 0.75) + 0.03, -2)
+ev('pop_s', st(6) + cue(6, 'pill', 2.1), -9); ev('pop_s', st(6) + cue(6, 'enviamos', 1.4), -11)
 # 7) pop por burbuja y whoosh del avioncito; whoosh del logo final
-P1 = shot(7, 'P1'); ev('pop_s', P1 + 0.45, -7)
+P1 = shot(7, 'P1'); q = (SC[6]['shots']['P1'][1] - SC[6]['shots']['P1'][0]) / 4; ev('pop_s', P1 + 0.45 * q, -7)
 for k in range(4):
-    ev('whoosh', P1 + 0.85 + 0.32 * k, -11); ev('pop', P1 + 1.15 + 0.32 * k, -5); ev('pop_s', P1 + 2.2 + 0.28 * k, -10)
+    ev('whoosh', P1 + (0.85 + 0.32 * k) * q, -11); ev('pop', P1 + (1.15 + 0.32 * k) * q, -5); ev('pop_s', P1 + (2.2 + 0.28 * k) * q, -10)
 ev('pop_s', shot(7, 'P2') + 0.1, -8)
 ev('whoosh', shot(7, 'FIN') - 0.15, -3); ev('ding', shot(7, 'FIN') + 0.1, -9)
 for name, t, g in EV:
@@ -161,14 +163,14 @@ if synth: print('AVISO: efectos sintetizados con código (básicos):', ', '.join
 
 # ---------------- música ----------------
 mp = A('musica.mp3') if os.path.exists(A('musica.mp3')) else A('musica.wav')
-if not os.path.exists(mp): subprocess.run(['python3', A('make_music.py')], check=True); mp = A('musica.wav')
+if not mp.endswith('.mp3'): subprocess.run(['python3', A('make_music.py')], check=True)  # sintetizada: siempre con los tiempos actuales
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
 mus = np.frombuffer(raw, '<f4').astype(np.float64).reshape(-1, 2)
 mus = np.vstack([mus, np.zeros((max(0, N - len(mus)), 2))])[:N]
-# nivel: -38 dBFS RMS (≈ 18 dB bajo la voz a -20) y baja 4 dB más mientras habla Marta
+# nivel: -38 dBFS RMS (≈ 18 dB bajo la voz a -20) y baja 2 dB más mientras habla Marta
 mus *= 10 ** (-38 / 20) / max(np.sqrt((mus ** 2).mean()), 1e-9)
 env = np.abs(voice); win = int(0.25 * SR); env = np.convolve(env, np.ones(win) / win, 'same')
-duck = 10 ** (-4 * np.clip(env / 0.02, 0, 1) / 20)
+duck = 10 ** (-2 * np.clip(env / 0.02, 0, 1) / 20)
 mus *= duck[:, None]
 print(f'música: {os.path.relpath(mp, ROOT)}  RMS {db(np.sqrt((mus ** 2).mean())):.1f} dBFS')
 
