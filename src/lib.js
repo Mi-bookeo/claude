@@ -429,7 +429,7 @@ function person(o) {
   let g = '';
   if (o.sit) g += sitLeg(true) + sitLeg(false);
   else if (!o.noLegs) g += leg(o.legB || 0, true) + leg(o.legF || 0, false);
-  g += `<g transform="translate(0 ${f(o.bob || 0)})">`;
+  g += `<g transform="translate(0 ${f(o.bob || 0)})${o.upperRot ? ` rotate(${f(o.upperRot)} 186 146)` : ''}">`; // (vídeo 12) upperRot: inclina el tronco sentada
   if (o.behind) g += o.behind(w); // objetos detrás del cuerpo (caja bajo el brazo)
   if (!o.noArmB) g += arm(ARM_B, o.armB || 0, true, o.handB ? o.handB(w) : '');
   // pelo trasero
