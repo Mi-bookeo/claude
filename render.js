@@ -7,6 +7,7 @@
      node render.js scenes [1,2,...]  -> scenes/scene_XX.mp4
      node render.js concat            -> vídeo final (config.output) + timeline.txt
      node render.js all               -> scenes + stills + concat
+     node render.js subs              -> versión con subtítulos (subtitles.json) en scenes_sub/ -> tmp/subtitulado_mudo.mp4
 */
 'use strict';
 const fs = require('fs');
@@ -18,6 +19,8 @@ const ROOT = __dirname;
 const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
 const FPS = cfg.fps;
 const pad = n => String(n).padStart(2, '0');
+const SUBS = (process.argv[2] === 'subs' || process.env.SUBS) ? JSON.parse(fs.readFileSync(path.join(ROOT, 'subtitles.json'), 'utf8')) : null;
+const SCN = process.argv[2] === 'subs' ? 'scenes_sub' : 'scenes';
 
 function sceneTiming() {
   let frame = 0;
@@ -46,7 +49,7 @@ async function openPage(browser) {
     // logo.png: solo el icono, sin letras (500x500, transparente)
     ['logoI', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo.png')).toString('base64')]
   ];
-  await page.evaluate(([c, f, l]) => window.init(c, f, l), [cfg, fonts, logos]);
+  await page.evaluate(([c, f, l, sb]) => window.init(c, f, l, sb), [cfg, fonts, logos, SUBS]);
   return page;
 }
 
@@ -67,8 +70,8 @@ function run(cmd, args, opts = {}) {
 
 async function renderScene(browser, sc) {
   const page = await openPage(browser);
-  const out = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.mp4`);
-  const tmp = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.partial.mp4`);
+  const out = path.join(ROOT, SCN, `scene_${pad(sc.id)}.mp4`);
+  const tmp = path.join(ROOT, SCN, `scene_${pad(sc.id)}.partial.mp4`);
   const e = cfg.encoder;
   let proc;
   const done = run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error',
@@ -106,11 +109,14 @@ async function stills(browser, ids, dir) {
 async function concat() {
   const sc = sceneTiming();
   const list = path.join(ROOT, 'concat_list.txt');
-  fs.writeFileSync(list, sc.map(s => `file 'scenes/scene_${pad(s.id)}.mp4'`).join('\n') + '\n');
-  const tmp = path.join(ROOT, cfg.output.replace(/\.mp4$/, '.partial.mp4'));
+  fs.writeFileSync(list, sc.map(s => `file '${SCN}/scene_${pad(s.id)}.mp4'`).join('\n') + '\n');
+  const final = process.argv[2] === 'subs' ? path.join(ROOT, 'tmp', 'subtitulado_mudo.mp4') : path.join(ROOT, cfg.output);
+  fs.mkdirSync(path.dirname(final), { recursive: true });
+  const tmp = final.replace(/\.mp4$/, '.partial.mp4');
   await run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-an', '-movflags', '+faststart', tmp]);
-  fs.renameSync(tmp, path.join(ROOT, cfg.output));
+  fs.renameSync(tmp, final);
   fs.unlinkSync(list);
+  if (process.argv[2] === 'subs') { console.log('-> ' + path.relative(ROOT, final)); return; }
   let tl = `${cfg.title} — timeline (${cfg.width}x${cfg.height}, ${FPS} fps)\n`;
   tl += `escena\tinicio_s\tfin_s\tduracion_s\tfotogramas\tnombre\n`;
   sc.forEach(s => { tl += `${pad(s.id)}\t${s.start.toFixed(3)}\t${s.end.toFixed(3)}\t${(s.end - s.start).toFixed(3)}\t${s.frames}\t${s.name}\n`; });
@@ -131,12 +137,12 @@ async function pool(items, n, fn) {
   const browser = await chromium.launch();
   try {
     if (cmd === 'stills') await stills(browser, ids, process.argv[4] || path.join(ROOT, 'stills'));
-    if (cmd === 'scenes' || cmd === 'all') {
-      fs.mkdirSync(path.join(ROOT, 'scenes'), { recursive: true });
+    if (cmd === 'scenes' || cmd === 'all' || cmd === 'subs') {
+      fs.mkdirSync(path.join(ROOT, SCN), { recursive: true });
       const timing = sceneTiming().filter(s => ids.includes(s.id)).sort((a, b) => b.frames - a.frames);
       await pool(timing, Number(process.env.JOBS || 3), s => renderScene(browser, s));
     }
     if (cmd === 'all') await stills(browser, all, path.join(ROOT, 'stills'));
-    if (cmd === 'concat' || cmd === 'all') await concat();
+    if (cmd === 'concat' || cmd === 'all' || cmd === 'subs') await concat();
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exit(1); });

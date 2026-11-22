@@ -55,7 +55,7 @@ S[1] = (t, T) => {
   // línea negra gruesa en medio
   s += `<rect x="-10" y="${SPLIT.line - 11}" width="${W + 20}" height="22" fill="${INK}"/>`;
   // texto con rebote en el centro de la línea
-  const k1 = pop(t, 0.6, 0.5), k2 = pop(t, 0.9, 0.5);
+  const k1 = pop(t, 0.6, 0.5), k2 = pop(t, 2.1, 0.5);
   const box = (k, y, rot, fill) => at(540, y, k, `<rect x="-430" y="-50" width="860" height="100" rx="24" transform="translate(9 9)" fill="${INK}"/><rect x="-430" y="-50" width="860" height="100" rx="24" fill="${fill}" stroke="${INK}" stroke-width="${f(SW)}"/>`, rot);
   s += box(k1, 748, -2, C.red) + big('Dos tiendas de moda.', 540, 748, 76, k1, -2, { maxW: 800 });
   s += box(k2, 852, 1.5, C.yel) + big('Dos calles muy distintas.', 540, 852, 72, k2, 1.5, { maxW: 800 });
@@ -64,24 +64,24 @@ S[1] = (t, T) => {
 
 /* ---------- 2) Avenida de Carmen: mucha gente pasa… pero nadie entra ---------- */
 const Z2 = { t0: 1.15, d: 0.5, z0: 0.92, z1: 1.5 };
-S[2] = (t, T) => {
-  // Carmen: esperanzada (mira a ambos lados) -> decaída -> suspiro -> mano en la mejilla
-  const co = {};
-  if (t < 2.9) {
+S[2] = (t, T, sc) => {
+  // Carmen: esperanzada (mira a ambos lados) -> decaída -> suspiro -> mano en la mejilla (sincronizado con la voz)
+  const sh = ((sc && sc.duration) || 4.7) - 4.7, co = {};
+  if (t < 2.9 + sh) {
     const lk = t < 0.9 ? 1.2 : (t < 1.7 ? -1.2 : 1.0 * Math.sin(t * 3));
     Object.assign(co, { expr: 'hope', look: [lk, -0.2], head: lk * 3 });
-  } else if (t < 3.35) Object.assign(co, { expr: 'sad', look: [0, 0.6], head: 3 });
-  else if (t < 3.8) Object.assign(co, { expr: 'sigh', slump: 2.5 * Math.sin(PI * clamp((t - 3.35) / 0.45)), head: 4 });
+  } else if (t < 3.35 + sh) Object.assign(co, { expr: 'sad', look: [0, 0.6], head: 3 });
+  else if (t < 3.8 + sh) Object.assign(co, { expr: 'sigh', slump: 2.5 * Math.sin(PI * clamp((t - 3.35 - sh) / 0.45)), head: 4 });
   else {
-    const e = easeOut((t - 3.8) / 0.3);
+    const e = easeOut((t - 3.8 - sh) / 0.3);
     Object.assign(co, { expr: 'sad', look: [0.4, 0.8], head: 9 * e, armF: { ik: [lerp(199, 206, e), lerp(134, 92, e)], side: -1 }, itemF: e > 0.9 ? cheekItem : null, armB: { ang: 4, bend: -8 } });
   }
   let w = avenueBack(T) + carmenAt(T, co);
-  if (t > 3.35 && t < 3.8) { const [mx, my] = tPt(CAR.x, CAR.foot, CAR.sc, 204, 90); w += sighPuff(mx + 10, my, (t - 3.35) / 0.45); }
+  if (t > 3.35 + sh && t < 3.8 + sh) { const [mx, my] = tPt(CAR.x, CAR.foot, CAR.sc, 204, 90); w += sighPuff(mx + 10, my, (t - 3.35 - sh) / 0.45); }
   w += avenueWalkers(t) + AV_FG(T);
   const u = qz(t, Z2.t0, Z2.d), z = lerp(Z2.z0, Z2.z1, u) * bump(t, [Z2.t0 + Z2.d], 0.035) * zoomIn(t, 0, 1.1, 0.2);
   let s = view(z, lerp(540, 640, u), lerp(930, 1070, u), w);
-  const k1 = pop(t, 0.25, 0.5), k2 = pop(t, 2.7, 0.5);
+  const k1 = pop(t, 2.75, 0.5), k2 = pop(t, 4.95, 0.5);
   s += big('Mucha gente pasa…', 540, 300, 118, k1, lerp(-8, -3, k1));
   s += big('…pero nadie entra', 540, 440, 118, k2, lerp(7, 2, k2), { fill: C.yel });
   return s;
@@ -99,7 +99,7 @@ S[3] = (t, T) => {
   const look = t > 2.4 && t < 3.6 ? [1.2, 0.8] : [0.3, 0];
   let w = alleyBack(T, { passage }) + mariaAt(T, { look, head: t > 2.4 && t < 3.6 ? 4 : 0, expr: t > 2.6 && t < 3.6 ? 'happy' : 'calm' }) + catAt(T);
   let s = view(zoomIn(t, 0, 1.12, 0.22) * lerp(1.16, 1.22, easeInOut(t / 5)), 575, 1000, w, 540, 1000);
-  const k1 = pop(t, 0.3, 0.5), k2 = pop(t, 0.5, 0.5);
+  const k1 = pop(t, 2.5, 0.5), k2 = pop(t, 2.7, 0.5);
   s += big('Aquí casi no', 540, 300, 130, k1, lerp(-8, -3, k1));
   s += big('pasa nadie', 540, 440, 130, k2, lerp(7, 2, k2), { fill: C.glass });
   return s;
@@ -132,7 +132,7 @@ S[4] = (t, T) => {
   });
   w += sparkle(780, 760, 30, pop(t, 0.6, 0.35) * (1 + 0.2 * Math.sin(t * 14))) + sparkle(250, 900, 26, pop(t, 0.8, 0.35) * (1 + 0.2 * Math.sin(t * 12 + 1)));
   let s = view(zoomIn(t, 0, 1.14, 0.2) * bump(t, [0.1], 0.04), 540, 960, w);
-  const k1 = pop(t, 0.25, 0.5);
+  const k1 = pop(t, 0.9, 0.5);
   s += big('Pero siempre llena', 540, 330, 128, k1, lerp(-9, -3, k1), { fill: C.yel });
   return s;
 };
@@ -158,12 +158,12 @@ S[5] = (t, T) => {
   s += mark('?', 540, 340, pop(t, 0.45, 0.4) * (1 + 0.06 * Math.sin(t * 6)), -10 + 6 * Math.sin(t * 3), 170, C.red);
   s += mark('?', 540, 640, pop(t, 0.6, 0.4) * (1 + 0.06 * Math.sin(t * 6 + 1)), 12 - 6 * Math.sin(t * 3), 140, C.yel);
   // textos grandes
-  const k1 = pop(t, 1.5, 0.5), k2 = pop(t, 1.65, 0.5), k3 = pop(t, 2.8, 0.5), k4 = pop(t, 2.95, 0.5);
+  const k1 = pop(t, 0.3, 0.5), k2 = pop(t, 0.45, 0.5), k3 = pop(t, 2.15, 0.5), k4 = pop(t, 2.3, 0.5);
   s += big('No basta con', 540, 905, 128, k1, lerp(-8, -3, k1));
   s += big('que te vean', 540, 1030, 128, k2, lerp(6, 2, k2));
   s += big('Tienen que saber', 540, 1190, 120, k3, lerp(-6, -2, k3), { fill: C.yel });
   s += big('que existes', 540, 1315, 130, k4, lerp(6, 2, k4), { fill: C.yel });
-  return cam(bump(t, [1.5, 2.8], 0.025), 540, 900, s);
+  return cam(bump(t, [0.3, 2.15], 0.025), 540, 900, s);
 };
 
 /* ---------- 6) Interior: María publica; salen «Novedad» y «Oferta»; «Publicar» -> tic verde ---------- */
@@ -227,7 +227,7 @@ S[6] = (t, T) => {
 };
 
 /* ---------- 7) Avenida: vibran los móviles, ven las tarjetas de la tienda azul y echan a andar juntos ---------- */
-const VIB7 = 0.6, UP7 = 1.0, GO7 = 2.2, ZC7 = 3.5;
+const VIB7 = 0.6, UP7 = 1.0, GO7 = 2.2, ZC7 = 2.75;
 function crowd7(t) {
   const list = WALKERS.map((wk_, n) => ({ wk_, n })).sort((a, b) => a.wk_.foot - b.wk_.foot);
   let s = '';
@@ -278,7 +278,7 @@ S[7] = (t, T) => {
     const k = pop(t, UP7 + 0.3 + i * 0.12, 0.5);
     s += card10(i, x, y + 6 * Math.sin(t * 2.4 + i), k * 0.62, lerp(r * 2.5, r, k), t);
   });
-  const k1 = pop(t, 0.15, 0.5), k2 = pop(t, 0.35, 0.5);
+  const k1 = pop(t, 0.7, 0.5), k2 = pop(t, 1.25, 0.5);
   s += big('A la mano de', 540, 280, 130, k1, lerp(-8, -3, k1));
   s += big('tus clientes', 540, 420, 140, k2, lerp(7, 2, k2), { fill: C.yel });
   return s;
@@ -296,23 +296,23 @@ S[8] = (t, T) => {
     const x = b.dir > 0 ? lerp(-90, W + 90, u) : lerp(W + 90, -90, u);
     s += bird(x, Math.min(1380, b.y + Math.sin(u * 7 + i) * 14), b.a, 0.35 + 0.65 * Math.sin(t * 2 * PI / 0.34 + i * 2));
   });
-  const k1 = pop(t, 0.15, 0.5), k2 = pop(t, 0.35, 0.55);
+  const k1 = pop(t, 0.15, 0.5), k2 = pop(t, 1.2, 0.55);
   s += big('Escaparate de Tudela', 540, 300, 112, k1, lerp(-8, -3, k1));
   s += big('hace que existas', 540, 440, 140, k2, lerp(7, 2, k2), { fill: C.yel, sd: 11 });
   if (t > 0.8) [[110, 430, 30, 0.8], [980, 300, 26, 0.9]].forEach(([x, y, r, d], i) => { s += sparkle(x, y, r, pop(t, d, 0.35) * (1 + 0.2 * Math.sin(t * 12 + i))); });
   // franja roja «¿Tienes un comercio?»
-  const ks = pop(t, 1.3, 0.6);
+  const ks = pop(t, 3.35, 0.6);
   let st = `<rect x="-640" y="-82" width="1280" height="164" transform="translate(0 14)" fill="${INK}"/><rect x="-640" y="-82" width="1280" height="164" fill="${C.red}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
   st += text('¿Tienes un comercio?', 0, 4, { size: fit('¿Tienes un comercio?', 96, 940), sw: SW * 2, sd: 6 });
   s += `<g transform="translate(${f(540 + (1 - ks) * -1500)} 650) rotate(-3)">${st}</g>`;
   // Comenta ALTA y te enviamos la solicitud
-  const k3 = pop(t, 2.0, 0.5);
+  const k3 = pop(t, 4.6, 0.5);
   let c = text('Comenta', -150, 2, { size: 100, sw: SW * 2, sd: 6 });
-  c += at(240, 0, 1 + 0.05 * Math.sin(Math.max(0, t - 2.5) * 2 * PI / 1.1), `<rect x="-150" y="-66" width="300" height="132" rx="24" transform="translate(9 9)" fill="${INK}"/><rect x="-150" y="-66" width="300" height="132" rx="24" fill="${C.yel}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text('ALTA', 0, 6, { size: 110, font: 'G', fill: C.red, sw: SW * 2, sd: 6, ls: 4 }), 4);
+  c += at(240, 0, 1 + 0.05 * Math.sin(Math.max(0, t - 5.1) * 2 * PI / 1.1), `<rect x="-150" y="-66" width="300" height="132" rx="24" transform="translate(9 9)" fill="${INK}"/><rect x="-150" y="-66" width="300" height="132" rx="24" fill="${C.yel}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text('ALTA', 0, 6, { size: 110, font: 'G', fill: C.red, sw: SW * 2, sd: 6, ls: 4 }), 4);
   s += at(540, 880, k3, c, lerp(-6, -2, k3));
-  const k4 = pop(t, 2.3, 0.5);
+  const k4 = pop(t, 5.3, 0.5);
   s += big('y te enviamos la solicitud', 540, 1030, 92, k4, lerp(6, 2, k4));
-  const k5 = pop(t, 2.7, 0.5);
+  const k5 = pop(t, 5.9, 0.5);
   s += at(540, 1150, k5, `<rect x="-330" y="-46" width="660" height="92" rx="46" transform="translate(8 8)" fill="${INK}"/><rect x="-330" y="-46" width="660" height="92" rx="46" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/>` +
     text('escaparatetudela.es', 0, 2, { size: fit('escaparatetudela.es', 56, 580), fill: INK, stroke: null }));
   return cam(zoomIn(t, 0, 1.1, 0.2), 540, 800, s);
@@ -329,25 +329,25 @@ S[9] = (t, T, sc) => {
     const u = qz(t, Z9.t0, Z9.d);
     const sc_ = lerp(Z9.s0, Z9.s1, u), cy = lerp(Z9.y0, Z9.y1, u);
     // gestos: mano a la boca -> mira a un lado y al otro -> vuelve a cámara con un guiño
-    const hand = easeOut(clamp((t - 1.5) / 0.3));
+    const hand = easeOut(clamp((t - 1.0) / 0.3));
     let look = [0, 0], head = 0, wink = 0, smile = 'calm', brow = 0;
     if (t > 1.0) smile = 'sly';
-    if (t > 1.9 && t < 2.35) { const e = easeInOut((t - 1.9) / 0.15); look = [-1 * e, 0.1]; head = -3 * e; }
-    else if (t >= 2.35 && t < 2.85) { const e = easeInOut((t - 2.35) / 0.15); look = [lerp(-1, 1, e), 0.1]; head = lerp(-3, 3, e); }
-    else if (t >= 2.85 && t < 3.05) { const e = easeInOut((t - 2.85) / 0.2); look = [lerp(1, 0, e), 0]; head = lerp(3, 0, e); }
-    if (t > 3.15 && t < 4.0) { wink = 1; smile = 'grin'; brow = 6; }
-    if (t >= 4.0) smile = 'grin';
+    if (t > 1.4 && t < 1.85) { const e = easeInOut((t - 1.4) / 0.15); look = [-1 * e, 0.1]; head = -3 * e; }
+    else if (t >= 1.85 && t < 2.35) { const e = easeInOut((t - 1.85) / 0.15); look = [lerp(-1, 1, e), 0.1]; head = lerp(-3, 3, e); }
+    else if (t >= 2.35 && t < 2.55) { const e = easeInOut((t - 2.35) / 0.2); look = [lerp(1, 0, e), 0]; head = lerp(3, 0, e); }
+    if (t > 2.65 && t < 3.5) { wink = 1; smile = 'grin'; brow = 6; }
+    if (t >= 3.5) smile = 'grin';
     const blink = !wink && ((t > 0.9 && t < 1.0) || (t > 4.5 && t < 4.6));
     const lean = u * 2;
     s += at(540, cy, sc_, mariaBust({ look, head: head + lean, wink, hand, smile, blink, brow }), 0);
     s += speedLinesRadial(540, cy, t > Z9.t0 && t < Z9.t0 + Z9.d ? Math.sin(PI * (t - Z9.t0) / Z9.d) : 0);
     // estrellita del guiño
-    if (t > 3.15 && t < 4.3) s += sparkle(540 - 38 * sc_ - 40, cy - 10 * sc_ - 40, 34, pop(t, 3.15, 0.3) * (1 + 0.2 * Math.sin(t * 16)));
+    if (t > 2.65 && t < 3.8) s += sparkle(540 - 38 * sc_ - 40, cy - 10 * sc_ - 40, 34, pop(t, 2.65, 0.3) * (1 + 0.2 * Math.sin(t * 16)));
     // texto encima
-    const k1 = pop(t, 1.25, 0.5), k2 = pop(t, 1.45, 0.5);
+    const k1 = pop(t, 1.2, 0.5), k2 = pop(t, 1.75, 0.5);
     s += big('Gratis hasta el', 540, 250, 116, k1, lerp(-8, -3, k1));
     s += big('31 de enero', 540, 385, 150, k2, lerp(7, 2, k2), { fill: C.yel, sd: 11 });
-    return cam(bump(t, [Z9.t0 + Z9.d, 3.15], 0.03), 540, 900, s);
+    return cam(bump(t, [Z9.t0 + Z9.d, 2.65], 0.03), 540, 900, s);
   }
   // tarjeta final: fondo rojo, logo blanco (logo_blanco.png, con «Escaparate de Tudela») y la web
   const u = t - cut;
@@ -359,9 +359,31 @@ S[9] = (t, T, sc) => {
   return s;
 };
 
+/* ---------- subtítulos (versión subtitulada): franja inferior, caja oscura y letras grandes con contorno ---------- */
+let SUBS = null;
+const SUB_COL = { narradora: '#FFFFFF', carmen: C.pink, maria: C.glass };
+function wrapLines(str, size, maxW) {
+  const words = str.split(' '); const lines = [];
+  let cur = '';
+  words.forEach(wd => { const tr = cur ? cur + ' ' + wd : wd; if (measure(tr, size) <= maxW || !cur) cur = tr; else { lines.push(cur); cur = wd; } });
+  if (cur) lines.push(cur);
+  return lines;
+}
+function subtitle(T) {
+  const c = SUBS.find(q => T >= q.start - 1e-6 && T < q.end);
+  if (!c) return '';
+  let size = 74, lines = wrapLines(c.text, size, 940);
+  while (lines.length > 2 && size > 50) { size -= 4; lines = wrapLines(c.text, size, 940); }
+  const lh = size * 1.18, wMax = Math.max(...lines.map(l => measure(l, size)));
+  const bw = Math.min(1040, wMax + 90), bh = lines.length * lh + 50, cy = 1640;
+  let s = `<rect x="${f(540 - bw / 2)}" y="${f(cy - bh / 2)}" width="${f(bw)}" height="${f(bh)}" rx="30" fill="${INK}" fill-opacity="0.86"/>`;
+  lines.forEach((l, i) => { s += text(l, 540, cy - (lines.length - 1) * lh / 2 + i * lh + size * 0.04, { size, fill: SUB_COL[c.who] || '#FFFFFF', sw: size * 0.14, shadow: false }); });
+  return s;
+}
+
 /* ---------- API para el renderizador ---------- */
-window.init = async function (cfg, fonts, logos) {
-  CFG = cfg;
+window.init = async function (cfg, fonts, logos, subs) {
+  CFG = cfg; SUBS = subs || null;
   const b64ToBuf = b => Uint8Array.from(atob(b), c => c.charCodeAt(0)).buffer;
   for (const [fam, wt, b64] of fonts) {
     const ff = new FontFace(fam, b64ToBuf(b64), { weight: String(wt) });
@@ -383,5 +405,5 @@ window.init = async function (cfg, fonts, logos) {
 window.renderFrame = function (sceneId, t, T) {
   uid = 0;
   const sc = CFG.scenes.find(s => s.id === sceneId);
-  document.getElementById('dyn').innerHTML = S[sceneId](t, T, sc);
+  document.getElementById('dyn').innerHTML = S[sceneId](t, T, sc) + (SUBS ? subtitle(T) : '');
 };

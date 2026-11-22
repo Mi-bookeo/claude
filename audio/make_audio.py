@@ -254,7 +254,7 @@ amb('viento', amb_wind, s[1], 4.0, db(-30), 0.2)
 amb('trafico_lejano', amb_traffic, s[2], 5.0, db(-32))
 amb('murmullo_calle', lambda d: amb_murmur(d, 280, 1400), s[2], 5.0, db(-28))
 put(None, s[2], db(-28), 0, snd=steps(5.0, 0.42, 0.05, 4) * env(int(5 * SR), 0.1, 0.2))
-put('suspiro', s[2] + 3.35, db(-10))
+put('suspiro', s[2] + 3.35 + (END[2] - START[2] - 4.7), db(-12))
 # (3) callejuela silenciosa: pájaro, maullido, persiana lejana, tic de farola
 amb('viento', amb_wind, s[3], 5.0, db(-34))
 put('pajaro', s[3] + 0.7, db(-26), -0.3)
@@ -283,12 +283,12 @@ for k in range(14):
 amb('murmullo_calle', lambda d: amb_murmur(d, 280, 1400), s[7], 5.0, db(-30))
 put(None, s[7] + 2.2, db(-20), 0.2, snd=steps(2.4, 0.16, 0.04, 6) * env(int(2.4 * SR), 0.15, 0.6))
 # (8) whoosh al entrar el texto y pop al aparecer la franja
-put('whoosh', s[8] + 0.1, db(-16)); put('whoosh', s[8] + 0.3, db(-18))
-put('pop', s[8] + 1.3, db(-11))
+put('whoosh', s[8] + 0.1, db(-16)); put('whoosh', s[8] + 1.2, db(-18))
+put('pop', s[8] + 3.35, db(-11))
 # (9) whoosh suave al acercarse María, susurro de aire y ting al guiño
 put('whoosh_suave', s[9] + 0.3, db(-17))
-put('susurro_aire', s[9] + 1.55, db(-24))
-put('ting', s[9] + 3.15, db(-13))
+put('susurro_aire', s[9] + 1.05, db(-26))
+put('ting', s[9] + 2.65, db(-13))
 
 # ---------- 2) VOCES ----------
 VOZ = os.path.join(A, 'voces')
@@ -297,24 +297,41 @@ plan = [('narradora_1', 1), ('narradora_2', 2), ('narradora_3', 3), ('narradora_
         ('narradora_6', 6), ('narradora_7', 7), ('carmen_1', 7), ('narradora_8', 8), ('maria_1', 9)]
 cursor = {}
 TARGET_VOICE_RMS = db(-20)
+VOICE_GAIN = {'maria_1': 1.0}  # el susurro, un pelín por encima
+CUES = json.load(open(os.path.join(VOZ, 'cues.json'), encoding='utf-8')) if os.path.exists(os.path.join(VOZ, 'cues.json')) else {}
+SPEAKER = lambda n: 'carmen' if n.startswith('carmen') else ('maria' if n.startswith('maria') else 'narradora')
+subs = []
 for name, sc in plan:
     p = find(VOZ, name)
     if not p:
         missing.append(name); continue
     x = decode(p)
-    # recorta silencios del principio y del final
-    a = np.abs(x).max(1); idx = np.where(a > 0.01)[0]
-    if len(idx): x = x[max(0, idx[0] - int(0.02 * SR)):idx[-1] + int(0.08 * SR)]
+    # nivel: RMS de la parte con voz -> -20 dBFS (iguala la narración, Carmen y el susurro de María, que estaba más bajo)
     act = x[np.abs(x).max(1) > 0.02]
-    x = x * (TARGET_VOICE_RMS / (rms(act) or 1))
+    x = x * (TARGET_VOICE_RMS / (rms(act) or 1)) * db(VOICE_GAIN.get(name, 0))
     t0 = cursor.get(sc, START[sc] + 0.1)
     place(vo, x, t0)
     t1 = t0 + len(x) / SR
     cursor[sc] = t1 + 0.15
     placed.append((name, sc, t0, t1))
+    for a_, b_, txt in CUES.get(name, [[0.06, len(x) / SR - 0.1, '']]):
+        if txt: subs.append({'start': round(t0 + a_, 3), 'end': round(t0 + b_, 3), 'text': txt, 'who': SPEAKER(name)})
     if t1 > END[sc] + 0.01:
         print(f'AVISO: {name} termina en {t1:.2f} s, después del final de la escena {sc} ({END[sc]:.2f} s)')
     if name == 'maria_1': maria_span = (t0, t1)
+
+# subtítulos: cada uno hasta el siguiente (máx. +0,6 s tras la voz), mínimo 1 s en pantalla
+subs.sort(key=lambda c: c['start'])
+for i, c in enumerate(subs):
+    nxt = subs[i + 1]['start'] if i + 1 < len(subs) else TOTAL
+    c['end'] = round(min(nxt - 0.04, max(c['end'] + 0.6, c['start'] + 1.0), TOTAL), 3)
+SUBJ = os.path.join(ROOT, 'subtitles.json'); sj = json.dumps(subs, ensure_ascii=False, indent=1)
+if not os.path.exists(SUBJ) or open(SUBJ, encoding='utf-8').read() != sj:  # solo se reescribe si cambia
+    open(SUBJ, 'w', encoding='utf-8').write(sj)
+def srt_t(x):
+    ms = int(round(x * 1000)); return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}'
+with open(os.path.join(ROOT, cfg['output'].replace('.mp4', '.srt')), 'w', encoding='utf-8') as fh:
+    for i, c in enumerate(subs, 1): fh.write(f"{i}\n{srt_t(c['start'])} --> {srt_t(c['end'])}\n{c['text']}\n\n")
 
 # ---------- 3) MÚSICA ----------
 mu = np.zeros((N, 2)); music = find(A, 'musica')
@@ -355,6 +372,16 @@ tmp = OUT.replace('.mp4', '.partial.mp4')
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', VIDEO, '-i', os.path.join(A, 'mezcla.wav'), '-map', '0:v:0', '-map', '1:a:0',
                 '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{TOTAL:.3f}', '-movflags', '+faststart', tmp], check=True)
 os.replace(tmp, OUT)
+# versión con subtítulos (imagen de tmp/subtitulado_mudo.mp4, render.js subs) + la misma mezcla, también con -c:v copy
+SUBV = os.path.join(ROOT, 'tmp', 'subtitulado_mudo.mp4')
+OUT_S = os.path.join(ROOT, cfg['output'].replace('.mp4', '_subtitulado.mp4'))
+if os.path.exists(SUBV):  # (render.js subs debe ejecutarse después de generar subtitles.json)
+    tmp = OUT_S.replace('.mp4', '.partial.mp4')
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', SUBV, '-i', os.path.join(A, 'mezcla.wav'), '-map', '0:v:0', '-map', '1:a:0',
+                    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', f'{TOTAL:.3f}', '-movflags', '+faststart', tmp], check=True)
+    os.replace(tmp, OUT_S); print('->', os.path.relpath(OUT_S, ROOT))
+else:
+    print('(sin versión subtitulada: falta tmp/subtitulado_mudo.mp4 o es anterior a subtitles.json -> node render.js subs)')
 
 print('voces colocadas:', ', '.join(f'{n} (esc. {s}) {a:.2f}-{b:.2f} s' for n, s, a, b in placed) or 'ninguna')
 if missing: print('FALTAN voces (silencio):', ', '.join(missing))
