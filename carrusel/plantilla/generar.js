@@ -160,19 +160,19 @@ function portada(quien, r) {
 
 function contenido(p, i, n, pj, lado, carpeta, hoy) {
   const izq = lado === 'izq'; // personaje a la izquierda, bocadillo a la derecha
-  let s = logo(LOGO_BLANCO, 40, 14, 122);
-  s += caja(700, 50, 340, 50, `<b style="font-size:30px;color:#fff">${i} DE ${n}</b>`, 'align-items:flex-end;text-align:right');
-  s += `<div style="position:absolute;left:60px;top:150px;width:960px;height:660px;border-radius:36px;background:#fff;border:7px solid ${DARK}"></div>`;
+  // sin logo arriba (ya pone escaparatetudela.es abajo); contador pequeño pegado arriba y la tarjeta subida al máximo
+  let s = caja(700, 6, 320, 30, `<b style="font-size:22px;color:#fff">${i} DE ${n}</b>`, 'align-items:flex-end;text-align:right');
+  s += `<div style="position:absolute;left:60px;top:40px;width:960px;height:770px;border-radius:36px;background:#fff;border:7px solid ${DARK}"></div>`;
   const foto = p.foto && path.join(carpeta, p.foto);
   if (foto && fs.existsSync(foto)) {
-    s += `<img src="${datauri(foto, 'image/jpeg')}" style="position:absolute;left:92px;top:182px;width:896px;height:330px;border-radius:22px;object-fit:cover;border:3px solid ${DARK}">`;
+    s += `<img src="${datauri(foto, 'image/jpeg')}" style="position:absolute;left:92px;top:72px;width:896px;height:440px;border-radius:22px;object-fit:cover;border:3px solid ${DARK}">`;
   } else {
-    s += `<div style="position:absolute;left:92px;top:182px;width:896px;height:330px;border-radius:22px;background:#EFEFEF;border:3px dashed #BDBDBD"></div>`;
-    s += caja(92, 182, 896, 330, `<b style="font-size:38px;color:#9A9A9A">FOTO NO ENCONTRADA</b><i style="font-size:28px;color:#9A9A9A">${esc(p.foto || '')}</i>`);
+    s += `<div style="position:absolute;left:92px;top:72px;width:896px;height:440px;border-radius:22px;background:#EFEFEF;border:3px dashed #BDBDBD"></div>`;
+    s += caja(92, 72, 896, 440, `<b style="font-size:38px;color:#9A9A9A">FOTO NO ENCONTRADA</b><i style="font-size:28px;color:#9A9A9A">${esc(p.foto || '')}</i>`);
   }
   // etiqueta de tipo
   const tipo = TIPOS[p.tipo] ? p.tipo : 'oferta';
-  s += `<div style="position:absolute;left:112px;top:202px;height:58px;padding:0 26px;border-radius:29px;background:${tipo === 'oferta' ? RED : DARK};border:4px solid #fff;color:#fff;font-weight:700;font-size:28px;line-height:50px;letter-spacing:1px">${TIPOS[tipo]}</div>`;
+  s += `<div style="position:absolute;left:112px;top:92px;height:58px;padding:0 26px;border-radius:29px;background:${tipo === 'oferta' ? RED : DARK};border:4px solid #fff;color:#fff;font-weight:700;font-size:28px;line-height:50px;letter-spacing:1px">${TIPOS[tipo]}</div>`;
   if (p.descuento) {
     s += `<div style="position:absolute;left:812px;top:427px;width:176px;height:176px;border-radius:50%;background:${RED};border:9px solid #fff;transform:rotate(-9deg)"></div>`;
     s += caja(830, 445, 140, 140, `<b style="font-size:56px;color:#fff;white-space:nowrap">${esc(p.descuento)}</b>`, 'transform:rotate(-9deg)');
