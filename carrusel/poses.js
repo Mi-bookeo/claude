@@ -1,6 +1,6 @@
 /* Poses sueltas de María y Pedro para carruseles de Instagram.
    Se dibujan con el MISMO código de la serie de vídeos (rama video-11-marta-cuatro-motivos):
-   María = src/maria.js (placeMaria), Pedro = src/v05.js (placePedro, el del cartel),
+   María = src/maria.js (placeMaria), Pedro = personajes/pedro/pedro.js (placePedroF, Pedro de frente),
    manos = hand11 (src/v11.js). Nada redibujado a mano.
    Misma escala para los dos personajes -> mismo grosor de contorno (SW ≈ 8,5 px a escala 1). */
 'use strict';
@@ -64,45 +64,35 @@ const POSE_MARIA = {
   }
 };
 
-// ---------- POSE_PEDRO (el del cartel: v05, camiseta verde y gafas) ----------
+// ---------- PEDRO DE FRENTE (personajes/pedro/pedro.js: gafas, cuello, camiseta verde; mismo sistema que María) ----------
+const PF_HF = (x, y, hand = 'fist', o = {}) => Object.assign({ h: [x, y], side: -1, hand, hs: 1.2 }, o);
+const PF_HB = (x, y, hand = 'fist', o = {}) => Object.assign({ h: [x, y], side: 1, hand, hs: 1.2 }, o);
 const POSE_PEDRO = {
-  senalando: () => {
-    const a = -130;
-    return placePedro(PX, FOOT, SC, {
-      expr: 'grin', head: -4, armF: a, armB: 4,
-      itemF: (w, x, y) => hand11('point', [x, y], w, { fill: P5.skin, hs: 1.3, dir: armDir(a) })
-    });
-  },
-  sonriendo: () => placePedro(PX, FOOT, SC, { expr: 'laugh', armF: -4, armB: 4 }),
-  sorprendido: () => placePedro(PX, FOOT, SC, {
-    expr: 'surprise', head: -3, armF: -150, armB: 150,
-    itemF: (w, x, y) => hand11('open', [x, y], w, { fill: P5.skin, hs: 1.2, hrot: armDir(-150) + 90 }),
-    itemB: (w, x, y) => hand11('open', [x, y], w, { fill: P5.skinS, hs: 1.2, hrot: armDir(150) + 90 })
+  senalando: () => placePedroF(PX, FOOT, SC, {
+    expr: 'sparkle', head: -4, armF: PF_HF(229.5, 93, 'point', { dir: -28, hs: 1.35 }), armB: PD_REST_B
+  }),
+  sonriendo: () => placePedroF(PX, FOOT, SC, { expr: 'grin', head: 3, armF: PD_REST_F, armB: PD_REST_B }),
+  sorprendido: () => placePedroF(PX, FOOT, SC, {
+    expr: 'surprise', armF: PF_HF(218.5, 84.5, 'open', { hrot: 22 }), armB: PF_HB(161.5, 84.5, 'open', { hrot: -22 })
   }),
   cartel: () => {
-    const hy = 137, aF = pAng(PF, BD.x1 - 0.5, hy), aB = pAng(PB, BD.x0 + 0.5, hy);
-    return placePedro(PX, FOOT, SC, {
-      expr: 'grin', armF: aF, armB: aB,
-      itemF: w => {
-        const hF = handLocal(PF, aF), hB = handLocal(PB, aB);
-        return board(BD.topP, w) + handC(w, hB[0], hB[1], P5.skin, 4.4) + handC(w, hF[0], hF[1], P5.skin, 4.4);
-      }
+    const HF = [BD.x1 - 0.5, 124], HB = [BD.x0 + 0.5, 124];
+    return placePedroF(PX, FOOT, SC, {
+      expr: 'grin', armF: PF_HF(HF[0], HF[1]), armB: PF_HB(HB[0], HB[1]),
+      front: w => board(99, w) + hand11('fist', HF, w, { fill: PD.skin, hs: 1.2 }) + hand11('fist', HB, w, { fill: PD.skin, hs: 1.2 })
     });
   },
   movil: () => {
-    const x0 = PH_CX_P - PH.w / 2, x1 = PH_CX_P + PH.w / 2, hy = 144;
-    const aF = pAng(PF, x1 - 0.5, hy), aB = pAng(PB, x0 + 0.5, hy);
-    return placePedro(PX, FOOT, SC, {
-      expr: 'grin', armF: aF, armB: aB,
-      itemF: w => {
-        const hF = handLocal(PF, aF), hB = handLocal(PB, aB);
-        return bigPhone(PH_CX_P, PH_TOP_P, w) + handC(w, hB[0], hB[1], P5.skin, 4.4) + handC(w, hF[0], hF[1], P5.skin, 4.4);
-      }
+    const HF = [211, 128], HB = [169, 128];
+    return placePedroF(PX, FOOT, SC, {
+      expr: 'sparkle', armF: PF_HF(HF[0], HF[1]), armB: PF_HB(HB[0], HB[1]),
+      front: w => bigPhone(190, 97, w) + hand11('fist', HF, w, { fill: PD.skin, hs: 1.2 }) + hand11('fist', HB, w, { fill: PD.skin, hs: 1.2 })
     });
   }
 };
 
-window.POSES = { maria: POSE_MARIA, pedro: POSE_PEDRO };
+window.POSES = { maria: POSE_MARIA, pedro: POSE_PEDRO,
+  ref: { pedro: () => placePedroF(PX, FOOT, SC, { expr: 'happy', armF: PD_REST_F, armB: PD_REST_B }) } };
 window.drawPose = (who, pose) => {
   uid = 0;
   document.getElementById('dyn').innerHTML = window.POSES[who][pose]();

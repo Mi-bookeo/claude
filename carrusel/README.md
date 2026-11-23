@@ -14,11 +14,11 @@ posición quedan alineados entre una diapositiva y otra.
 
 ## De dónde salen
 
-Nada está redibujado a mano: las poses se generan con el código de los vídeos
-(rama `video-11-marta-cuatro-motivos`):
+Las poses se generan por código (rama `video-11-marta-cuatro-motivos` + `personajes/pedro/pedro.js`):
 
 - **María**: `src/maria.js` (`placeMaria`), el personaje fijo del vídeo 11, con contorno negro.
-- **Pedro**: `src/v05.js` (`placePedro`), el mismo Pedro del cartel (camiseta verde y gafas).
+- **Pedro**: `personajes/pedro/pedro.js` (`placePedroF`), la versión de frente del Pedro del cartel, con cuello y
+  brazos con codo. Es el personaje fijo para los próximos vídeos.
 - Manos (señalar, abiertas, puño): `hand11` de `src/v11.js`.
 - El cartel blanco (apaisado, liso, para escribir encima) y el móvil grande son piezas nuevas en el estilo de la serie: carcasa negra con el mismo
   contorno; cartel y pantalla en blanco liso (#FFFFFF). Miden lo mismo en los dos personajes.

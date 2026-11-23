@@ -19,6 +19,7 @@ const FILES = {
   const html = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent;overflow:hidden}svg{display:block}</style></head><body>
 <svg id="stage" xmlns="http://www.w3.org/2000/svg" width="1000" height="1250" viewBox="0 0 1000 1250"><defs id="defs"></defs><g id="dyn"></g></svg>
 ${LIBS.map(l => `<script src="file://${path.join(SRC, 'src', l)}"></script>`).join('\n')}
+<script src="file://${path.join(__dirname, '..', 'personajes', 'pedro', 'pedro.js')}"></script>
 <script src="file://${path.join(__dirname, 'poses.js')}"></script></body></html>`;
   const tmp = path.join(OUT, '_poses.html'); fs.writeFileSync(tmp, html);
   const browser = await chromium.launch();
@@ -33,5 +34,8 @@ ${LIBS.map(l => `<script src="file://${path.join(SRC, 'src', l)}"></script>`).jo
     await page.screenshot({ path: path.join(OUT, name + '.png'), omitBackground: true, clip: { x: 0, y: 0, width: 1000, height: 1250 } });
     console.log(name + '.png');
   }
+  // ficha de referencia de Pedro de frente (personajes/pedro/pedro.png)
+  await page.evaluate(() => window.drawPose('ref', 'pedro'));
+  await page.screenshot({ path: path.join(__dirname, '..', 'personajes', 'pedro', 'pedro.png'), omitBackground: true, clip: { x: 0, y: 0, width: 1000, height: 1250 } });
   await browser.close(); fs.unlinkSync(tmp);
 })();
