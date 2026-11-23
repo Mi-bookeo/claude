@@ -23,14 +23,14 @@ Los logos son `../logo_blanco.png` (sobre rojo) y `../logo_rojo.png` (pantalla d
 {
   "hoy": "2026-11-23",
   "publicaciones": [
-    { "tipo": "oferta", "titulo": "Botas de piel", "comercio": "Calzados X", "descuento": "-20 %", "fin": "2026-11-30", "foto": "foto1.jpg" },
+    { "tipo": "oferta", "titulo": "Botas de piel", "comercio": "Calzados X", "descuento": "-20 %", "precio": "48 €", "precio_antes": "60 €", "fin": "2026-11-30", "foto": "foto1.jpg" },
     { "tipo": "novedad", "titulo": "Nueva colección", "comercio": "Tienda Y", "fin": "2026-12-15", "foto": "foto2.jpg" },
     { "tipo": "evento", "titulo": "Concierto", "comercio": "Bar Z", "fin": "2026-11-28", "foto": "foto3.jpg" }
   ]
 }
 ```
 
-   - `tipo`: `oferta`, `novedad` o `evento`. `descuento` es opcional (-20 %, 2x1…).
+   - `tipo`: `oferta`, `novedad` o `evento`. `descuento` es opcional (-20 %, 2x1…). `precio` (precio actual, rojo y grande) y `precio_antes` (tachado, más pequeño) también son opcionales: salen abajo a la derecha de la tarjeta, debajo del círculo de descuento.
    - `fin` (AAAA-MM-DD) da la píldora: "Hasta el DD/MM", "¡Termina hoy!" si es `hoy`. `texto_fecha` la sustituye por un texto libre.
    - Rango del asunto y la portada: de `hoy` −3 a +3 días por defecto. Si el usuario dice otras fechas, ponlas en `desde` / `hasta`. Si `desde` = `hasta` es un solo día: la portada dice "DE HOY" (o "DEL DÍA" si no es hoy) y la etiqueta solo ese día.
    - Máximo 8: se usan las que terminan antes.

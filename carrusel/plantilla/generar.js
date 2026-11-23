@@ -177,7 +177,14 @@ function contenido(p, i, n, pj, lado, carpeta, hoy) {
     s += `<div style="position:absolute;left:812px;top:427px;width:176px;height:176px;border-radius:50%;background:${RED};border:9px solid #fff;transform:rotate(-9deg)"></div>`;
     s += caja(830, 445, 140, 140, `<b style="font-size:56px;color:#fff;white-space:nowrap">${esc(p.descuento)}</b>`, 'transform:rotate(-9deg)');
   }
-  const ancho = p.descuento ? 690 : 880;
+  // precio: abajo a la derecha, debajo del círculo de descuento. El tachado (precio_antes) más pequeño encima.
+  if (p.precio || p.precio_antes) {
+    s += caja(748, 616, 240, 174,
+      (p.precio_antes ? `<i style="font-size:36px;font-weight:700;color:#8A6F6F;text-decoration:line-through;text-decoration-thickness:4px;white-space:nowrap">${esc(p.precio_antes)}</i>` : '') +
+      (p.precio ? `<b style="font-size:72px;color:${RED};line-height:1;white-space:nowrap">${esc(p.precio)}</b>` : ''),
+      'align-items:flex-end;text-align:right;justify-content:flex-end');
+  }
+  const ancho = p.precio || p.precio_antes ? 640 : p.descuento ? 690 : 880;
   s += caja(92, 530, ancho, 128, `<b style="font-size:54px;color:${DARK}">${esc(p.titulo)}</b>`, 'justify-content:flex-end;align-items:flex-start;text-align:left');
   s += caja(92, 660, ancho, 44, `<b style="font-size:34px;color:${RED};white-space:nowrap">${esc(p.comercio)}</b>`, 'align-items:flex-start;text-align:left');
   let pill = p.texto_fecha;
@@ -215,7 +222,8 @@ function pieDeFoto(pubs, r, hoy) {
     let f = '';
     if (p.texto_fecha) f = ` (${p.texto_fecha})`;
     else if (p.fin) f = p.fin === hoy ? ' (¡termina hoy!)' : ` (hasta el ${ddmm(p.fin)})`;
-    return `${icono} ${p.descuento ? p.descuento + ' · ' : ''}${p.titulo} — ${p.comercio}${f}`;
+    const pr = p.precio ? ` · ${p.precio_antes ? `antes ${p.precio_antes}, ahora ` : ''}${p.precio}` : '';
+    return `${icono} ${p.descuento ? p.descuento + ' · ' : ''}${p.titulo}${pr} — ${p.comercio}${f}`;
   };
   return `ASUNTO: Carrusel Instagram · publicaciones ${r.asunto}
 
