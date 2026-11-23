@@ -10,7 +10,7 @@ Genera el carrusel semanal (1080×1350, 4:5) sin IA, con una plantilla fija. Se 
 | `fuentes/` | Poppins Bold y Light (licencia OFL en `OFL.txt`). |
 | `plantilla/generar.js` | El generador (Node + Playwright/Chromium). `make_carrusel_referencia.py` es la versión antigua, solo de referencia. |
 | `estado.json` | Último personaje usado en portada, cierre y contenido, para que el siguiente carrusel no repita. |
-| `salida/AAAA-MM-DD/` | Cada carrusel: `publicaciones.json`, las fotos, `01.jpg`, `02.jpg`… y `pie.txt`. |
+| `salida/AAAA-MM-DD/` | Carpeta de trabajo de cada carrusel. **No se sube al repo** (está en `.gitignore`): las imágenes y el pie se envían por el chat para descargarlas. |
 | `ejemplo/` | Prueba con publicaciones inventadas. |
 
 Los logos son `../logo_blanco.png` (sobre rojo) y `../logo_rojo.png` (pantalla del móvil).
@@ -42,6 +42,9 @@ node carrusel/plantilla/generar.js carrusel/salida/AAAA-MM-DD
 ```
 
    Añade `--sin-estado` para probar sin avanzar la rotación de personajes.
+
+3. Envía al usuario por el chat los JPG y el texto de `pie.txt`. No subas la carpeta `salida/`.
+4. Sube **solo** `carrusel/estado.json` (commit + push) para que el siguiente carrusel siga la rotación.
 
 ## Rotación de personajes
 
