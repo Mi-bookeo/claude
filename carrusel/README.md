@@ -32,7 +32,7 @@ Los logos son `../logo_blanco.png` (sobre rojo) y `../logo_rojo.png` (pantalla d
 
    - `tipo`: `oferta`, `novedad` o `evento`. `descuento` es opcional (-20 %, 2x1…).
    - `fin` (AAAA-MM-DD) da la píldora: "Hasta el DD/MM", "¡Termina hoy!" si es `hoy`. `texto_fecha` la sustituye por un texto libre.
-   - Rango del asunto y la portada: de `hoy` −3 a +3 días (se puede forzar con `desde` / `hasta`).
+   - Rango del asunto y la portada: de `hoy` −3 a +3 días por defecto. Si el usuario dice otras fechas, ponlas en `desde` / `hasta`. Si `desde` = `hasta` es un solo día: la portada dice "DE HOY" (o "DEL DÍA" si no es hoy) y la etiqueta solo ese día.
    - Máximo 8: se usan las que terminan antes.
 
 2. Ejecuta desde la raíz del repo:

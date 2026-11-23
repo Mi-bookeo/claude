@@ -52,11 +52,18 @@ function sumaDias(s, n) { const d = fecha(s); d.setUTCDate(d.getUTCDate() + n); 
 function ddmm(s) { const d = fecha(s); return String(d.getUTCDate()).padStart(2, '0') + '/' + String(d.getUTCMonth() + 1).padStart(2, '0'); }
 function hoyMadrid() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date()); }
 
-function rango(desde, hasta) {
+function rango(desde, hasta, hoy) {
   const a = fecha(desde), b = fecha(hasta);
   const da = a.getUTCDate(), db = b.getUTCDate(), ma = a.getUTCMonth(), mb = b.getUTCMonth();
-  if (ma === mb) return { asunto: `del ${da} al ${db} de ${MESES[mb]}`, l1: `${da} – ${db}`, l2: MESES[mb].toUpperCase() };
+  if (desde === hasta) {
+    const deHoy = desde === hoy;
+    return { asunto: `del ${da} de ${MESES[ma]}`, l1: `${da}`, l2: MESES[ma].toUpperCase(),
+      paren: `${da} de ${MESES[ma]}`, portada: deHoy ? 'DE HOY' : 'DEL DÍA', pie: deHoy ? 'de hoy' : `del ${da} de ${MESES[ma]}` };
+  }
+  const extra = { portada: 'DE ESTA SEMANA', pie: 'de esta semana' };
+  if (ma === mb) return { ...extra, asunto: `del ${da} al ${db} de ${MESES[mb]}`, l1: `${da} – ${db}`, l2: MESES[mb].toUpperCase() };
   return {
+    ...extra,
     asunto: `del ${da} de ${MESES[ma]} al ${db} de ${MESES[mb]}`,
     l1: `${da} – ${db}`,
     l2: `${MESES[ma].slice(0, 3).toUpperCase()} – ${MESES[mb].slice(0, 3).toUpperCase()}`,
@@ -145,7 +152,7 @@ function portada(quien, r) {
   const { html, zona: z } = personaje(quien + '_cartel', 0.66, 520, 1318);
   let s = plaza() + logo(LOGO_BLANCO, 40, 34, 200) + html;
   s += caja(z.x + z.w * 0.07, z.y + z.h * 0.12, z.w * 0.86, z.h * 0.76,
-    `<b style="font-size:84px;color:${RED};line-height:1.05">PUBLICACIONES</b><b style="font-size:52px;color:${DARK};margin-top:8px">DE ESTA SEMANA</b>`);
+    `<b style="font-size:84px;color:${RED};line-height:1.05">PUBLICACIONES</b><b style="font-size:52px;color:${DARK};margin-top:8px">${esc(r.portada)}</b>`);
   s += etiquetaFecha(895, 330, 7, r.l1, r.l2);
   s += caja(700, 1268, 350, 50, `<b style="font-size:32px;color:#fff">Desliza →</b>`, 'align-items:flex-end;text-align:right');
   return pagina(s);
@@ -213,7 +220,7 @@ function pieDeFoto(pubs, r, hoy) {
   return `ASUNTO: Carrusel Instagram · publicaciones ${r.asunto}
 
 PIE DE FOTO:
-📣 Las publicaciones de esta semana en Escaparate de Tudela (${r.asunto}) 👇
+📣 Las publicaciones ${r.pie} en Escaparate de Tudela (${r.paren || r.asunto}) 👇
 
 ${pubs.map(linea).join('\n')}
 
@@ -232,7 +239,7 @@ async function main() {
   const sinEstado = process.argv.includes('--sin-estado');
   const datos = JSON.parse(fs.readFileSync(path.join(carpeta, 'publicaciones.json'), 'utf8'));
   const hoy = datos.hoy || hoyMadrid();
-  const r = rango(datos.desde || sumaDias(hoy, -3), datos.hasta || sumaDias(hoy, 3));
+  const r = rango(datos.desde || sumaDias(hoy, -3), datos.hasta || sumaDias(hoy, 3), hoy);
   // las que terminan antes primero; sin fecha de fin, al final
   const pubs = [...datos.publicaciones].sort((a, b) => (a.fin || '9999') .localeCompare(b.fin || '9999')).slice(0, MAX_PUB);
   if (datos.publicaciones.length > MAX_PUB) console.log(`Hay ${datos.publicaciones.length} publicaciones: uso las ${MAX_PUB} que terminan antes.`);
