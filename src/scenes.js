@@ -378,7 +378,7 @@ function vFlock(x, y, a, t, i) {
   return s;
 }
 S[10] = (t, T, sc) => {
-  const c = cues(sc, { a1: 0.25, a2: 0.5, b1: 4.6, b2: 4.9, b3: 5.3, wink: 4.5 });
+  const c = cues(sc, { a1: 0.25, strip: 1.9, sub: 2.6, b1: 4.6, b2: 4.9, b3: 5.3, wink: 4.5 });
   const [shot, a] = shotAt(t, sc);
   if (shot === 'FIN') {
     const u = t - a;
@@ -410,8 +410,12 @@ S[10] = (t, T, sc) => {
   w += placeJose(jx, jy, jsc, { expr: inB ? (t > c.wink + 0.15 && t < c.wink + 0.9 ? 'wink' : 'grin') : 'proud', armF, head: -3 + 1.5 * Math.sin(T * 2), bob: breathJ(T, jsc), blink: blinkJ(T) });
   let s = cam(comicZoom(t, 1.1) * bumpZ(t, [c.wink], 0.03), 540, 900, w);
   if (!inB) {
-    s += bigT('Publica tus ofertas', 540, 270, 120, pop(t, c.a1, 0.5), -3);
-    s += bigT('¡y llena tu comercio!', 540, 392, 116, pop(t, c.a2, 0.5), 2, { fill: C.yel });
+    // para comercios: franja roja «Comenta ALTA» (como «Comenta CANAL» de la serie), sincronizada con la voz de José
+    s += bigT('¿Tienes un negocio?', 540, 262, 116, pop(t, c.a1, 0.5), -3, { fill: C.yel });
+    const ks = pop(t, c.strip, 0.5), pulse = t > c.strip + 0.6 ? 1 + 0.03 * Math.sin((t - c.strip) * 2 * PI / 1.1) : 1;
+    s += at(540, 400, ks * pulse, `<rect x="-470" y="-62" width="940" height="124" rx="26" transform="translate(10 10)" fill="${INK}"/><rect x="-470" y="-62" width="940" height="124" rx="26" fill="${C.red}" ${st12()}/>` +
+      text('Comenta ALTA', 0, 4, { size: 96, sw: SW * 2, sd: 6 }), -2);
+    s += bigT('y te enviamos el formulario', 540, 528, 66, pop(t, c.sub, 0.5), 1, { fill: '#FFFFFF', maxW: 960 });
   } else {
     s += bigT('Y tú, apúntate al canal', 540, 262, 104, pop(t, c.b1, 0.5), -3);
     s += at(540, 392, pop(t, c.b2, 0.5), pill(0, 0, 720, 112, C.green, 'Canal de WhatsApp', { size: 60, dx: 40, pad: 120 }) + iconChat(-290, 0, 34), -2);

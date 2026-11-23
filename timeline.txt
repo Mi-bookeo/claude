@@ -9,5 +9,5 @@ escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
 07	32.000	38.000	6.000	180	Interior 18:00: montaje con cortes secos, 3 clientes, 8 y bar lleno; Pedro entre ellos con su pincho y su caña; José sirve cañas
 08	38.000	45.000	7.000	210	Interior 20:00: barra vacía (platos y migas), clientes contentos, José pulgar arriba; «¡Todo vendido!»
 09	45.000	53.000	8.000	240	José orgulloso ante la barra vacía; para comercios: «¿Te sobra género?» «¡Lánzalo en oferta flash!» Escaparate de Tudela
-10	53.000	68.300	15.300	459	Atardecer tras las 20:00, farolas encendidas y pájaros: José en primer plano; «Publica tus ofertas» y, para el público, «Y tú, apúntate al canal»; tarjeta final con logo y web
+10	53.000	68.300	15.300	459	Atardecer tras las 20:00, farolas encendidas y pájaros: José en primer plano; para comercios «¿Tienes un negocio?» «Comenta ALTA» «y te enviamos el formulario»; para el público «Y tú, apúntate al canal»; tarjeta final con logo y web
 TOTAL	0.000	68.300

@@ -194,7 +194,7 @@ ev('pop', at(8, 'thumb'), -9); ev('clink', at(8, 'chin'), -6); ev('clink', at(8,
 # 9) «ta-chán» de éxito al pulgar arriba
 ev(f'murmullo_{D(9):.2f}_1.8_4', st(9), -28); ev('pop', at(9, 't1'), -11); ev('pop', at(9, 't2'), -11); ev('pop', at(9, 'banner'), -8); ev('tachan', at(9, 'thumb'), -5)
 # 10) «whoosh» suave al acercarse José a cámara, «pop» de las franjas y «whoosh» del logo final
-ev('calle', st(10), -22); ev('whoosh', st(10) - 0.05, -11); ev('pop', at(10, 'a1'), -12); ev('pop', at(10, 'b2'), -7); ev('pop_s', at(10, 'b3'), -10)
+ev('calle', st(10), -22); ev('whoosh', st(10) - 0.05, -11); ev('pop', at(10, 'a1'), -12); ev('pop', at(10, 'strip'), -6); ev('pop_s', at(10, 'sub'), -10); ev('pop', at(10, 'b2'), -7); ev('pop_s', at(10, 'b3'), -10)
 ev('whoosh', shot(10, 'FIN') - 0.2, -4); ev('ding', shot(10, 'FIN') + 0.1, -11)
 
 fx = np.zeros(N)
