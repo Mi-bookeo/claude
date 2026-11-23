@@ -42,6 +42,15 @@ function bocadillo(x, y, w, h, tx, ty, lines, size, color = INK) {
     ${txt}</g>`;
 }
 
+// personaje en imagen: (cx,cy) = centro de la cabeza en la imagen; (hx,hy) = dónde va en el cartel
+function foto(src, w, h, cx, cy, hx, hy, sc, rot) {
+  return `<image href="${src}" width="${w}" height="${h}" transform="translate(${hx} ${hy}) rotate(${rot}) scale(${sc}) translate(${-cx} ${-cy})"/>`;
+}
+// mano de María (mismo estilo plano, sin contorno)
+function manoPlana(x, y, r) {
+  return `<g><ellipse cx="${x}" cy="${y}" rx="${r * 0.95}" ry="${r}" fill="#F2C29C"/><ellipse cx="${x - r * 0.25}" cy="${y - r * 0.2}" rx="${r * 0.5}" ry="${r * 0.45}" fill="#F6CFAE"/>
+    <path d="M${x + r * 0.15} ${y - r * 0.4} h${r * 0.6} M${x + r * 0.15} ${y + r * 0.05} h${r * 0.6} M${x + r * 0.15} ${y + r * 0.5} h${r * 0.6}" stroke="#D9A37C" stroke-width="3" stroke-linecap="round"/></g>`;
+}
 function render() {
   let g = `<defs><clipPath id="arriba"><rect x="0" y="0" width="1414" height="1650"/></clipPath><clipPath id="caja"><rect x="${BOX.x}" y="${BOX.y}" width="${BOX.w}" height="${BOX.h}" rx="${BOX.r}"/></clipPath></defs>`;
   g += `<image href="${IMG}" x="0" y="0" width="1414" height="2000"/>`;
@@ -49,8 +58,8 @@ function render() {
   // ---- personajes (detrás del recuadro) ----
   const scM = 5.4, scP = 5.4;
   g += `<g clip-path="url(#arriba)">`;
-  g += asoma(person, { who: 'marta', expr: 'smile', head: -16, armF: 55, armB: 60, pony: -10 }, 405, 1505, scM, -32, true);
-  g += asoma(pedro, { expr: 'grin', head: -24, armF: 60, armB: 55 }, 985, 1600, scP, 42, false);
+  g += foto('maria_recorte.png', 536, 1488, 268, 332, 200, 1195, 0.43, -32);
+  g += foto('pedro_recorte.png', 512, 1633, 266, 227, 1212, 1300, 0.42, 32);
   g += `</g>`;
 
   // ---- el recuadro del QR vuelve a dibujarse encima: los personajes quedan escondidos detrás ----
@@ -58,11 +67,11 @@ function render() {
   g += `<rect x="${BOX.x + 1.5}" y="${BOX.y + 1.5}" width="${BOX.w - 3}" height="${BOX.h - 3}" rx="${BOX.r - 1}" fill="none" stroke="#000" stroke-width="3.5"/>`;
 
   // ---- manos agarradas al borde ----
-  g += manoBorde(326, 1345, 21, C.skin, 'L');
+  g += manoPlana(326, 1330, 20);
   g += manoBorde(1087, 1462, 21, P5.skin, 'R');
 
   // ---- bocadillos ----
-  g += bocadillo(56, 880, 248, 200, 190, 1112,
+  g += bocadillo(56, 812, 248, 200, 175, 1046,
     ['¡Escanea', 'el <tspan fill="#C71F1E">QR</tspan>', 'y entra!'], 46);
   g += bocadillo(1112, 1046, 248, 160, 1236, 1228, ['¡No te las', 'pierdas!'], 42);
 
