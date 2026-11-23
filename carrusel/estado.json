@@ -1,8 +1,8 @@
 {
-  "portada": "pedro",
-  "cierre": "maria",
-  "contenido": -1,
-  "ultimo_contenido": null,
-  "lado": "der",
-  "fecha": null
+  "portada": "maria",
+  "cierre": "pedro",
+  "contenido": 1,
+  "ultimo_contenido": "pedro_sonriendo",
+  "lado": "izq",
+  "fecha": "2026-11-23"
 }
