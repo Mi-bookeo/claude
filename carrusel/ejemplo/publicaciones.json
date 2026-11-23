@@ -1,0 +1,9 @@
+{
+  "hoy": "2026-11-23",
+  "publicaciones": [
+    { "tipo": "oferta",  "titulo": "Botas de piel para invierno", "comercio": "Calzados Ejemplo", "descuento": "-20 %", "fin": "2026-11-30", "foto": "foto1.jpg" },
+    { "tipo": "novedad", "titulo": "Llegan los calendarios de adviento y los libros de la nueva temporada", "comercio": "Librería de Prueba", "fin": "2026-12-15", "foto": "foto2.jpg" },
+    { "tipo": "evento",  "titulo": "Concierto acústico en la tienda", "comercio": "Música Tudela Demo", "fin": "2026-11-28", "foto": "foto3.jpg" },
+    { "tipo": "oferta",  "titulo": "Roscón y dulces de temporada", "comercio": "Pastelería Ejemplo", "descuento": "2x1", "fin": "2026-11-23", "foto": "foto4.jpg" }
+  ]
+}
