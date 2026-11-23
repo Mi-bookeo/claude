@@ -165,27 +165,27 @@ function contenido(p, i, n, pj, lado, carpeta, hoy) {
   s += `<div style="position:absolute;left:60px;top:40px;width:960px;height:770px;border-radius:36px;background:#fff;border:7px solid ${DARK}"></div>`;
   const foto = p.foto && path.join(carpeta, p.foto);
   if (foto && fs.existsSync(foto)) {
-    s += `<img src="${datauri(foto, 'image/jpeg')}" style="position:absolute;left:92px;top:72px;width:896px;height:440px;border-radius:22px;object-fit:cover;border:3px solid ${DARK}">`;
+    s += `<img src="${datauri(foto, 'image/jpeg')}" style="position:absolute;left:92px;top:72px;width:896px;height:474px;border-radius:22px;object-fit:cover;border:3px solid ${DARK}">`;
   } else {
-    s += `<div style="position:absolute;left:92px;top:72px;width:896px;height:440px;border-radius:22px;background:#EFEFEF;border:3px dashed #BDBDBD"></div>`;
-    s += caja(92, 72, 896, 440, `<b style="font-size:38px;color:#9A9A9A">FOTO NO ENCONTRADA</b><i style="font-size:28px;color:#9A9A9A">${esc(p.foto || '')}</i>`);
+    s += `<div style="position:absolute;left:92px;top:72px;width:896px;height:474px;border-radius:22px;background:#EFEFEF;border:3px dashed #BDBDBD"></div>`;
+    s += caja(92, 72, 896, 474, `<b style="font-size:38px;color:#9A9A9A">FOTO NO ENCONTRADA</b><i style="font-size:28px;color:#9A9A9A">${esc(p.foto || '')}</i>`);
   }
   // etiqueta de tipo
   const tipo = TIPOS[p.tipo] ? p.tipo : 'oferta';
   s += `<div style="position:absolute;left:112px;top:92px;height:58px;padding:0 26px;border-radius:29px;background:${tipo === 'oferta' ? RED : DARK};border:4px solid #fff;color:#fff;font-weight:700;font-size:28px;line-height:50px;letter-spacing:1px">${TIPOS[tipo]}</div>`;
   if (p.descuento) {
-    s += `<div style="position:absolute;left:812px;top:427px;width:176px;height:176px;border-radius:50%;background:${RED};border:9px solid #fff;transform:rotate(-9deg)"></div>`;
-    s += caja(830, 445, 140, 140, `<b style="font-size:56px;color:#fff;white-space:nowrap">${esc(p.descuento)}</b>`, 'transform:rotate(-9deg)');
+    s += `<div style="position:absolute;left:818px;top:376px;width:150px;height:150px;border-radius:50%;background:${RED};border:7px solid #fff;transform:rotate(-9deg)"></div>`;
+    s += caja(831, 389, 124, 124, `<b style="font-size:48px;color:#fff;white-space:nowrap">${esc(p.descuento)}</b>`, 'transform:rotate(-9deg)');
   }
   // precio: abajo a la derecha, debajo del círculo de descuento. El tachado (precio_antes) más pequeño encima.
   if (p.precio || p.precio_antes) {
-    s += caja(748, 616, 240, 174,
+    s += caja(748, 662, 240, 128,
       (p.precio_antes ? `<i style="font-size:36px;font-weight:700;color:#8A6F6F;text-decoration:line-through;text-decoration-thickness:4px;white-space:nowrap">${esc(p.precio_antes)}</i>` : '') +
       (p.precio ? `<b style="font-size:72px;color:${RED};line-height:1;white-space:nowrap">${esc(p.precio)}</b>` : ''),
       'align-items:flex-end;text-align:right;justify-content:flex-end');
   }
-  const ancho = p.precio || p.precio_antes ? 640 : p.descuento ? 690 : 880;
-  s += caja(92, 530, ancho, 128, `<b style="font-size:54px;color:${DARK}">${esc(p.titulo)}</b>`, 'justify-content:flex-end;align-items:flex-start;text-align:left');
+  const ancho = p.precio || p.precio_antes ? 640 : 880;
+  s += caja(92, 554, 880, 104, `<b style="font-size:54px;color:${DARK}">${esc(p.titulo)}</b>`, 'justify-content:flex-end;align-items:flex-start;text-align:left');
   s += caja(92, 660, ancho, 44, `<b style="font-size:34px;color:${RED};white-space:nowrap">${esc(p.comercio)}</b>`, 'align-items:flex-start;text-align:left');
   let pill = p.texto_fecha;
   if (!pill && p.fin) pill = p.fin === hoy ? '¡Termina hoy!' : `Hasta el ${ddmm(p.fin)}`;
