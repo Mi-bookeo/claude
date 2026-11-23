@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Baloo;src:url(Baloo2-ExtraBold.ttf)}
+html,body{margin:0;padding:0;background:#C71F1E}
+svg{display:block}
+</style></head>
+<body>
+<svg id="cartel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1414" height="2000" viewBox="0 0 1414 2000"></svg>
+<script src="personajes.js"></script>
+<script>
+// Recuadro blanco del QR en el cartel original (medido en píxeles)
+const BOX = { x: 315, y: 793, w: 783, h: 862, r: 48 };
+const IMG = 'cartel_original.png';
+const LINE = 6;            // grosor de contorno en píxeles del cartel
+const K = sc => LINE / (3 * sc);
+
+// personaje inclinado, asomando: (hx,hy) = cadera en el mundo, local (190,150)
+function asoma(drawFn, o, hx, hy, sc, lean, flip) {
+  o.k = K(sc);
+  const sx = flip ? -sc : sc;
+  return `<g transform="translate(${hx} ${hy}) rotate(${lean}) scale(${sx} ${sc}) translate(-190 -150)">${drawFn(o)}</g>`;
+}
+// mano agarrando el borde del recuadro (encima del recuadro)
+function manoBorde(x, y, r, skin, side) {
+  const d = side === 'L' ? 1 : -1;
+  const fingers = [-0.45, 0, 0.45].map(t =>
+    `<path d="M${x + d * r * 0.15} ${y + t * r} h${d * r * 0.75}" stroke="${INK}" stroke-width="${LINE * 0.6}" stroke-linecap="round"/>`).join('');
+  return `<g><ellipse cx="${x}" cy="${y}" rx="${r * 0.95}" ry="${r}" fill="${skin}" stroke="${INK}" stroke-width="${LINE}"/>${fingers}</g>`;
+}
+// bocadillo con cola hacia (tx,ty)
+function bocadillo(x, y, w, h, tx, ty, lines, size, color = INK) {
+  const r = 34, bx = Math.max(x + r + 10, Math.min(x + w - r - 60, tx - 30));
+  const tail = `M${bx} ${y + h - 2} L${tx} ${ty} L${bx + 54} ${y + h - 2}`;
+  const lh = size * 1.12, y0 = y + h / 2 - (lines.length - 1) * lh / 2 + size * 0.34;
+  const txt = lines.map((l, i) => `<text x="${x + w / 2}" y="${y0 + i * lh}" text-anchor="middle" font-family="Baloo" font-size="${size}" fill="${color}">${l}</text>`).join('');
+  return `<g>
+    <rect x="${x + 7}" y="${y + 9}" width="${w}" height="${h}" rx="${r}" fill="${INK}" opacity="0.28"/>
+    <path d="${tail}" fill="#FFFFFF" stroke="${INK}" stroke-width="${LINE}" stroke-linejoin="round"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="#FFFFFF" stroke="${INK}" stroke-width="${LINE}"/>
+    <path d="${tail}" fill="#FFFFFF" stroke="none" transform="translate(0 -6)"/>
+    ${txt}</g>`;
+}
+
+function render() {
+  let g = `<defs><clipPath id="arriba"><rect x="0" y="0" width="1414" height="1650"/></clipPath><clipPath id="caja"><rect x="${BOX.x}" y="${BOX.y}" width="${BOX.w}" height="${BOX.h}" rx="${BOX.r}"/></clipPath></defs>`;
+  g += `<image href="${IMG}" x="0" y="0" width="1414" height="2000"/>`;
+
+  // ---- personajes (detrás del recuadro) ----
+  const scM = 5.4, scP = 5.4;
+  g += `<g clip-path="url(#arriba)">`;
+  g += asoma(person, { who: 'marta', expr: 'smile', head: -16, armF: 55, armB: 60, pony: -10 }, 405, 1505, scM, -32, true);
+  g += asoma(pedro, { expr: 'grin', head: -24, armF: 60, armB: 55 }, 985, 1600, scP, 42, false);
+  g += `</g>`;
+
+  // ---- el recuadro del QR vuelve a dibujarse encima: los personajes quedan escondidos detrás ----
+  g += `<image href="${IMG}" x="0" y="0" width="1414" height="2000" clip-path="url(#caja)"/>`;
+  g += `<rect x="${BOX.x + 1.5}" y="${BOX.y + 1.5}" width="${BOX.w - 3}" height="${BOX.h - 3}" rx="${BOX.r - 1}" fill="none" stroke="#000" stroke-width="3.5"/>`;
+
+  // ---- manos agarradas al borde ----
+  g += manoBorde(326, 1345, 21, C.skin, 'L');
+  g += manoBorde(1087, 1462, 21, P5.skin, 'R');
+
+  // ---- bocadillos ----
+  g += bocadillo(16, 806, 296, 268, 190, 1112,
+    ['¡Escanea el', '<tspan fill="#C71F1E">QR</tspan> y entra a', 'disfrutar de las', 'mejores ofertas', 'y novedades!'], 37);
+  g += bocadillo(1112, 1046, 286, 160, 1240, 1228, ['¡No te las', 'pierdas!'], 46);
+
+  document.getElementById('cartel').innerHTML = g;
+}
+document.fonts.load('40px Baloo').then(render, render);
+</script>
+</body></html>
