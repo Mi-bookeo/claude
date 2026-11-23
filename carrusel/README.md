@@ -31,7 +31,7 @@ Los logos son `../logo_blanco.png` (sobre rojo) y `../logo_rojo.png` (pantalla d
 ```
 
    - `tipo`: `oferta`, `novedad` o `evento`. `descuento` es opcional (-20 %, 2x1…).
-   - `fin` (AAAA-MM-DD) da la píldora: "Hasta el DD/MM", "¡Termina hoy!" si es `hoy`, y "El DD/MM" en eventos. `texto_fecha` la sustituye por un texto libre.
+   - `fin` (AAAA-MM-DD) da la píldora: "Hasta el DD/MM", "¡Termina hoy!" si es `hoy`. `texto_fecha` la sustituye por un texto libre.
    - Rango del asunto y la portada: de `hoy` −3 a +3 días (se puede forzar con `desde` / `hasta`).
    - Máximo 8: se usan las que terminan antes.
 

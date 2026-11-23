@@ -174,7 +174,7 @@ function contenido(p, i, n, pj, lado, carpeta, hoy) {
   s += caja(92, 530, ancho, 128, `<b style="font-size:54px;color:${DARK}">${esc(p.titulo)}</b>`, 'justify-content:flex-end;align-items:flex-start;text-align:left');
   s += caja(92, 660, ancho, 44, `<b style="font-size:34px;color:${RED};white-space:nowrap">${esc(p.comercio)}</b>`, 'align-items:flex-start;text-align:left');
   let pill = p.texto_fecha;
-  if (!pill && p.fin) pill = p.fin === hoy ? '¡Termina hoy!' : p.tipo === 'evento' ? `El ${ddmm(p.fin)}` : `Hasta el ${ddmm(p.fin)}`;
+  if (!pill && p.fin) pill = p.fin === hoy ? '¡Termina hoy!' : `Hasta el ${ddmm(p.fin)}`;
   if (pill) s += `<div style="position:absolute;left:92px;top:716px;height:64px;padding:0 34px;border-radius:32px;background:${PINK};color:${RED};font-weight:700;font-size:30px;line-height:64px">${esc(pill)}</div>`;
   // personaje + bocadillo: solo se espejan las poses de señalar
   const espejo = !izq && pj.endsWith('senalando');
@@ -207,7 +207,7 @@ function pieDeFoto(pubs, r, hoy) {
     const icono = { oferta: '🏷️', novedad: '✨', evento: '📅' }[p.tipo] || '🏷️';
     let f = '';
     if (p.texto_fecha) f = ` (${p.texto_fecha})`;
-    else if (p.fin) f = p.fin === hoy ? ' (¡termina hoy!)' : p.tipo === 'evento' ? ` (el ${ddmm(p.fin)})` : ` (hasta el ${ddmm(p.fin)})`;
+    else if (p.fin) f = p.fin === hoy ? ' (¡termina hoy!)' : ` (hasta el ${ddmm(p.fin)})`;
     return `${icono} ${p.descuento ? p.descuento + ' · ' : ''}${p.titulo} — ${p.comercio}${f}`;
   };
   return `ASUNTO: Carrusel Instagram · publicaciones ${r.asunto}
