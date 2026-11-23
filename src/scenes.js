@@ -18,7 +18,7 @@ const FOOT = V11.foot;
 
 /* ---------- plano A de un motivo: Marta + número gigante + rótulo ---------- */
 function shotA(t, T, u, sc, n, word) {
-  const ranges = sc.talk, M = 7, px = 400;
+  const ranges = sc.talk, [M, px, FOOT] = FR().A, [NX, NY, NR, LY] = FR().num;
   let arm, expr = 'happy';
   if (n <= 3) {
     arm = Object.assign({}, POSE.count(n));
@@ -28,16 +28,16 @@ function shotA(t, T, u, sc, n, word) {
   } else { arm = POSE.heart; expr = 'sparkle'; }
   let s = bg11(T, n === 4 ? { birds: { time: t, t0: 0.1, d: 4.2, y: 640 } } : {});
   if (n === 4) s += at(780, 640, pop(u, 0.08, 0.55), `<g opacity="${f(0.55 * pop(u, 0.3, 0.6))}">${rays(0, 0, 14, T * 30, C.yel, 350)}</g>`);
-  s += marta11(px, FOOT, M, mState(t, T, M, ranges, { expr, armF: arm, nod: n === 4 ? -4 * Math.sin(PI * clamp(u / 0.8)) : 0 }));
+  s += hero11(px, FOOT, M, mState(t, T, M, ranges, { expr, armF: arm, nod: n === 4 ? -4 * Math.sin(PI * clamp(u / 0.8)) : 0 }));
   if (n === 4) {
-    const [hx, hy] = mPt(px, FOOT, M, 193, 108);
+    const [hx, hy] = heroPt(px, FOOT, M, 193, 108);
     for (let i = 0; i < 3; i++) { const p = ((u * 0.9 + i / 3) % 1); s += riseHeart(hx + 110 + i * 40, hy + 60 - p * 300, 26, (p < 0.15 ? p / 0.15 : 1) * (1 - p * 0.4), 10 * Math.sin(u * 4 + i)); }
   }
   s = cam(comicZoom(u), 540, 800, s);
   const k = pop(u, 0.08, 0.55);
   if (n <= 3) {
-    s += bigNumber(800, 610, 150, n, k, -12 * (1 - k), T);
-    s += label11(word, 800, 860, pop(u, 0.35, 0.5), -3);
+    s += bigNumber(NX, NY, NR, n, k, -12 * (1 - k), T);
+    s += label11(word, NX, LY, pop(u, 0.35, 0.5), -3);
   } else {
     s += bigNumber(780, 640, 200, 4, k, -12 * (1 - k), T, 0);
     s += sealMejor(960, 470, 92, pop(u, 0.6, 0.5), 12, T);
@@ -48,7 +48,7 @@ function shotA(t, T, u, sc, n, word) {
 }
 /* ---------- plano C de un motivo: Marta a pantalla completa con el gesto de cierre ---------- */
 function shotC(t, T, u, sc, n) {
-  const ranges = sc.talk, M = 7, px = 540;
+  const ranges = sc.talk, [M, px, FOOT] = FR().C;
   const g = [null,
     { expr: 'happy', armF: POSE.thumb },
     { expr: 'wink', armF: POSE.thumb },
@@ -57,14 +57,14 @@ function shotC(t, T, u, sc, n) {
   let s = bg11(T, n === 4 ? { birds: { time: t, t0: 8.4, d: 3.6, y: 520 } } : {});
   const kb = pop(u, 0.02, 0.4);
   if (g.armF.hand === 'thumb') g.armF = Object.assign({}, g.armF, { hs: 1.45 * (0.5 + 0.5 * kb) });
-  s += marta11(px, FOOT, M, mState(t, T, M, ranges, Object.assign({ nod: 3 * Math.sin(PI * clamp(u / 0.5)) }, g)));
+  s += hero11(px, FOOT, M, mState(t, T, M, ranges, Object.assign({ nod: 3 * Math.sin(PI * clamp(u / 0.5)) }, g)));
   if (n === 4) {
     for (let i = 0; i < 6; i++) {
       const p = ((u * 0.8 + i / 6) % 1), x = 540 + (i - 2.5) * 120 + 30 * Math.sin(u * 3 + i);
       s += riseHeart(x, 1080 - p * 640, 24 + 10 * hash(i), Math.min(1, p / 0.12), 14 * Math.sin(u * 4 + i));
     }
   } else {
-    const [hx, hy] = mPt(px, FOOT, M, 222, 92);
+    const [hx, hy] = heroPt(px, FOOT, M, 222, 92);
     s += sparkle(hx + 60, hy - 40, 28, pop(u, 0.15, 0.4)) + sparkle(hx - 10, hy - 110, 20, pop(u, 0.3, 0.4));
   }
   return cam(comicZoom(u, 1.12), 540, 760, s);
@@ -103,12 +103,12 @@ function benefit(n, word) {
 
 /* ---------- 1) Saludo y título ---------- */
 S[1] = (t, T, sc) => {
-  const M = 5, px = 540;
+  const [M, px, FOOT] = FR().s1;
   let s = bg11(T, { sunX: 930, sunY: 1000 });
   const c = Object.assign({ title1: 0.2, title2: 0.5, waveEnd: 3.0, circles: 1.1, four: 1.85 }, sc.cues);
   const arm = t < c.waveEnd ? POSE.wave(2 * PI * t * 2) : t < c.circles - 0.1 ? POSE.restF : POSE.pointUp;
   const extra = { expr: t < c.four ? 'happy' : 'sparkle', armF: arm };
-  s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, extra));
+  s += hero11(px, FOOT, M, mState(t, T, M, sc.talk, extra));
   s = cam(comicZoom(t, 1.1), 540, 900, s);
   // título
   s += bigT('4 motivos', 540, 378, 150, pop(t, c.title1, 0.55), -3, { fill: C.yel });
@@ -128,10 +128,10 @@ S[5] = benefit(4, 'El mejor');
 /* ---------- 6) Comenta CANAL ---------- */
 S[6] = (t, T, sc) => {
   const c = Object.assign({ pill: 2.1, comenta: 0.2, bubble: 0.75, enviamos: 1.4, enlace: 1.6, arrow: 2.5 }, sc.cues);
-  const M = 6, px = 255;
+  const [M, px, FOOT] = FR().s6;
   let s = bg11(T, { sunX: 110, sunY: 1190 });
   const pd = Object.assign({}, POSE.pointDown, { h: [POSE.pointDown.h[0], POSE.pointDown.h[1] - 3 * Math.max(0, Math.sin(t * 2 * PI * 1.4))] });
-  s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: 'happy', armF: pd, armB: POSE.phoneB }));
+  s += hero11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: 'happy', armF: pd, armB: POSE.phoneB }));
   s = cam(comicZoom(t, 1.1), 540, 900, s);
   s += bigT('Comenta CANAL', 540, 368, 124, pop(t, c.comenta, 0.55), -3, { fill: '#FFFFFF' });
   s += commentBubble(770, 565, pop(t, c.bubble, 0.55), -3, t);
@@ -157,13 +157,13 @@ S[7] = (t, T, sc) => {
     s += sparkle(170, 480, 30, 0.6 + 0.4 * Math.sin(T * 8)) + sparkle(920, 1000, 26, 0.6 + 0.4 * Math.sin(T * 7 + 2));
     return s;
   }
-  const M = 6;
+  let [M, , FOOT] = FR().s7;
   if (k === 'P1') {
-    const px = 255, q = (sc.shots.P1[1] - sc.shots.P1[0]) / 4, uu = u / q;
+    const px = FR().s7[1], q = (sc.shots.P1[1] - sc.shots.P1[0]) / 4, uu = u / q;
     let s = bg11(T, { sunX: 950, sunY: 1250 });
-    s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: uu > 2.4 ? 'sparkle' : 'happy', armF: Object.assign({}, POSE.phoneF, { screen: 'chat' }) }));
+    s += hero11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: uu > 2.4 ? 'sparkle' : 'happy', armF: Object.assign({}, POSE.phoneF, { screen: 'chat' }) }));
     s = cam(comicZoom(u, 1.1), 540, 900, s);
-    const [phx, phy] = mPt(px, FOOT, M, 216, 116 - 16);
+    const [phx, phy] = heroPt(px, FOOT, M, 216, 116 - 16);
     s += shareIcon(phx - 5, phy - 165, 62, pop(uu, 0.45, 0.45));
     // el avioncito vuela del móvil a cada burbuja
     const BY = [585, 745, 905, 1065];
@@ -180,10 +180,10 @@ S[7] = (t, T, sc) => {
     return s;
   }
   // P2: pulgar arriba y guiño
-  const px = 540;
+  const px = FR().p2[1]; [M, , FOOT] = FR().p2;
   let s = bg11(T, { sunX: 140, sunY: 650 });
   const kb = pop(u, 0.05, 0.4);
-  s += marta11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: 'wink', armF: Object.assign({}, POSE.thumb, { hs: 1.45 * (0.5 + 0.5 * kb) }), nod: 3 * Math.sin(PI * clamp(u / 0.5)) }));
+  s += hero11(px, FOOT, M, mState(t, T, M, sc.talk, { expr: 'wink', armF: Object.assign({}, POSE.thumb, { hs: 1.45 * (0.5 + 0.5 * kb) }), nod: 3 * Math.sin(PI * clamp(u / 0.5)) }));
   for (let i = 0; i < 4; i++) { const p = ((u * 0.7 + i / 4) % 1); s += riseHeart(160 + i * 250 + 20 * Math.sin(u * 3 + i), 1250 - p * 560, 22, Math.min(1, p / 0.12), 12 * Math.sin(u * 4 + i)); }
   s = cam(comicZoom(u, 1.12), 540, 860, s);
   s += bigT('Para que ellos también', 540, 365, 88, pop(u, 0.15, 0.5), -2, { fill: '#FFFFFF' });

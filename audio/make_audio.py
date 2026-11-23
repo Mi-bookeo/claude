@@ -188,8 +188,15 @@ with wave.open(A('mezcla.wav'), 'wb') as w:
 with wave.open(A('efectos.wav'), 'wb') as w:
     w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(fx, -1, 1) * 32767).astype('<i2').tobytes())
-vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, 'marta_cuatro_motivos_con_audio.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
+vid = os.path.join(ROOT, cfg['output']); BASE = vid[:-4]; out = BASE + '_con_audio.mp4'; tmp = out.replace('.mp4', '.partial.mp4')
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-i', A('mezcla.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy',
                 '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', tmp], check=True)
 os.replace(tmp, out)
 print('->', os.path.relpath(out, ROOT), f'({TOTAL:.2f} s)')
+# versión subtitulada (si se ha renderizado con: node render.js subs)
+mudo = os.path.join(ROOT, 'tmp', 'subtitulado_mudo.mp4')
+if os.path.exists(mudo) and os.path.getmtime(mudo) >= os.path.getmtime(vid):
+    out = BASE + '_subtitulado.mp4'; tmp = out.replace('.mp4', '.partial.mp4')
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', mudo, '-i', A('mezcla.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy',
+                    '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', tmp], check=True)
+    os.replace(tmp, out); print('->', os.path.relpath(out, ROOT))

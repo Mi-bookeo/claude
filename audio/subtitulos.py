@@ -35,6 +35,6 @@ for i in range(len(subs) - 1):  # sin solapes; huecos cortos rellenados
 json.dump(subs, open(os.path.join(ROOT, 'subtitles.json'), 'w'), ensure_ascii=False, indent=1)
 def ts(x):
     ms = int(round(x * 1000)); return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}'
-with open(os.path.join(ROOT, 'marta_cuatro_motivos.srt'), 'w') as fh:
+with open(os.path.join(ROOT, cfg['output'][:-4] + '.srt'), 'w') as fh:
     for i, s in enumerate(subs, 1): fh.write(f"{i}\n{ts(s['start'])} --> {ts(s['end'])}\n{s['text']}\n\n")
 for s in subs: print(f"{s['start']:6.2f}-{s['end']:6.2f}  {s['text']}")
