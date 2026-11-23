@@ -1,224 +1,34 @@
 {
-  "title": "Marta y la cesta de bebé",
-  "output": "marta_cesta_bebe.mp4",
+  "title": "José y las tortillas",
+  "output": "jose_la_tortilla.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
-  "encoder": {
-    "codec": "libx264",
-    "crf": 18,
-    "preset": "medium",
-    "pix_fmt": "yuv420p"
-  },
-  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fijan). 'cues' = momentos de aparición de textos y acciones (tiempo local de la escena, desde 0). 'shots' = tramos de cada plano. 'talk' = tramos en que Marta mueve la boca (escena 9). 'still' = instante del PNG de stills/. Si cambias una duración, revisa los cues de esa escena. 'voice' = frase de la escena (archivo, inicio dentro de la escena, duración, texto y tramos con voz); la escriben audio/cortar_voces.py.",
+  "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fijan). 'shots' = tramos de cada plano dentro de la escena (cortes secos). 'cues' = momentos de aparición de textos y acciones (tiempo local de la escena o del plano). 'still' = instante del PNG de stills/. Si cambias una duración, revisa los shots y cues de esa escena.",
   "scenes": [
-    {
-      "id": 1,
-      "name": "Casa: Marta sentada en el sofá con el portátil, pensativa; nube con Lucía y el bebé; «Regalo para el bebé de Lucía»",
-      "duration": 5.0,
-      "still": 3.0,
-      "cues": {
-        "title": 0.2,
-        "title2": 0.45,
-        "think": 0.7
-      },
-      "voice": {
-        "file": "audio/voces/narradora_1.wav",
-        "start": 0.15,
-        "duration": 3.88,
-        "text": "Marta busca un regalo para la hija recién nacida de su amiga Lucía.",
-        "segments": [
-          [0.17, 3.93]
-        ]
-      }
-    },
-    {
-      "id": 2,
-      "name": "Primer plano del portátil (buscador «regalo bebé», productos que suben); Marta dudosa con «?»; «¿Qué le regalo?»",
-      "duration": 5.0,
-      "still": 3.3,
-      "cues": {
-        "title": 0.25,
-        "title2": 0.45,
-        "doubt": 1.6,
-        "q": 1.8
-      },
-      "voice": {
-        "file": "audio/voces/narradora_2.wav",
-        "start": 0.15,
-        "duration": 4.08,
-        "text": "Lleva un buen rato buscando por internet, pero nada le convence.",
-        "segments": [
-          [0.19, 4.14]
-        ]
-      }
-    },
-    {
-      "id": 3,
-      "name": "El móvil vibra en el sofá; notificación «Oferta · Cestas de bebé · 30 %»; Marta lo coge, sorprendida; «¡WOW! 30 %»",
-      "duration": 4.0,
-      "still": 2.6,
-      "cues": {
-        "buzz": 0.05,
-        "notif": 0.2,
-        "reach": 0.45,
-        "grab": 0.72,
-        "lift": 0.95,
-        "wow": 1.0
-      },
-      "voice": {
-        "file": "audio/voces/marta_1.wav",
-        "start": 1.0,
-        "duration": 2.72,
-        "text": "¡Wow! ¡Treinta por ciento de descuento!",
-        "segments": [
-          [1.05, 3.59]
-        ]
-      },
-      "talk": [
-        [1.05, 3.59]
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Primer plano del móvil: tarjeta de oferta de la Farmacia; el dedo pulsa «WhatsApp»; chat con la cajetilla y el primer mensaje",
-      "duration": 6.0,
-      "still": 5.0,
-      "cues": {
-        "seal": 0.3,
-        "finger": 1.25,
-        "press": 1.85,
-        "cut": 2.6,
-        "prefill": 2.9,
-        "send": 3.35,
-        "bubble": 3.5,
-        "ticks": 4.0
-      },
-      "voice": {
-        "file": "audio/voces/narradora_3.wav",
-        "start": 0.15,
-        "duration": 3.83,
-        "text": "Marta entra en la oferta y habla con la farmacia directamente.",
-        "segments": [
-          [0.2, 3.86]
-        ]
-      }
-    },
-    {
-      "id": 5,
-      "name": "Chat: Marta escribe «¿Me podrías hacer…?»; «Farmacia está escribiendo…»; respuesta y pulgar; corte a Marta en el sofá «Directo con el comercio»",
-      "duration": 7.0,
-      "still": 4.9,
-      "shots": {
-        "CHAT": [0, 5.3],
-        "SOFA": [5.3, 7.0]
-      },
-      "cues": {
-        "type0": 0.25,
-        "type1": 2.0,
-        "send": 2.2,
-        "ticks": 2.7,
-        "typing": 2.95,
-        "reply": 4.2,
-        "thumb": 4.6,
-        "cut": 5.3,
-        "text": 5.4,
-        "text2": 5.6
-      }
-    },
-    {
-      "id": 6,
-      "name": "Hoja de calendario «VIERNES»; Marta camina por la calle hasta la farmacia y entra (campanilla)",
-      "duration": 4.0,
-      "still": 2.2,
-      "cues": {
-        "cal": 0.05,
-        "calOut": 1.1,
-        "walk0": 0.9,
-        "door": 2.95,
-        "enter": 3.2,
-        "close": 3.6
-      },
-      "voice": {
-        "file": "audio/voces/narradora_4.wav",
-        "start": 0.15,
-        "duration": 1.85,
-        "text": "Y el viernes, a recogerla.",
-        "segments": [
-          [0.2, 1.85]
-        ]
-      }
-    },
-    {
-      "id": 7,
-      "name": "Interior de la farmacia: la farmacéutica le entrega la cesta rosa; Marta emocionada con corazones; «¡Para el viernes!»",
-      "duration": 6.0,
-      "still": 3.6,
-      "cues": {
-        "title": 0.3,
-        "lift": 0.75,
-        "give": 1.45,
-        "take": 1.9,
-        "hold": 2.5
-      }
-    },
-    {
-      "id": 8,
-      "name": "Exterior: Marta sale de la farmacia con la cesta, mirando a cámara; «¡Bien!»",
-      "duration": 4.0,
-      "still": 1.6,
-      "cues": {
-        "open": 0.05,
-        "out": 0.25,
-        "front": 0.95,
-        "bien": 1.05,
-        "close": 1.3
-      },
-      "voice": {
-        "file": "audio/voces/marta_2.wav",
-        "start": 1.0,
-        "duration": 2.14,
-        "text": "¡Bien! Ya tengo lo que quería.",
-        "segments": [
-          [1.07, 3.0]
-        ]
-      },
-      "talk": [
-        [1.07, 3.0]
-      ]
-    },
-    {
-      "id": 9,
-      "name": "Medio cuerpo con la cesta: «Apúntate al canal» · «Comenta CANAL» · «y te enviamos el enlace directo» · escaparatetudela.es; tarjeta final",
-      "duration": 12.0,
-      "still": 9.2,
-      "shots": {
-        "A": [0, 10.0],
-        "FIN": [10.0, 12.0]
-      },
-      "cues": {
-        "title": 0.3,
-        "pulse": 4.95,
-        "strip": 6.15,
-        "sub": 7.2,
-        "web": 8.3
-      },
-      "talk": [
-        [0.23, 4.72],
-        [4.95, 5.84],
-        [6.16, 8.98]
-      ],
-      "voice": {
-        "file": "audio/voces/marta_3.wav",
-        "start": 0.15,
-        "duration": 9.04,
-        "text": "Si tú también quieres empezar a beneficiarte de las ofertas y descuentos de los comercios de Tudela, apúntate al canal. Escribe canal y te enviamos el enlace directo.",
-        "segments": [
-          [0.23, 4.72],
-          [4.95, 5.84],
-          [6.16, 8.98]
-        ]
-      }
-    }
+    { "id": 1, "name": "Exterior 16:00: fachada del bar La Tortilla, calle tranquila; recuadro «16:00»; «Bar La Tortilla»", "duration": 4.0, "still": 2.0,
+      "cues": { "title": 0.2, "hour": 0.5 } },
+    { "id": 2, "name": "Interior casi vacío: José con los brazos cruzados ante la barra llena de tortillas, cansado; «Poca gente esta mañana»", "duration": 5.0, "still": 2.2,
+      "cues": { "title": 0.25, "sigh": 1.6 } },
+    { "id": 3, "name": "José con la mano en la cabeza; nube: las tortillas al cubo de basura; «¿Tirarlas?»", "duration": 4.0, "still": 2.3,
+      "cues": { "hand": 0.1, "title": 0.3, "cloud": 0.45 } },
+    { "id": 4, "name": "Ojos muy abiertos, chasquido y bombilla; nube con el logo de Escaparate de Tudela y destello; «¡Idea!»", "duration": 4.0, "still": 2.2,
+      "cues": { "eyes": 0.15, "title": 0.35, "snap": 0.45, "bulb": 0.5, "cloud": 0.8, "logo": 1.0, "flash": 1.3 } },
+    { "id": 5, "name": "17:00: José teclea en el móvil; tarjeta de oferta flash, pulsa «Publicar» → «Publicada»; José sonríe mirando el reloj, nube con el bar lleno y «20:00»; «A las 6, flash»", "duration": 10.0, "still": 8.4,
+      "shots": { "A": [0, 1.8], "B": [1.8, 6.6], "C": [6.6, 10.0] },
+      "cues": { "hour": 0.15, "title": 0.3, "seal": 0.25, "finger": 2.2, "press": 2.8, "release": 3.05, "cloud": 0.4, "titleC": 0.25 } },
+    { "id": 6, "name": "Exterior 17:00: a todos les vibra el móvil y leen la oferta; Pedro sonríe y va al bar; «Oferta flash»", "duration": 5.0, "still": 2.2,
+      "cues": { "title": 0.25, "buzz": 0.35, "take": 0.85, "card": 1.15, "smile": 2.0, "go": 2.6 } },
+    { "id": 7, "name": "Interior 18:00: montaje con cortes secos, 3 clientes, 8 y bar lleno; Pedro entre ellos con su pincho y su caña; José sirve cañas", "duration": 6.0, "still": 5.0,
+      "shots": { "A": [0, 2.0], "B": [2.0, 4.0], "C": [4.0, 6.0] },
+      "cues": { "hour": 0.1, "title": 0.25 } },
+    { "id": 8, "name": "Interior 20:00: barra vacía (platos y migas), clientes contentos, José pulgar arriba; «¡Todo vendido!»", "duration": 7.0, "still": 3.5,
+      "cues": { "hour": 0.1, "title": 0.35, "thumb": 1.4, "chin": 3.2 } },
+    { "id": 9, "name": "José orgulloso ante la barra vacía; para comercios: «¿Te sobra género?» «¡Lánzalo en oferta flash!» Escaparate de Tudela", "duration": 8.0, "still": 5.5,
+      "cues": { "t1": 0.3, "t2": 1.7, "banner": 3.2, "thumb": 4.6 } },
+    { "id": 10, "name": "Atardecer tras las 20:00, farolas encendidas y pájaros: José en primer plano; «Publica tus ofertas» y, para el público, «Y tú, apúntate al canal»; tarjeta final con logo y web", "duration": 10.0, "still": 6.2,
+      "shots": { "A": [0, 7.6], "FIN": [7.6, 10.0] },
+      "cues": { "a1": 0.25, "a2": 0.5, "wink": 4.5, "b1": 4.6, "b2": 4.9, "b3": 5.3 } }
   ]
 }

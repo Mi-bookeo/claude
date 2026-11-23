@@ -1,7 +1,7 @@
-/* Vídeo 12 — «Marta y la cesta de bebé». Escenas sobre lib.js + series.js + rosa.js + v04…v12.js.
-   Todo se calcula a partir de (t local de la escena, T global). Duraciones, planos (shots) y momentos de aparición
-   (cues) se leen de config.json. Franja inferior (y > 1400) libre de textos y elementos importantes; margen superior
-   hasta y=192. Cortes secos entre escenas y entre planos; textos con rebote; zoom rápido tipo cómic al empezar. */
+/* Vídeo 13 — «José y las tortillas». Escenas sobre lib.js + series.js + rosa.js + v04…v13.js.
+   Todo se calcula a partir de (t local de la escena, T global). Duraciones, planos (shots) y momentos (cues) se
+   leen de config.json. Franja inferior (y > 1400) libre de textos y elementos importantes; margen superior hasta
+   y=192. Cortes secos entre escenas y entre planos; textos con rebote; zoom rápido tipo cómic al empezar cada plano. */
 'use strict';
 
 const S = {};
@@ -14,401 +14,414 @@ function shotAt(t, sc) {
 }
 const comicZoom = (u, from = 1.14) => lerp(from, 1, easeOut(u / 0.22));
 const cues = (sc, def) => Object.assign({}, def, sc.cues || {});
-const MSG1 = 'He visto tu oferta en Escaparate de Tudela, quiero más información';
-const MSG2 = '¿Me podrías hacer para el viernes una cesta para una niña?';
-const MSG3 = 'No hay problema, para el viernes la tienes.';
-const SITM = 4.6, SITX = 380; // Marta sentada en el sofá: escala y posición del punto (190,149)
-const sitState = (T, extra = {}) => Object.assign({ sit: true, blink: blink11(T), bob: marta12Breath(T, SITM), pony: 5 * Math.sin(2 * PI * T / 1.9) }, extra);
-const lerp2 = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u)];
-// gira un punto local alrededor de la cadera (para objetivos de mano con el tronco inclinado)
-function unrot(p, deg) { const a = -deg * PI / 180, dx = p[0] - 186, dy = p[1] - 146; return [186 + dx * Math.cos(a) - dy * Math.sin(a), 146 + dx * Math.sin(a) + dy * Math.cos(a)]; }
+const bumpZ = (t, times, a = 0.03) => 1 + times.reduce((m, t0) => m + (t >= t0 ? a * Math.max(0, damp(t - t0, 14, 6)) : 0), 0);
+const life = (t, t0, t1, d = 0.45) => pop(t, t0, d) * (t1 === undefined ? 1 : 1 - easeOut((t - t1) / 0.18));
 
-/* ---------- 1) Regalo para el bebé de Lucía ---------- */
+/* ---------- plano medio del bar (José detrás de la barra, a la izquierda) ---------- */
+const MED = { top: 1110, jx: 330, jsc: 6, bar1: 760, floor: 1170 };
+MED.jy = MED.top + (208 - 138) * MED.jsc;
+const MED_ROOM = { clock: [130, 600, 78], posters: [[440, 470, 220, 220, 0]], shelf: [700, 1060, 560, 740] };
+const MED_SLOTS = TORT_SLOTS(92, 672, MED.top - 34, 5);
+// mesa alta del fondo (a la derecha de la barra) con el cliente del café
+function backCorner(T, withClient) {
+  let s = `<rect x="${MED.bar1 - 10}" y="${MED.floor}" width="${W - MED.bar1 + 20}" height="${H - MED.floor}" fill="#E9D3C5"/>`;
+  for (let x = MED.bar1 + 40; x < W + 200; x += 120) s += `<line x1="${x}" y1="${MED.floor}" x2="${x - 160}" y2="${H}" stroke="${INK}" stroke-width="${f(SW * 0.5)}" opacity="0.5"/>`;
+  s += `<line x1="${MED.bar1 - 10}" y1="${MED.floor}" x2="${W}" y2="${MED.floor}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  // mesa alta
+  const tx = 870, tt = 1130;
+  s += `<rect x="${tx - 9 + 6}" y="${tt}" width="18" height="${1330 - tt}" fill="${INK}"/><rect x="${tx - 9}" y="${tt}" width="18" height="${1330 - tt}" rx="6" fill="${P5.woodS}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  s += `<ellipse cx="${tx}" cy="1334" rx="70" ry="14" fill="${P5.woodS}" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  if (withClient) {
+    const sip = (T % 4.2) > 3.0 && (T % 4.2) < 3.8;
+    s += placeFolk(7, 975, 1330, 3.1, { flip: true, expr: sip ? 'bored' : 'happy', armF: sip ? -120 : -40, armB: 6, bob: breath(T) * 0.5,
+      handF: sip ? (wk => `<g transform="translate(202.5 140) scale(${f(1 / 3.1)})">${coffeeCup(0, 20, 0.8)}</g>` + hand(202.5, 139.5, wk, FOLK[7].skin)) : null });
+  }
+  s += `<rect x="${tx - 90 + 7}" y="${tt - 14 + 7}" width="180" height="26" rx="12" fill="${INK}"/><rect x="${tx - 90}" y="${tt - 14}" width="180" height="26" rx="12" fill="#C98A4B" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  if (withClient && !((T % 4.2) > 3.0 && (T % 4.2) < 3.8)) s += coffeeCup(tx - 30, tt - 14, 0.8);
+  return s;
+}
+// escena completa del plano medio. o: tm, clockK, client, left (tortillas que quedan), jose (opciones de pose)
+function medBar(t, T, o = {}) {
+  let s = barRoom(T, Object.assign({}, MED_ROOM, { tm: o.tm || 960, clockK: o.clockK, clockWob: o.clockWob }));
+  s += backCorner(T, o.client);
+  s += placeJose(MED.jx, MED.jy, MED.jsc, Object.assign({ bob: breathJ(T, MED.jsc), blink: blinkJ(T) }, o.jose || {}));
+  s += barFront(MED.top, MED.bar1);
+  s += counterFood(MED_SLOTS, o.left === undefined ? 5 : o.left, 56);
+  for (let i = 0; i < 4; i++) s += pinchoPlate(165 + i * 145, MED.top + 34, 0.74);
+  return s;
+}
+const jHead = () => jPt(MED.jx, MED.jy, MED.jsc, 190, 76);
+
+/* ---------- plano general del bar (barra a lo ancho, José al centro, clientes delante) ---------- */
+const WIDE = { top: 980, jx: 540, jsc: 4.3, back: 1440, front: 1610, bsc: 3.6, fsc: 4.2 };
+WIDE.jy = WIDE.top + (208 - 138) * WIDE.jsc;
+const WIDE_ROOM = { clock: [150, 560, 70], posters: [[290, 400, 170, 200, 0]], shelf: [600, 1060, 600, 760], lampR: 0.9 };
+const WIDE_SLOTS = TORT_SLOTS(70, 1010, WIDE.top - 18, 7);
+// clientes: [fila, x, folk (o 'pedro'), mira a la izquierda, objeto]
+const CROWD = [
+  ['b', 70, 0, false, 'glass'], ['b', 210, 9, false, 'pincho'], ['b', 355, 4, false, 'phone'], ['b', 725, 8, true, 'pincho'], ['b', 870, 1, true, 'glass'], ['b', 1015, 3, true, 'glass'],
+  ['f', 110, 10, false, 'glass'], ['f', 275, 11, false, 'pincho'], ['f', 440, F_ROSA, false, 'glass'], ['f', 600, 'pedro', false, 'both'], ['f', 760, 6, true, 'glass'], ['f', 915, F_CUADROS, true, 'pincho'], ['f', 1065, 5, true, 'none']
+];
+function crowdMember(m, idx, t, T, o = {}) {
+  const [row, x, who, flip, item] = m;
+  const foot = row === 'b' ? WIDE.back : WIDE.front, sc = row === 'b' ? WIDE.bsc : WIDE.fsc;
+  const ph = T * 2.1 + idx * 1.7;
+  const lift = Math.max(0, Math.sin(ph)) ** 3;
+  const bob = -1.5 * (0.5 - 0.5 * Math.cos(T * 3 + idx));
+  const exprs = o.exprs || ['happy', 'smile', 'sparkle', 'smile', 'happy', 'wink'];
+  const expr = exprs[(idx + Math.floor(T / 1.3)) % exprs.length];
+  if (who === 'pedro') {
+    const pa = -52 - 26 * lift;
+    return shadowEll(x, foot + 4, 26 * sc) + placePedro(x, foot + 6, sc * 1.02, { armF: pa, armB: -58, bob, head: -2, expr: o.pedroExpr || 'grin', blink: blinkJ(T, 1.1),
+      itemF: (wk, hx, hy) => glassItem(wk, hx, hy, { tilt: 8 * lift }), itemB: (wk, hx, hy) => pintxoItem(wk, hx, hy) });
+  }
+  let handF = null, armF = 10, armB = 6;
+  if (item === 'glass') { armF = -48 - 40 * lift; handF = wk => glassItem(wk, 202.5, 139.5, { skin: FOLK[who].skin, tilt: 10 * lift }); }
+  if (item === 'pincho') { armF = -60 - 30 * lift; handF = wk => pintxoItem(wk, 202.5, 139.5, FOLK[who].skin); }
+  if (item === 'phone') { armF = -70; handF = phoneHand(202.5, 139.5, { lit: true, card: 3, skin: FOLK[who].skin }); }
+  return shadowEll(x, foot + 4, 24 * sc) + placeFolk(who, x, foot, sc, { flip, expr, armF, armB, bob, head: flip ? 3 : -3, handF });
+}
+function wideBar(t, T, o = {}) {
+  let s = barRoom(T, Object.assign({}, WIDE_ROOM, { tm: o.tm || 18 * 60 }));
+  s += beerTap(770, WIDE.top);
+  s += placeJose(WIDE.jx, WIDE.jy, WIDE.jsc, Object.assign({ bob: breathJ(T, WIDE.jsc), blink: blinkJ(T) }, o.jose || {}));
+  s += barFront(WIDE.top);
+  s += counterFood(WIDE_SLOTS, o.left === undefined ? 7 : o.left, 44);
+  if (o.canas) o.canas.forEach(x => { s += canaJ(x, WIDE.top + 4, 64); });
+  const show = o.show || CROWD.map((_, i) => i);
+  CROWD.forEach((m, i) => { if (m[0] === 'b' && show.includes(i)) s += crowdMember(m, i, t, T, o); });
+  CROWD.forEach((m, i) => { if (m[0] === 'f' && show.includes(i)) s += crowdMember(m, i, t, T, o); });
+  return s;
+}
+// José sirviendo cañas (brazo delantero con la caña, el trasero apoyado)
+const servePose = (T, extra = {}) => {
+  const u = 0.5 - 0.5 * Math.cos(T * 2 * PI / 1.4);
+  return Object.assign({ expr: 'happy', armB: JP.counterB, armF: { h: [lerp(222, 232, u), lerp(112, 126, u)], side: 1, hand: 'glass', tilt: lerp(-6, 4, u) }, look: [0.6, 0.8] }, extra);
+};
+
+/* ---------- 1) Bar La Tortilla, 16:00 ---------- */
+const G1 = 1330, FEET1 = 1392;
 S[1] = (t, T, sc) => {
-  const c = cues(sc, { title: 0.2, title2: 0.45, think: 0.7 });
-  let s = homeBack(T);
-  const tap = 0.8 * Math.max(0, Math.sin(2 * PI * 1.3 * t));
-  s += marta12(SITX, HOME.seat, 190, 149, SITM, sitState(T, {
-    expr: 'pensive', head: -3 + 1.5 * Math.sin(2 * PI * T / 2.4), lap: lapLaptop,
-    armF: { h: [199.5, 95.6 - tap], side: 1, hand: 'fist', hs: 1.15 },
-    armB: { h: [206, 136], side: 1, hand: 'fist', hs: 1.1 }
-  }));
-  const head = m12W(SITX, HOME.seat, 190, 149, SITM, 199, 62);
-  s += thoughtLucia(735, 650, 640, 420, pop(t, c.think, 0.6), T, head);
-  s = cam(comicZoom(t), 540, 900, s);
-  s += bigT('Regalo para', 540, 262, 104, pop(t, c.title, 0.5), -3, { fill: '#FFFFFF' });
-  s += bigT('el bebé de Lucía', 540, 372, 104, pop(t, c.title2, 0.5), 2, { fill: C.yel });
+  const c = cues(sc, { title: 0.2, hour: 0.5 });
+  let w = sky13(T, 'day', { band: 900, sx: 900, sy: 560, sr: 60 });
+  w += shop(-290, G1, 440, 560, SHOP_TYPES[1]) + shop(890, G1, 440, 560, SHOP_TYPES[2]);
+  w += barFacade13(230, G1, 620, 720);
+  w += ground(G1, 0, { sp: 230 });
+  w += lampPost13(110, FEET1 + 4, 860, false);
+  w += sandwichBoard(170, FEET1 + 2, 1.05);
+  // calle tranquila: una vecina pasea despacio
+  const x = lerp(1180, 820, t / 4.2), ph = 2 * PI * t / 1.1;
+  w += shadowEll(x, FEET1 + 4, 70) + placeFolk(8, x, FEET1, 3.6, Object.assign(walkPose(ph, 0.6), { flip: true, expr: 'happy', blink: blinkJ(T) }));
+  let s = cam(comicZoom(t), 540, 900, w);
+  s += bigT('Bar La Tortilla', 540, 270, 140, pop(t, c.title, 0.5), -3, { font: 'G', ls: 2 });
+  s += hourBox(540, 440, 16 * 60, pop(t, c.hour, 0.5), 3 * damp(t - c.hour, 10, 3));
   return s;
 };
 
-/* ---------- 2) ¿Qué le regalo? (primer plano del portátil) ---------- */
-function martaCircle12(cx, cy, r, t, T, o) {
-  const sc = r / 22, id = 'mc' + (uid++);
-  const px = cx - 3 * sc, foot = cy + (204 - 88) * sc;
-  let g = `<circle cx="${f(cx + 12)}" cy="${f(cy + 12)}" r="${r}" fill="${INK}"/>`;
-  g += `<clipPath id="${id}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath><g clip-path="url(#${id})">`;
-  g += `<rect x="${cx - r}" y="${cy - r}" width="${2 * r}" height="${2 * r}" fill="${C.cream}"/>`;
-  for (let y = cy - r + 10; y < cy + r; y += 28) for (let x = cx - r + 10; x < cx + r; x += 28) g += `<circle cx="${x}" cy="${y}" r="4" fill="${DOT}"/>`;
-  g += `<rect x="${cx - r}" y="${f(cy + r * 0.35)}" width="${2 * r}" height="${r}" rx="30" fill="${C.blue}" ${st12()}/>`;
-  g += marta12(px, foot, 190, 204, sc, Object.assign({ blink: blink11(T), bob: marta12Breath(T, sc), pony: 5 * Math.sin(2 * PI * T / 1.9) }, o));
-  g += `</g><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${INK}" stroke-width="${f(SW * 1.3)}"/>`;
-  return g;
-}
+/* ---------- 2) Poca gente: José con los brazos cruzados ante la barra llena ---------- */
 S[2] = (t, T, sc) => {
-  const c = cues(sc, { title: 0.25, title2: 0.45, doubt: 1.6, q: 1.8 });
-  let s = dotWall();
-  s += bigLaptop(100, 690, 880, 520, t, 34 + 95 * t);
-  const doubt = t >= c.doubt;
-  const sx = doubt ? 1.3 * Math.sin(2 * PI * 5 * t) : 0;
-  s += martaCircle12(262, 452, 170, t, T, {
-    expr: doubt ? 'doubt' : 'pensive', head: doubt ? 4 : -3,
-    armF: { h: [199.5 + sx, 95.6 + (doubt ? 0.6 * Math.cos(2 * PI * 5 * t) : 0)], side: 1, hand: doubt ? 'point' : 'fist', dir: -95, hs: 1.2 }
-  });
-  // signos de interrogación sobre la cabeza
-  [[150, 250, 96, -14], [262, 222, 120, 6], [376, 262, 88, 16]].forEach(([x, y, sz, rot], i) => {
-    const k = pop(t, c.q + i * 0.25, 0.45), b = 8 * Math.sin(T * 5 + i * 2);
-    s += qMark(x, y + b, sz, k, rot + 6 * Math.sin(T * 3 + i));
-  });
-  s = cam(comicZoom(t), 540, 900, s);
-  s += bigT('¿Qué le', 770, 390, 124, pop(t, c.title, 0.5), -4, { fill: '#FFFFFF', maxW: 480 });
-  s += bigT('regalo?', 770, 512, 136, pop(t, c.title2, 0.5), 3, { fill: C.yel, maxW: 480 });
+  const c = cues(sc, { title: 0.25, sigh: 1.6 });
+  const sigh = t > c.sigh && t < c.sigh + 1.2 ? Math.sin((t - c.sigh) / 1.2 * PI) : 0;
+  let w = medBar(t, T, { tm: 16 * 60, client: true, jose: { arms: 'crossed', expr: 'tired', look: [1.2, 1.4], head: 3 + 3 * sigh, bob: breathJ(T, MED.jsc) + 1.2 * sigh } });
+  const [hx, hy] = jHead();
+  if (sigh > 0) w += sighPuff(hx + 130, hy + 80, clamp((t - c.sigh) / 1.2));
+  let s = cam(comicZoom(t), 540, 900, w);
+  s += bigT('Poca gente', 540, 262, 128, pop(t, c.title, 0.5), -3);
+  s += bigT('esta mañana', 540, 384, 128, pop(t, c.title + 0.2, 0.5), 2, { fill: C.yel });
   return s;
 };
 
-/* ---------- 3) Notificación: ¡WOW! 30 % ---------- */
-function phoneLying(x, y, shake, lit) {
-  let g = `<g transform="translate(${f(x + shake)} ${f(y)}) rotate(-6)">`;
-  g += `<rect x="-78" y="-26" width="156" height="52" rx="14" transform="translate(6 6)" fill="${INK}"/>`;
-  g += `<rect x="-78" y="-26" width="156" height="52" rx="14" fill="${INK}" ${st12(0.8)}/>`;
-  g += `<rect x="-66" y="-17" width="132" height="34" rx="8" fill="${lit ? C.cream : C.glass}"/>`;
-  if (lit) g += `<rect x="-66" y="-17" width="30" height="34" rx="6" fill="${C.red}"/><rect x="-28" y="-8" width="80" height="7" rx="3.5" fill="${INK}" opacity="0.5"/><rect x="-28" y="4" width="52" height="7" rx="3.5" fill="${C.red}"/>`;
-  return g + '</g>';
-}
-function notifBanner(x, y, k) {
+/* ---------- 3) ¿Tirarlas? Mano a la cabeza; nube con las tortillas al cubo ---------- */
+function thoughtBin(cx, cy, k, t, T) {
   if (k <= 0.01) return '';
-  const Wd = 960, Hd = 176, x0 = -Wd / 2, y0 = -Hd / 2;
-  let g = panel(x0, y0, Wd, Hd, 40, '#FFFFFF', 12);
-  g += `<rect x="${x0 + 24}" y="${y0 + 24}" width="128" height="128" rx="28" fill="${C.red}" ${st12(0.8)}/>`;
-  g += `<rect x="${x0 + 36}" y="${y0 + 36}" width="104" height="104" rx="22" fill="#FFFFFF" ${st12(0.6)}/>` + logoIcon(x0 + 88, y0 + 90, 100);
-  g += text('Escaparate de Tudela', x0 + 180, y0 + 54, { size: 36, anchor: 'start', fill: C.red, stroke: null, shadow: false });
-  g += text('Oferta · Cestas de bebé · 30 %', x0 + 180, y0 + 118, { size: fit('Oferta · Cestas de bebé · 30 %', 58, Wd - 210), anchor: 'start', fill: INK, stroke: null, shadow: false });
-  return at(x, y, k, g);
+  let g = '';
+  const bx = cx + 120, bb = cy + 150;
+  const per = 0.9, n = Math.floor(t / per), u = (t % per) / per;
+  const open = 0.5 + 0.5 * Math.sin(Math.min(1, u * 1.4) * PI);
+  g += trashBin(bx, bb, 0.95, t > 0.2 ? open : 0);
+  // tortillas que caen una tras otra (desde la izquierda, en arco)
+  if (t > 0.2) {
+    const x = lerp(cx - 210, bx, u), y = lerp(cy - 120, bb - 170, u) - 170 * Math.sin(u * PI);
+    if (u < 0.92) g += tortilla(x, y, 46, u * 340);
+  }
+  // montón de tortillas esperando
+  const left = Math.max(1, 4 - (t > 0.2 ? n : 0));
+  for (let i = 0; i < left; i++) g += tortilla(cx - 200 + (i % 2) * 40, cy + 110 - i * 36, 44, -8 + i * 5);
+  g += sparkle(cx - 60, cy - 150, 18, 0.7 + 0.3 * Math.sin(t * 9));
+  return at(cx, cy, k, `<g transform="translate(${-cx} ${-cy})">${g}</g>`);
 }
+function thinkDots(fromX, fromY, toX, toY, t, t0) {
+  let s = '';
+  [0.2, 0.45, 0.72].forEach((u, i) => { s += thinkDot(lerp(fromX, toX, u), lerp(fromY, toY, u), 16 + i * 10, pop(t, t0 + i * 0.08, 0.4)); });
+  return s;
+}
+const CLOUD_M = [760, 650, 600, 480];
 S[3] = (t, T, sc) => {
-  const c = cues(sc, { buzz: 0.1, notif: 0.35, reach: 1.15, grab: 1.45, lift: 1.75, wow: 1.85 });
-  let s = homeBack(T);
-  // portátil cerrado apoyado en el sofá
-  s += `<rect x="190" y="${HOME.seat - 52}" width="150" height="22" rx="8" fill="${C.navy}" ${st12(0.8)}/><rect x="182" y="${HOME.seat - 32}" width="166" height="16" rx="6" fill="${K12.greyL}" ${st12(0.8)}/>`;
-  const PH = [590, HOME.seat - 26];
-  const grabbed = t >= c.grab, wow = t >= c.wow;
-  let lean = 0, armF;
-  if (!grabbed) {
-    const ur = t < c.reach ? 0 : easeOut((t - c.reach) / 0.25) * 16;
-    lean = ur;
-    const tgt = unrot(m12L(SITX, HOME.seat, 190, 149, SITM, PH[0] - 8, PH[1] - 6), ur);
-    const rest = [207, 134];
-    armF = { h: t < c.reach ? rest : lerp2(rest, tgt, easeOut((t - c.reach) / 0.25)), side: -1, hand: 'fist', hs: 1.15 };
-  } else {
-    const u = easeOut((t - c.grab) / 0.3);
-    lean = 16 * (1 - u);
-    const tgt0 = unrot(m12L(SITX, HOME.seat, 190, 149, SITM, PH[0] - 8, PH[1] - 6), 16), tgt1 = [215, 92];
-    armF = { h: lerp2(tgt0, tgt1, u), side: 1, hand: 'phone', hs: 1.5, rot: lerp(-80, 8, u) };
-  }
-  const shake = t >= c.buzz && !grabbed ? 7 * Math.sin(2 * PI * 26 * t) : 0;
-  if (!grabbed) {
-    if (t >= c.buzz) s += vibeRings(PH[0], PH[1], t, 70, 3);
-    s += phoneLying(PH[0], PH[1], shake, t >= c.notif);
-  }
-  // líneas de impacto detrás de Marta
-  const headW = m12W(SITX, HOME.seat, 190, 149, SITM, 194, 80);
-  if (wow) s += `<g opacity="0.9">${impactLines(headW[0], headW[1], t, 26, 330)}</g>`;
-  s += marta12(SITX, HOME.seat, 190, 149, SITM, sitState(T, {
-    expr: wow ? (t < c.wow + 0.7 ? 'shock' : 'sparkle') : grabbed ? 'surprise' : t >= c.buzz ? 'surprise' : 'pensive', upperRot: lean,
-    talk: t >= c.wow + 0.7 ? talkAmt(t, sc.talk) : 0,
-    head: wow ? -4 : 0, squash: wow ? [1 + 0.05 * damp(t - c.wow, 20, 6), 1 - 0.05 * damp(t - c.wow, 20, 6)] : null,
-    armF, armB: { h: [178, 141], side: 1, hand: 'fist', hs: 1.1 }
-  }));
-  if (wow) {
-    const k = pop(t, c.wow, 0.4);
-    [[-150, -140, -35], [150, -150, 35], [-190, -20, -70], [190, -10, 70]].forEach(([dx, dy, rot]) => {
-      s += at(headW[0] + dx * k, headW[1] + dy * k, k, `<path d="M0 -36 L10 0 L0 36 L-10 0Z" fill="${C.yel}" ${st12(0.8)}/>`, rot);
-    });
-  }
-  s = cam(comicZoom(t, 1.12) * (wow ? lerp(1.12, 1.05, easeOut((t - c.wow) / 0.25)) : 1), 520, 1000, s);
-  s += notifBanner(540, 300, pop(t, c.notif, 0.5));
-  if (wow) {
-    const k = pop(t, c.wow, 0.5);
-    s += at(540, 545, k, burst(0, 0, 220, T * 20, C.red), 0);
-    s += bigT('¡WOW! 30 %', 540, 545, 150, k, -5, { fill: C.yel, font: 'G', maxW: 860 });
-  }
+  const c = cues(sc, { title: 0.3, hand: 0.1, cloud: 0.45 });
+  const kh = easeOut((t - c.hand) / 0.3);
+  const shake = 1.5 * Math.sin(t * 9) * (t > 0.4 ? 1 : 0);
+  const headPose = { h: [lerp(214, 205, kh), lerp(140, 64, kh)], side: -1, hand: kh > 0.6 ? 'open' : 'fist', hs: 1.45, hrot: -40 };
+  let w = medBar(t, T, { tm: 16 * 60 + 5, client: true, jose: { expr: 'sad', armF: headPose, armB: JP.counterB, head: 4 + shake, look: [1.4, -1] } });
+  const [hx, hy] = jHead();
+  let s = cam(comicZoom(t), 540, 900, w);
+  const [cx, cy, cw, ch] = CLOUD_M;
+  s += thinkDots(hx + 110, hy - 70, cx - cw * 0.42, cy + ch * 0.32, t, c.cloud - 0.15);
+  const kc = pop(t, c.cloud, 0.55), fl = 6 * Math.sin(t * 2.2);
+  s += thinkCloud(cx, cy + fl, cw, ch, kc);
+  s += thoughtBin(cx, cy + fl, kc, t - c.cloud, T);
+  s += bigT('¿Tirarlas?', 540, 290, 170, pop(t, c.title, 0.5), -4, { font: 'G', ls: 2 });
+  // gotita de pena
+  s += at(hx - 120, hy - 50, pop(t, 0.6, 0.4), `<path d="M0 -26 Q16 0 0 12 Q-16 0 0 -26Z" fill="${C.glass}" stroke="${INK}" stroke-width="${f(SW)}" stroke-linejoin="round"/>`);
   return s;
 };
 
-/* ---------- 4) Tarjeta de oferta -> pulsa «WhatsApp» -> chat ---------- */
-const WA_TIP = [701, 1146];
+/* ---------- 4) ¡Idea! Chasquido, bombilla y logo en la nube ---------- */
 S[4] = (t, T, sc) => {
-  const c = cues(sc, { seal: 0.3, finger: 1.25, press: 1.85, cut: 2.6, prefill: 2.9, send: 3.35, bubble: 3.5, ticks: 4.0 });
-  const { X, Y, PW, PH } = PHN;
-  let s = dotWall();
-  if (t < c.cut) {
-    const kWa = t < c.press ? 1 : t < c.press + 0.1 ? 0.86 : 0.86 + 0.14 * pop(t, c.press + 0.1, 0.45);
-    const ring = t >= c.press && t < c.press + 0.5 ? (t - c.press) / 0.5 : 0;
-    let p = phoneFrame(X, Y, PW, PH, offerScreen({ kSeal: pop(t, c.seal, 0.5), kWa, ring }, t));
-    s += cam(comicZoom(t), 540, 800, p);
-    // dedo que entra desde la derecha y pulsa
-    if (t >= c.finger) {
-      const u = easeOut((t - c.finger) / 0.4), back = t > c.press + 0.35 ? easeInOut((t - c.press - 0.35) / 0.35) : 0;
-      const push = t >= c.press && t < c.press + 0.18 ? 12 : 0;
-      const tx = lerp(1300, WA_TIP[0] + 30, u) + back * 650 - push, ty = WA_TIP[1] + 14 + back * 60 + push * 0.4;
-      s += finger(tx + 34, ty, -10);
-    }
-    if (t >= c.press && t < c.press + 0.5) s += ringLines(WA_TIP[0], WA_TIP[1] - 10, pop(t, c.press, 0.3));
-    return s;
+  const c = cues(sc, { eyes: 0.15, snap: 0.45, bulb: 0.5, title: 0.35, cloud: 0.8, logo: 1.0, flash: 1.3 });
+  const snapK = t > c.snap ? Math.max(0, 1 - (t - c.snap) / 0.5) : 0;
+  const ku = easeOut((t - (c.snap - 0.3)) / 0.25);
+  const snapPose = { h: [lerp(214, 222, ku), lerp(138, 92, ku)], side: 1, hand: ku > 0.5 ? 'snap' : 'fist', snapK, hs: 1.45 };
+  const e = t < c.eyes ? 'sad' : 'idea';
+  const jolt = t > c.eyes ? -6 * Math.max(0, damp(t - c.eyes, 16, 6)) : 0;
+  let w = medBar(t, T, { tm: 16 * 60 + 10, client: true, jose: { expr: e, armF: snapPose, armB: JP.counterB, head: -3, look: [0, -1], bob: breathJ(T, MED.jsc) + jolt } });
+  const [hx, hy] = jHead();
+  if (t > c.eyes && t < c.eyes + 0.6) w += impactLines(hx, hy, t, 26, 260);
+  let s = cam(comicZoom(t) * bumpZ(t, [c.snap], 0.04), 540, 900, w);
+  s += bulb(hx, hy - 210, 52, pop(t, c.bulb, 0.5), t);
+  const [cx, cy, cw, ch] = CLOUD_M;
+  s += thinkDots(hx + 120, hy - 60, cx - cw * 0.42, cy + ch * 0.32, t, c.cloud - 0.15);
+  const kc = pop(t, c.cloud, 0.55), fl = 6 * Math.sin(t * 2.2);
+  s += thinkCloud(cx, cy + fl, cw, ch, kc);
+  const kl = pop(t, c.logo, 0.55);
+  if (t > c.flash) s += at(cx, cy + fl, kc, rays(0, 0, 14, t * 30, '#FFF1C9', 230 * pop(t, c.flash, 0.4)));
+  s += logoBadge(cx, cy + fl + 6, 360, lerp(-10, 0, kl) + 2 * Math.sin(t * 3), kl * kc, 'logoR');
+  if (t > c.flash) {
+    s += sparkle(cx - 220, cy - 140 + fl, 30, pop(t, c.flash, 0.4) * (0.9 + 0.2 * Math.sin(t * 13)));
+    s += sparkle(cx + 230, cy - 120 + fl, 26, pop(t, c.flash + 0.08, 0.4) * (0.9 + 0.2 * Math.sin(t * 11 + 1)), C.yel);
+    s += sparkle(cx + 200, cy + 160 + fl, 22, pop(t, c.flash + 0.14, 0.4));
   }
-  const u = t - c.cut;
-  const input = t >= c.prefill && t < c.bubble ? MSG1 : '';
-  const send = t >= c.send && t < c.bubble + 0.1 ? Math.sin(PI * clamp((t - c.send) / 0.25)) : 0;
-  const msgs = [{ who: 'm', text: MSG1, k: pop(t, c.bubble, 0.45), ticks: pop(t, c.ticks, 0.4) }];
-  s += cam(comicZoom(u, 1.1), 540, 800, phoneFrame(X, Y, PW, PH, chatScreen(msgs, { input, send, caret: !input }, t)));
-  if (t >= c.prefill && t < c.bubble) s += sparkle(250, 1300, 26, pop(t, c.prefill, 0.3));
+  s += bigT('¡Idea!', 300, 290, 190, pop(t, c.title, 0.5), -6, { font: 'G', fill: C.yel, ls: 2 });
   return s;
 };
 
-/* ---------- 5) Marta escribe; la farmacia responde; Marta en el sofá ---------- */
+/* ---------- 5) Publica la oferta flash (17:00) ---------- */
+// nube con el bar lleno y el cartel «20:00»
+function thoughtFull(cx, cy, k, t) {
+  if (k <= 0.01) return '';
+  let g = '';
+  g += `<rect x="-230" y="40" width="460" height="40" rx="12" fill="#C98A4B" stroke="${INK}" stroke-width="${f(SW)}"/>`;
+  const ppl = [[-190, 9], [-120, 1], [-55, 11], [10, 3], [75, 6], [140, 10], [200, 4]];
+  ppl.forEach(([x, i], j) => { g += placeFolk(i, x, 175, 1.7, { flip: j > 3, expr: j % 2 ? 'smile' : 'happy', armF: -60 - 20 * Math.max(0, Math.sin(t * 5 + j)), handF: wk => glassItem(wk, 202.5, 139.5, { skin: FOLK[i].skin }) }); });
+  g += `<rect x="-245" y="160" width="490" height="30" fill="#FFFFFF"/>`;
+  g += hourBox(0, -110, 20 * 60, 1, -4, 0.62);
+  return at(cx, cy, k, g);
+}
 S[5] = (t, T, sc) => {
-  const c = cues(sc, { type0: 0.25, type1: 2.0, send: 2.2, ticks: 2.7, typing: 2.95, reply: 4.2, thumb: 4.6, cut: 5.3, text: 5.4, text2: 5.6 });
-  if (t < c.cut) {
-    const { X, Y, PW, PH } = PHN;
+  const c = cues(sc, { title: 0.3, hour: 0.15, seal: 0.25, finger: 2.2, press: 2.8, release: 3.05, cloud: 0.4, titleC: 0.25 });
+  const [shot, a] = shotAt(t, sc);
+  const u = t - a;
+  if (shot === 'A') { // primer plano: José teclea en el móvil
+    const sc2 = 11, px = 540, py = 760 + 132 * sc2;
+    let w = barRoom(T, { shelf: [560, 1100, 520, 700], posters: [], lamps: [[160, 205], [920, 205]] });
+    w += placeJose(px, py, sc2, { arms: 'phone', typePh: u * 5.5, expr: 'happy', look: [0, 2], head: 4, bob: breathJ(T, sc2), blink: blinkJ(T) });
+    w += barFront(1500);
+    let s = cam(comicZoom(u, 1.12), 540, 900, w);
+    s += hourBox(220, 440, 17 * 60, pop(u, c.hour, 0.5), 3 * damp(u - c.hour, 10, 3));
+    s += bigT('A las 6, flash', 600, 270, 130, pop(u, c.title, 0.5), -3, { fill: C.yel });
+    return s;
+  }
+  if (shot === 'B') { // pantalla del móvil: tarjeta y botón Publicar
     let s = dotWall();
-    const n = Math.floor(MSG2.length * clamp((t - c.type0) / (c.type1 - c.type0)));
-    const input = t >= c.type0 && t < c.send ? MSG2.slice(0, n) : '';
-    const send = t >= c.type1 && t < c.send + 0.1 ? Math.sin(PI * clamp((t - c.type1) / 0.25)) : 0;
-    const msgs = [
-      { who: 'm', text: MSG1, k: 1, ticks: 1 },
-      { who: 'm', text: MSG2, k: pop(t, c.send, 0.45), ticks: pop(t, c.ticks, 0.4) },
-      { who: 'typing', k: t < c.reply ? pop(t, c.typing, 0.4) : 0 },
-      { who: 'f', text: MSG3, k: pop(t, c.reply, 0.45) }
-    ];
-    s += cam(comicZoom(t, 1.06), 540, 800, phoneFrame(X, Y, PW, PH, chatScreen(msgs, { input, send, caret: t < c.send, typingHdr: t >= c.typing && t < c.reply }, t)));
-    // teclado: pulgares que teclean
-    if (t >= c.type0 && t < c.type1) {
-      const ph = t * 2 * PI * 4;
-      [[330, 0], [750, PI]].forEach(([x, o]) => { const d = Math.max(0, Math.sin(ph + o)); s += hand11('fist', [x, 1350 - d * 18], wW, { hs: 6 }); });
+    const done = u >= c.release, press = clamp((u - c.press) / 0.12) * (1 - clamp((u - c.release) / 0.08));
+    const { X, Y, PW, PH } = PHN;
+    const shake = u > c.release && u < c.release + 0.3 ? 6 * Math.sin(u * 60) : 0;
+    let p = phoneFrame(X, Y, PW, PH, flashScreen({ kSeal: pop(u, c.seal, 0.5), press, done, kDone: pop(u, c.release, 0.35) }, u));
+    s += cam(comicZoom(u, 1.08) * bumpZ(u, [c.release], 0.03), 540, 800, p, shake);
+    // dedo que pulsa el botón
+    const bx = 540, by = 214 + 22 + 160 + 28 + 730 - 92;
+    if (u > c.finger && u < c.release + 0.55) {
+      const kin = easeOut((u - c.finger) / 0.4), kout = easeInOut((u - c.release - 0.15) / 0.4);
+      const dy = lerp(700, 0, kin) + 600 * kout + (press > 0 ? 10 : 0);
+      s += bigFinger(bx + 120, by + 10 + dy, 1);
     }
-    s += thumbSticker(915, 1190, 108, pop(t, c.thumb, 0.5), -10 + 6 * Math.sin(T * 4));
-    if (t >= c.thumb) s += sparkle(760, 1130, 26, pop(t, c.thumb + 0.15, 0.4)) + sparkle(1010, 1080, 22, pop(t, c.thumb + 0.25, 0.4));
+    if (done) {
+      const kd = pop(u, c.release, 0.4);
+      s += sparkle(250, by - 60, 34, kd * (0.9 + 0.2 * Math.sin(u * 13))) + sparkle(840, by - 80, 28, kd * (0.9 + 0.2 * Math.sin(u * 11 + 1)), C.yel) + sparkle(780, by + 70, 22, kd);
+    }
     return s;
   }
-  // corte rápido: Marta en el sofá, contentísima, con los brazos en alto
-  const u = t - c.cut;
-  let s = homeBack(T);
-  const hop = Math.abs(Math.sin(2 * PI * 1.6 * u)) * 4;
-  const wv = 3 * Math.sin(2 * PI * 3 * u);
-  s += marta12(SITX, HOME.seat - hop * SITM, 190, 149, SITM, sitState(T, {
-    expr: 'joy', lap: lapLaptop, head: 2,
-    armF: { h: [216 + wv, 66], side: -1, hand: 'open', hs: 1.3, hrot: 10 },
-    armB: { h: [168 - wv, 66], side: 1, hand: 'open', hs: 1.3, hrot: -10 }
-  }));
-  for (let i = 0; i < 14; i++) {
-    const p = (u * 0.9 + hash(i * 3.3)) % 1;
-    s += confetti(80 + hash(i * 7.7) * 920, 560 + p * 820, i, u + i);
-  }
-  const hd = m12W(SITX, HOME.seat, 190, 149, SITM, 192, 60);
-  s += sparkle(hd[0] - 170, hd[1] - 30, 30, 0.6 + 0.4 * Math.sin(T * 9)) + sparkle(hd[0] + 200, hd[1] + 10, 26, 0.6 + 0.4 * Math.sin(T * 8 + 2));
-  s = cam(comicZoom(u, 1.18), 480, 1000, s);
-  s += bigT('Directo', 540, 280, 140, pop(t, c.text, 0.5), -4, { fill: C.yel });
-  s += bigT('con el comercio', 540, 400, 110, pop(t, c.text2, 0.5), 2, { fill: '#FFFFFF' });
+  // C: José sonríe mirando el reloj de pared; nube con el bar lleno a las 20:00
+  let w = medBar(u, T, { tm: 17 * 60, client: false, jose: { expr: u > 0.5 ? 'grin' : 'happy', armF: JP.thumbF, armB: JP.counterB, look: [-1.6, -1.2], head: -5 } });
+  const [hx, hy] = jHead();
+  let s = cam(comicZoom(u, 1.12), 540, 900, w);
+  const [cx, cy, cw, ch] = CLOUD_M;
+  s += thinkDots(hx + 110, hy - 70, cx - cw * 0.42, cy + ch * 0.32, u, c.cloud - 0.15);
+  const kc = pop(u, c.cloud, 0.55), fl = 6 * Math.sin(u * 2.2);
+  s += thinkCloud(cx, cy + 20 + fl, cw, ch, kc);
+  s += thoughtFull(cx, cy + 20 + fl, kc, u);
+  s += hourBox(220, 440, 17 * 60, pop(u, 0.05, 0.4));
+  s += bigT('A las 6, flash', 600, 270, 130, pop(u, c.titleC, 0.5), -3, { fill: C.yel });
   return s;
 };
 
-/* ---------- 6) VIERNES: Marta va a la farmacia ---------- */
-const DOOR_X = (FAC.door[0] + FAC.door[1]) / 2;
-const STM = 3.6;
-function walkArms(ph, item) {
-  const sn = Math.sin(ph);
-  return {
-    armF: Object.assign({ h: [205 + 9 * sn, 139 - 2 * Math.abs(sn)], side: -1, hand: 'fist', hs: 1.15 }, item || {}),
-    armB: { h: [175 - 9 * sn, 139 - 2 * Math.abs(sn)], side: 1, hand: 'fist', hs: 1.15 }
-  };
-}
-function martaWalk(x, foot, sc, t, T, extra = {}) {
-  const ph = 2 * PI * t / STEP, wp = walkPose(ph, 1);
-  return marta12(x, foot, 190, 204, sc, Object.assign({ legF: wp.legF, legB: wp.legB, bob: wp.bob, pony: wp.pony, blink: blink11(T), expr: 'joy' }, walkArms(ph), extra));
-}
-function insideDoor(svg) {
-  const id = 'dr' + (uid++), [d0, d1] = FAC.door;
-  return `<clipPath id="${id}"><rect x="${d0}" y="${FAC.doorTop}" width="${d1 - d0}" height="${FAC.base - FAC.doorTop}"/></clipPath><g clip-path="url(#${id})">${svg}</g>`;
-}
+/* ---------- 6) Calle a las 17:00: a todos les vibra el móvil; Pedro va al bar ---------- */
+const G6 = 1330, FEET6 = 1392;
+const WALK6 = [[100, 0, false], [270, 11, false], [660, 3, true], [820, 9, true]];
 S[6] = (t, T, sc) => {
-  const c = cues(sc, { cal: 0.05, calOut: 1.1, walk0: 0.9, door: 2.95, enter: 3.2, close: 3.6 });
-  const openU = t < c.door ? 0 : t < c.close ? easeOut((t - c.door) / 0.25) : 1 - easeOut((t - c.close) / 0.3);
-  const bellAng = t >= c.door ? 26 * damp(t - c.door, 16, 2.6) : 0;
-  let inside = '', front = '';
-  if (t >= c.walk0) {
-    if (t < c.enter) {
-      const x = lerp(-170, DOOR_X, clamp((t - c.walk0) / (c.enter - c.walk0)));
-      front = shadowEll(x, FAC.base + 4, 80) + martaWalk(x, FAC.base, STM, t - c.walk0, T);
-    } else {
-      const u = clamp((t - c.enter) / 0.45);
-      const sc2 = STM * (1 - 0.12 * u), x = DOOR_X + 20 * u, foot = FAC.base - 40 * u;
-      inside = insideDoor(martaWalk(x, foot, sc2, t - c.walk0, T, { head: -4 * u }));
-    }
-  }
-  let s = streetScene(T, { open: openU, bellAng, inside });
-  s += front;
-  if (t >= c.door && t < c.door + 0.8) s += ringLines(FAC.door[0] + 40, FAC.doorTop + 60, pop(t, c.door, 0.3)) + onoma(FAC.door[0] - 40, FAC.doorTop - 40, pop(t, c.door, 0.4), '¡Tilín!', -10, C.yel, 56);
-  s = cam(comicZoom(t, 1.1), 540, 900, s);
-  // hoja de calendario
-  if (t < c.calOut + 0.4) {
-    let k = pop(t, c.cal, 0.55), y = 700, rot = -4 + 3 * Math.sin(T * 3);
-    if (t > c.calOut) { const u = easeInOut((t - c.calOut) / 0.35); y -= 1100 * u; rot -= 30 * u; k *= 1 - 0.4 * u; }
-    s += viernesSheet(540, y, k, rot);
-  }
-  return s;
-};
-
-/* ---------- 7) Interior de la farmacia: la cesta ---------- */
-const FM = { mx: 400, msc: 4.8, fx: 760, fsc: 4.8, bs: 0.85 };
-S[7] = (t, T, sc) => {
-  const c = cues(sc, { title: 0.3, lift: 0.75, give: 1.45, take: 1.9, hold: 2.5 });
-  const B0 = [650, FI.counter - 6], B1 = [565, 1000], B2 = [455, 1128];
-  let B, phase;
-  if (t < c.lift) { B = B0; phase = 0; }
-  else if (t < c.give) { B = lerp2(B0, B1, easeInOut((t - c.lift) / (c.give - c.lift))); phase = 1; }
-  else if (t < c.take) { B = B1; phase = 2; }
-  else if (t < c.hold) { B = lerp2(B1, B2, easeInOut((t - c.take) / (c.hold - c.take))); phase = 3; }
-  else { B = [B2[0], B2[1] - 4 * Math.abs(Math.sin(2 * PI * 0.9 * (t - c.hold)))]; phase = 4; }
-  const bs = FM.bs, handleTop = [B[0], B[1] - BASKET_HANDLE * bs];
-  let s = pharmacyInterior(T);
-  // farmacéutica (detrás del mostrador, mirando a la izquierda)
-  const fF = fLoc(FM.fx, FI.floor, FM.fsc, handleTop[0] + 6, handleTop[1] + 4, true);
-  const holding = t < c.take + 0.25;
-  const armFf = holding ? { ik: fF, side: -1 } : { ang: 8, bend: -14 };
-  s += placeFarma(FM.fx, FI.floor, FM.fsc, { flip: true, expr: t > c.take ? 'proud' : 'happy', blink: tBlink(T, 0.6), bob: tBreath(T), pony: 4 * Math.sin(T * 2), armF: armFf, armB: { ang: 6, bend: -8 }, head: 3 * Math.sin(T * 1.7) });
-  s += pharmacyCounter();
-  // Marta
-  const M = FM.msc, toL = (X, Y) => m12L(FM.mx, FI.floor, 190, 204, M, X, Y);
-  let hF, hB;
-  const sideL = [B[0] - 95 * bs, B[1] - 72 * bs], sideR = [B[0] + 95 * bs, B[1] - 72 * bs], bot = [B[0] + 10, B[1] - 6];
-  if (phase <= 1) { hF = [207, 140]; hB = [173, 140]; }
-  else if (phase === 2) { const u = easeOut((t - c.give) / 0.3); hF = lerp2([207, 140], toL(...bot), u); hB = lerp2([173, 140], toL(...sideL), u); }
-  else if (phase === 3) { const u = easeInOut((t - c.take) / (c.hold - c.take)); hF = lerp2(toL(...[B1[0] + 10, B1[1] - 6]), toL(...sideR), u); hB = toL(...sideL); }
-  else { hF = toL(...sideR); hB = toL(...sideL); }
-  if (phase === 3) hB = toL(...sideL);
-  const emo = t >= c.hold;
-  s += shadowEll(FM.mx, FI.floor + 4, 90);
-  s += marta12(FM.mx, FI.floor, 190, 204, M, {
-    expr: emo ? 'sparkle' : t >= c.give ? 'joy' : 'happy', blink: emo ? false : blink11(T), bob: breath11(T, M), pony: 5 * Math.sin(2 * PI * T / 1.9),
-    armF: { h: hF, side: 1, hand: 'fist', hs: 1.15 }, armB: { h: hB, side: 1, hand: 'fist', hs: 1.15 }, head: emo ? 3 : 0
+  const c = cues(sc, { title: 0.25, buzz: 0.35, take: 0.85, card: 1.15, smile: 2.0, go: 2.6 });
+  let w = sky13(T, 'eve', { band: 880, sx: 860, sy: 700, sr: 58 });
+  w += shop(-160, G6, 440, 560, SHOP_TYPES[0]) + shop(330, G6, 440, 560, SHOP_TYPES[3]);
+  w += barFacade13(820, G6, 460, 600);
+  w += ground(G6, 0, { sp: 230 });
+  const buzz = t > c.buzz && t < c.take + 0.3;
+  const take = easeOut((t - c.take) / 0.3);
+  WALK6.forEach(([x, i, flip], j) => {
+    const sh = buzz ? 2.4 * Math.sin(t * 70 + j) : 0;
+    const r = crowdPerson({ kind: 'folk', i }, x, FEET6, 3.9, { flip, expr: t > c.card + 0.3 ? (j % 2 ? 'wow' : 'smile') : (buzz ? 'surprise' : 'happy'), armF: lerp(4, -78, take), lit: take > 0.5, card: 3, shake: sh, look: t > c.take ? [0.4, 1] : [0, 0], blink: blinkJ(T, j) });
+    w += r.svg;
+    if (buzz) { const [vx, vy] = t < c.take ? toWorld(x, FEET6, 190, 204, 3.9 * (FOLK[i].scale || 1), 203, 140, flip) : r.phone; w += vibeRings(vx, vy, t, 26, 3); }
   });
-  // cesta y manos encima
-  s += basket(B[0], B[1], bs, phase >= 4 ? 2 * Math.sin(T * 3) : 0, T);
-  if (holding) s += `<circle cx="${f(handleTop[0] + 6)}" cy="${f(handleTop[1] + 4)}" r="${f(4.3 * FM.fsc)}" fill="${C.skin}" ${st12(0.75)}/>`;
-  if (phase >= 2) {
-    const wF = m12W(FM.mx, FI.floor, 190, 204, M, hF[0], hF[1]), wB = m12W(FM.mx, FI.floor, 190, 204, M, hB[0], hB[1]);
-    s += hand11('fist', wB, wW, { hs: 1.15 * M, fill: C.skinS }) + hand11('fist', wF, wW, { hs: 1.15 * M });
-  }
-  // corazones
-  if (emo) {
-    for (let i = 0; i < 5; i++) {
-      const p = ((t - c.hold) * 0.55 + i / 5) % 1;
-      s += heartPop(B[0] - 140 + i * 70 + 26 * Math.sin((t + i) * 3), B[1] - 300 - p * 420, 26 + (i % 2) * 8, Math.min(1, p / 0.12) * (1 - p * 0.3), 12 * Math.sin(t * 4 + i));
-    }
-  }
-  s = cam(comicZoom(t, 1.12), 540, 950, s);
-  s += bigT('¡Para el viernes!', 540, 262, 112, pop(t, c.title, 0.5), -3, { fill: C.yel });
-  return s;
-};
-
-/* ---------- 8) Sale con la cesta: ¡Bien! ---------- */
-S[8] = (t, T, sc) => {
-  const c = cues(sc, { open: 0.05, out: 0.25, front: 1.0, bien: 1.15, close: 1.3 });
-  const openU = t < c.close ? easeOut((t - c.open) / 0.25) : 1 - easeOut((t - c.close) / 0.3);
-  const bellAng = 24 * (damp(t - c.open, 16, 2.6) * (t >= c.open ? 1 : 0)) + (t >= c.close ? 18 * damp(t - c.close, 16, 3) : 0);
-  const X2 = 590;
-  const basketArm = { h: [207, 141], side: -1, hand: 'fist', hs: 1.15 };
-  const hangItem = (x, foot, sc2, rot) => { const [hx, hy] = m12W(x, foot, 190, 204, sc2, 207, 141); return basketHang(hx, hy - 4 * sc2 / STM, 0.56 * sc2 / STM, rot, T) + hand11('fist', [hx, hy], wW, { hs: 1.15 * sc2 }); };
-  let inside = '', front = '';
-  if (t < c.out) {
-    inside = insideDoor(marta12(DOOR_X + 10, FAC.base - 40, 190, 204, STM * 0.88, { expr: 'joy', blink: false, armF: basketArm }) + hangItem(DOOR_X + 10, FAC.base - 40, STM * 0.88, 0));
-  } else if (t < c.front) {
-    const u = (t - c.out) / (c.front - c.out), e = easeInOut(u);
-    const x = lerp(DOOR_X + 10, X2, e), foot = lerp(FAC.base - 40, FAC.base, e), sc2 = STM * lerp(0.88, 1, e);
-    const ph = 2 * PI * (t - c.out) / STEP, wp = walkPose(ph, 1);
-    const m = marta12(x, foot, 190, 204, sc2, Object.assign({ legF: wp.legF, legB: wp.legB, bob: wp.bob, pony: wp.pony, expr: 'joy', blink: blink11(T), armF: basketArm, armB: walkArms(ph).armB })) + hangItem(x, foot, sc2, 8 * Math.sin(ph));
-    if (u < 0.35) inside = insideDoor(m); else front = shadowEll(x, FAC.base + 4, 80) + m;
+  // Pedro
+  const PSC6 = 4.25, go = c.go;
+  let px = 500, pose;
+  const sh = buzz ? 2.4 * Math.sin(t * 70) : 0;
+  if (t < go) {
+    pose = { armF: lerp(0, -86, take), armB: 6, expr: t > c.smile ? 'grin' : (buzz ? 'surprise' : 'normal'), smile: 0.4, look: t > c.take ? [0.6, 1] : [0, 0], head: t > c.take ? 6 : 0, blink: blinkJ(T, 0.5),
+      itemF: phoneItem({ lit: take > 0.5, card: 3, shake: sh }) };
   } else {
-    const hop = t >= c.bien ? Math.max(0, Math.sin(PI * clamp((t - c.bien) / 0.4))) * 20 : 0;
-    const wave = POSE.wave(2 * PI * (t - c.front) * 2.2);
-    front = shadowEll(X2, FAC.base + 4, 80 - hop) + marta12(X2, FAC.base - hop * STM / 3, 190, 204, STM, {
-      expr: 'joy', talk: talkAmt(t, sc.talk), blink: blink11(T), bob: breath11(T, STM), pony: 6 * Math.sin(2 * PI * T / 1.9), armF: basketArm,
-      armB: { h: [166, 80], side: 1, hand: 'open', hs: 1.3, hrot: -14 + 14 * Math.sin(2 * PI * (t - c.front) * 2.2) }, head: -3
-    }) + hangItem(X2, FAC.base - hop * STM / 3, STM, 3 * Math.sin(T * 3));
-    void wave;
+    px = lerp(500, 1010, easeInOut((t - go) / 2.3));
+    pose = Object.assign(decidedWalk(t - go), { itemF: phoneItem({ lit: true, card: 3 }) });
   }
-  let s = streetScene(T, { open: openU, bellAng, inside, sunX: 160, sunY: 300 });
-  s += front;
-  if (t >= c.open && t < c.open + 0.7) s += ringLines(FAC.door[0] + 40, FAC.doorTop + 60, pop(t, c.open, 0.3));
-  s = cam(1.3 * comicZoom(t, 1.12), 650, 1060, s);
-  const k = pop(t, c.bien, 0.5);
-  s += at(540, 330, k, burst(0, 0, 200, T * 18, C.red));
-  s += bigT('¡Bien!', 540, 330, 190, k, -6, { fill: C.yel, font: 'G' });
+  w += shadowEll(px + 10, FEET6 + 4, 100);
+  if (t > go + 0.2 && t < go + 2.1) w += speedLinesH(px - 150, 900, 180, 4, 70, SW * 1.1);
+  w += placePedro(px, FEET6, PSC6, pose);
+  if (buzz) { const [vx, vy] = t < c.take ? pedroPt(px, FEET6, PSC6, 210, 150) : pedroPt(px, FEET6, PSC6, 222, 112); w += vibeRings(vx, vy, t, 30, 3); }
+  if (t > c.smile && t < go + 0.3) { const [tx, ty] = pedroPt(px, FEET6, PSC6, 210, 60); w += sparkle(tx + 60, ty - 40, 28, pop(t, c.smile, 0.4)) + sparkle(tx + 100, ty + 40, 18, pop(t, c.smile + 0.1, 0.4)); }
+  let s = cam(comicZoom(t), 540, 900, w);
+  s += notif(540, 590, 0.86 * pop(t, c.card, 0.5), lerp(-6, -2, pop(t, c.card, 0.5)), false);
+  s += bigT('Oferta flash', 540, 270, 150, pop(t, c.title, 0.5), -3, { font: 'G', fill: C.yel, ls: 2 });
+  s += flashSeal(950, 420, 80, pop(t, c.title + 0.25, 0.5), 10);
   return s;
 };
 
-/* ---------- 9) Apúntate al canal (medio cuerpo) + tarjeta final ---------- */
+/* ---------- 7) 18:00: el bar se llena (cortes secos: 3, 8, lleno) ---------- */
+S[7] = (t, T, sc) => {
+  const c = cues(sc, { hour: 0.1, title: 0.25 });
+  const [shot, a] = shotAt(t, sc);
+  const u = t - a;
+  const SHOW = { A: [0, 4, 11], B: [0, 2, 3, 4, 7, 9, 10, 11], C: CROWD.map((_, i) => i) };
+  const LEFT = { A: 7, B: 4, C: 2 };
+  let w = wideBar(u, T, { tm: 18 * 60 + (shot === 'A' ? 0 : shot === 'B' ? 20 : 45), show: SHOW[shot], left: LEFT[shot], jose: servePose(T), canas: shot === 'A' ? [] : [680, 860] });
+  let s = cam(comicZoom(u, 1.12), 540, 950, w);
+  s += hourBox(800, 410, 18 * 60, shot === 'A' ? pop(u, c.hour, 0.5) : 1, shot === 'A' ? 3 * damp(u - c.hour, 10, 3) : 0);
+  const txt = { A: 'Llegan los primeros', B: '¡Y más!', C: '¡Bar lleno!' }[shot];
+  s += bigT(txt, 540, 268, shot === 'C' ? 160 : 120, pop(u, c.title, 0.5), shot === 'B' ? 3 : -3, { font: 'G', fill: shot === 'C' ? C.yel : '#FFFFFF', ls: 2 });
+  if (shot === 'C') { s += sparkle(150, 230, 30, pop(u, 0.5, 0.4)); s += sparkle(960, 300, 24, pop(u, 0.6, 0.4), C.yel); }
+  return s;
+};
+
+/* ---------- 8) 20:00: barra vacía, ¡todo vendido! ---------- */
+S[8] = (t, T, sc) => {
+  const c = cues(sc, { hour: 0.1, title: 0.35, thumb: 1.4, chin: 3.2 });
+  const kt = easeOut((t - c.thumb) / 0.3);
+  const jose = t < c.thumb ? servePose(T, { expr: 'grin' }) : { expr: 'proud', armB: JP.counterB, armF: { h: [lerp(222, 221, kt), lerp(120, 96, kt)], side: 1, hand: 'thumb', hs: 1.5 }, head: -4 };
+  let w = wideBar(t, T, { tm: 20 * 60, left: 0, jose, show: [0, 1, 3, 4, 6, 7, 8, 9, 10, 11], canas: [300, 680, 860], exprs: ['sparkle', 'happy', 'smile', 'wink'], pedroExpr: 'laugh' });
+  if (t > c.chin && t < c.chin + 1.4) w += chin(380, 1010, pop(t, c.chin, 0.4) * (1 - easeOut((t - c.chin - 1.1) / 0.25)), t);
+  let s = cam(comicZoom(t, 1.12) * bumpZ(t, [c.thumb, c.chin], 0.03), 540, 950, w);
+  s += hourBox(800, 410, 20 * 60, pop(t, c.hour, 0.5), 3 * damp(t - c.hour, 10, 3));
+  s += bigT('¡Todo vendido!', 540, 268, 150, pop(t, c.title, 0.5), -3, { font: 'G', fill: C.yel, ls: 2 });
+  if (t > c.thumb) { const [tx, ty] = jPt(WIDE.jx, WIDE.jy, WIDE.jsc, 221, 84); s += sparkle(tx + 50, ty - 30, 26, pop(t, c.thumb + 0.1, 0.4)) + sparkle(tx + 80, ty + 40, 18, pop(t, c.thumb + 0.2, 0.4), C.yel); }
+  return s;
+};
+
+/* ---------- 9) José orgulloso ante la barra vacía: mensaje a los comercios ---------- */
+const PROUD = { top: 1180, jx: 540, jsc: 6.4 };
+PROUD.jy = PROUD.top + (208 - 138) * PROUD.jsc;
+function banner13(str, x, y, k, rot = 0, size = 66, wd = 900) {
+  if (k <= 0.01) return '';
+  const ht = size * 1.7;
+  let g = `<rect x="${-wd / 2}" y="${-ht / 2}" width="${wd}" height="${ht}" rx="${ht * 0.3}" transform="translate(10 10)" fill="${INK}"/><rect x="${-wd / 2}" y="${-ht / 2}" width="${wd}" height="${ht}" rx="${ht * 0.3}" fill="${C.red}" ${st12()}/>`;
+  const lr = ht * 0.36;
+  g += `<circle cx="${f(-wd / 2 + 26 + lr)}" cy="0" r="${f(lr)}" fill="#FFFFFF" ${st12(0.8)}/>` + logoI13(-wd / 2 + 26 + lr, 0, lr * 1.75);
+  const tx = -wd / 2 + 26 + lr * 2 + 20, tw = wd / 2 - 30 - tx;
+  g += text(str, tx + tw / 2, 3, { size: fit(str, size, tw), sw: SW * 1.6, sd: 5 });
+  return at(x, y, k, g, rot);
+}
 S[9] = (t, T, sc) => {
-  const [k, a] = shotAt(t, sc), u = t - a;
-  if (k === 'FIN') {
-    let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + `<g opacity="0.35">${rays(540, 740, 16, u * 12, C.redS)}</g>`;
-    const kl = pop(u, 0.02, 0.6);
-    s += at(540, 735, kl, `<circle cx="14" cy="14" r="300" fill="${INK}"/><circle r="300" fill="${C.cream}" ${st11(1.2)}/>`, 0);
-    s += logoPng11(540, 730, 470, -4 * (1 - kl), kl);
-    s += bigT('Escaparate de Tudela', 540, 1130, 100, pop(u, 0.25, 0.5), -2, { fill: '#FFFFFF' });
-    const kw = pop(u, 0.45, 0.5);
-    s += at(540, 1260, kw, `<rect x="-300" y="-46" width="600" height="92" rx="46" transform="translate(8 8)" fill="${INK}"/><rect x="-300" y="-46" width="600" height="92" rx="46" fill="${C.cream}" ${st11()}/>` +
-      text('escaparatetudela.es', 0, 3, { size: 52, fill: INK, stroke: null, shadow: false }));
-    s += sparkle(170, 480, 30, 0.6 + 0.4 * Math.sin(T * 8)) + sparkle(920, 1000, 26, 0.6 + 0.4 * Math.sin(T * 7 + 2));
+  const c = cues(sc, { t1: 0.3, t2: 1.7, banner: 3.2, thumb: 4.6 });
+  const kt = easeOut((t - c.thumb) / 0.3);
+  const armF = t < c.thumb ? JP.hipF : { h: [lerp(212, 221, kt), lerp(132, 96, kt)], side: lerp(-1, 1, kt) > 0 ? 1 : -1, hand: kt > 0.4 ? 'thumb' : 'fist', hs: 1.5 };
+  let w = barRoom(T, { clock: [130, 780, 76], tm: 20 * 60 + 10, posters: [[820, 760, 200, 210, 1]], shelf: [700, 1060, 600, 760] });
+  w += placeJose(PROUD.jx, PROUD.jy, PROUD.jsc, { expr: t < c.thumb ? 'proud' : 'grin', armF, armB: JP.hipB, head: -4 + 1.5 * Math.sin(T * 2), bob: breathJ(T, PROUD.jsc) - 1.2, blink: blinkJ(T) });
+  w += barFront(PROUD.top);
+  const slots = TORT_SLOTS(90, 990, PROUD.top - 20, 6);
+  w += counterFood(slots, 0, 52);
+  w += canaJ(300, PROUD.top + 4, 70) + canaJ(790, PROUD.top + 4, 70);
+  const [hx, hy] = jPt(PROUD.jx, PROUD.jy, PROUD.jsc, 190, 76);
+  [[hx - 260, hy - 60, 30, 0.6], [hx + 260, hy - 90, 26, 0.75], [hx + 300, hy + 120, 20, 0.9], [hx - 300, hy + 140, 22, 1.0]].forEach(([x, y, r, t0], i) => {
+    w += sparkle(x, y, r, pop(t, t0, 0.4) * (0.85 + 0.25 * Math.sin(t * 11 + i * 2)), i % 2 ? C.yel : '#FFFFFF');
+  });
+  let s = cam(comicZoom(t), 540, 900, w);
+  s += bigT('¿Te sobra género?', 540, 262, 130, pop(t, c.t1, 0.5), -3);
+  s += bigT('¡Lánzalo en oferta flash!', 540, 384, 110, pop(t, c.t2, 0.5), 2, { fill: C.yel });
+  s += banner13('Escaparate de Tudela', 540, 520, pop(t, c.banner, 0.5), -2, 62, 860);
+  return s;
+};
+
+/* ---------- 10) Atardecer: José en primer plano, comercios y público; tarjeta final ---------- */
+const BIRDS13 = [{ t0: 0.2, d: 4.0, dir: 1, y: 640, a: 34 }, { t0: 1.4, d: 4.6, dir: -1, y: 520, a: 28 }, { t0: 3.0, d: 4.2, dir: 1, y: 760, a: 30 }];
+function vFlock(x, y, a, t, i) {
+  let s = '';
+  [[0, 0], [-1, 1], [1, 1]].forEach(([dx, dy], j) => {
+    s += bird(x + dx * a * 1.5, y + dy * a * 0.9, a * (j ? 0.8 : 1), 0.35 + 0.65 * Math.sin(t * 2 * PI / 0.34 + i * 2 + j));
+  });
+  return s;
+}
+S[10] = (t, T, sc) => {
+  const c = cues(sc, { a1: 0.25, a2: 0.5, b1: 4.6, b2: 4.9, b3: 5.3, wink: 4.5 });
+  const [shot, a] = shotAt(t, sc);
+  if (shot === 'FIN') {
+    const u = t - a;
+    let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 720, 16, t * 8, C.dred);
+    const kl = pop(u, 0, 0.45), bob = 6 * Math.sin(u * 3);
+    s += logoBadge(540, 720 + bob, 820, lerp(-10, 0, kl), kl, 'logoW');
+    const url = 'escaparatetudela.es', us = fit(url, 78, 720);
+    s += at(540, 1250, pop(u, 0.25, 0.45), `<rect x="-400" y="-58" width="800" height="116" rx="58" transform="translate(10 10)" fill="${INK}"/><rect x="-400" y="-58" width="800" height="116" rx="58" fill="${C.dred}" stroke="${INK}" stroke-width="${f(SW)}"/>` + text(url, 0, 2, { size: us, sw: SW * 1.8, sd: 5 }));
     return s;
   }
-  const c = cues(sc, { title: 0.3, pulse: 4.95, strip: 6.15, sub: 7.2, web: 8.3 });
-  const M = 8.3, px = 540, py = 1402, AX = 190, AY = 150;
-  // cielo, sol, nubes y pájaros
-  let s = `<rect width="${W}" height="${H}" fill="${C.sky}"/><rect y="1120" width="${W}" height="${H}" fill="${C.skyL}"/>`;
-  s += sun(905, 760, 70, T * 12);
-  s += clouds(T, 0);
-  s += vBirds(T, { time: u, t0: 0.6, d: 4.6, y: 700 }) + vBirds(T, { time: u, t0: 5.6, d: 4.2, y: 820 });
-  // Marta de medio cuerpo con la cesta colgada del brazo
-  const talk = sc.talk || [];
-  const armF = { h: [212, 119], side: 1, hand: 'fist', hs: 1.2 };
-  const waveOn = u < 2.2 || (u > 6 && u < 7.6);
-  const armB = waveOn ? { h: [166, 82], side: 1, hand: 'open', hs: 1.35, hrot: -12 + 16 * Math.sin(2 * PI * 2.2 * u) } : { h: [176, 140], side: 1, hand: 'fist', hs: 1.15 };
-  const st = mState(u, T, M, talk, { expr: 'happy', armF, armB, noLegs: true, sit: false });
-  s += marta12(px, py, AX, AY, M, st);
-  // cesta colgada del antebrazo, y el antebrazo por encima del asa
-  const { E, H: Hh } = ik2(SH_F, armF.h, armF.side, 17);
-  const bob = st.bob || 0;
-  const Ew = m12W(px, py, AX, AY, M, E[0], E[1] + bob), Hw = m12W(px, py, AX, AY, M, Hh[0], Hh[1] + bob);
-  const mid = lerp2(Ew, Hw, 0.4);
-  s += basketHang(mid[0], mid[1] - 10, 0.8, 2 * Math.sin(T * 2.3), T);
-  s += capsule([Ew, Hw], 7 * M, C.skin, wW) + hand11('fist', Hw, wW, { hs: 1.2 * M });
-  // seto en primer plano (tapa la cintura) y acera
-  s += hedge(T);
-  s = cam(comicZoom(u, 1.45), 540, 1000, s);
-  // textos
-  const kt = pop(u, c.title, 0.5) * (u > c.pulse ? 1 + 0.12 * Math.sin(PI * clamp((u - c.pulse) / 0.35)) : 1);
-  s += bigT('Apúntate al canal', 540, 262, 116, kt, -3, { fill: C.yel });
-  const ks = pop(u, c.strip, 0.5);
-  s += at(540, 400, ks, `<rect x="-470" y="-62" width="940" height="124" rx="26" transform="translate(10 10)" fill="${INK}"/><rect x="-470" y="-62" width="940" height="124" rx="26" fill="${C.red}" ${st12()}/>` +
-    text('Comenta CANAL', 0, 4, { size: 96, sw: SW * 2, sd: 6 }), -2);
-  s += bigT('y te enviamos el enlace directo', 540, 528, 62, pop(u, c.sub, 0.5), 1, { fill: '#FFFFFF', maxW: 960 });
-  s += at(540, 604, pop(u, c.web, 0.5), `<rect x="-230" y="-32" width="460" height="64" rx="32" transform="translate(6 6)" fill="${INK}"/><rect x="-230" y="-32" width="460" height="64" rx="32" fill="#FFFFFF" ${st12(0.8)}/>` +
-    text('escaparatetudela.es', 0, 2, { size: 42, fill: INK, stroke: null, shadow: false }));
+  let w = sky13(T, 'dusk', { band: 1000, sx: 240, sy: 1130, sr: 84, clouds: [
+    { x0: 40, y: 230, s: 0.7, v: 12 }, { x0: 760, y: 980, s: 0.75, v: 18 }, { x0: 1250, y: 560, s: 0.85, v: 14 }, { x0: 1650, y: 300, s: 0.6, v: 9 }] });
+  BIRDS13.forEach((b, i) => {
+    const u = (t - b.t0) / b.d;
+    if (u < 0 || u > 1) return;
+    const x = b.dir > 0 ? lerp(-140, W + 140, u) : lerp(W + 140, -140, u);
+    w += vFlock(x, Math.min(1300, b.y + Math.sin(u * 7 + i) * 14), b.a, t, i);
+  });
+  w += barFacade13(-60, 1460, 560, 660, { night: true });
+  w += shop(560, 1460, 520, 600, SHOP_TYPES[3]);
+  w += ground(1460, 0, { sp: 230 });
+  w += lampPost13(520, 1470, 820, true) + lampPost13(1010, 1470, 860, true);
+  // José en primer plano (cabeza y hombros)
+  const jsc = 12.5, jx = 570, jy = 990 + 132 * jsc;
+  const inB = t >= c.wink;
+  const kt = easeOut((t - 0.2) / 0.3), kp = easeOut((t - c.wink) / 0.25);
+  const armF = !inB ? { h: [lerp(214, 222, kt), lerp(140, 100, kt)], side: 1, hand: kt > 0.4 ? 'thumb' : 'fist', hs: 1.45 }
+    : { h: [221, 100 - 3 * Math.max(0, damp(t - c.wink, 12, 5))], side: 1, hand: 'thumb', hs: 1.45 };
+  w += placeJose(jx, jy, jsc, { expr: inB ? (t > c.wink + 0.15 && t < c.wink + 0.9 ? 'wink' : 'grin') : 'proud', armF, head: -3 + 1.5 * Math.sin(T * 2), bob: breathJ(T, jsc), blink: blinkJ(T) });
+  let s = cam(comicZoom(t, 1.1) * bumpZ(t, [c.wink], 0.03), 540, 900, w);
+  if (!inB) {
+    s += bigT('Publica tus ofertas', 540, 270, 120, pop(t, c.a1, 0.5), -3);
+    s += bigT('¡y llena tu comercio!', 540, 392, 116, pop(t, c.a2, 0.5), 2, { fill: C.yel });
+  } else {
+    s += bigT('Y tú, apúntate al canal', 540, 262, 104, pop(t, c.b1, 0.5), -3);
+    s += at(540, 392, pop(t, c.b2, 0.5), pill(0, 0, 720, 112, C.green, 'Canal de WhatsApp', { size: 60, dx: 40, pad: 120 }) + iconChat(-290, 0, 34), -2);
+    s += at(540, 528, pop(t, c.b3, 0.5), `<rect x="-300" y="-40" width="600" height="80" rx="40" transform="translate(7 7)" fill="${INK}"/><rect x="-300" y="-40" width="600" height="80" rx="40" fill="#FFFFFF" ${st12(0.8)}/>` +
+      text('escaparatetudela.es', 0, 2, { size: 50, fill: INK, stroke: null, shadow: false }));
+  }
   return s;
 };
 
-/* ---------- subtítulos (solo en la versión subtitulada: node render.js subs) ---------- */
-// franja inferior (y > 1400), hasta dos líneas, letra grande
+/* ---------- subtítulos (solo en una versión subtitulada: node render.js subs) ---------- */
 function subtitle(T) {
   const c = SUBS.find(q => T >= q.start - 1e-6 && T < q.end);
   if (!c) return '';
@@ -417,7 +430,7 @@ function subtitle(T) {
   const lh = size * 1.2, wMax = Math.max(...lines.map(l => measure(l, size)));
   const bw = Math.min(1050, wMax + 80), bh = lines.length * lh + 44, cy = 1630;
   let s = `<rect x="${f(540 - bw / 2)}" y="${f(cy - bh / 2)}" width="${f(bw)}" height="${f(bh)}" rx="30" fill="${INK}" fill-opacity="0.86"/>`;
-  const col = c.who === 'marta' ? C.yel : '#FFFFFF';
+  const col = c.who === 'jose' ? C.yel : '#FFFFFF';
   lines.forEach((l, i) => { s += text(l, 540, cy - (lines.length - 1) * lh / 2 + i * lh + size * 0.04, { size, fill: col, sw: size * 0.14, shadow: false }); });
   return s;
 }
@@ -436,7 +449,7 @@ window.init = async function (cfg, fonts, logos, subs) {
   for (const [id, url] of logos) {
     const img = new Image(); img.src = url; await img.decode();
     const el = document.createElementNS(ns, 'image');
-    // los PNG (1000x1000) se dibujan en un cuadro de 500 para mantener las coordenadas de recorte de la serie
+    // los PNG se dibujan en un cuadro de 500 para mantener las coordenadas de recorte de la serie
     el.setAttribute('id', id); el.setAttribute('width', '500'); el.setAttribute('height', '500');
     el.setAttribute('href', url);
     defs.appendChild(el);
