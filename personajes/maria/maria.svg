@@ -15,54 +15,52 @@
 
   <!-- back hair (curly volume) -->
   <g fill="#6B3E22">
-    <circle cx="300" cy="200" r="118"/>
-    <circle cx="205" cy="250" r="55"/><circle cx="395" cy="250" r="55"/>
-    <circle cx="198" cy="305" r="50"/><circle cx="402" cy="305" r="50"/>
-    <circle cx="212" cy="358" r="44"/><circle cx="388" cy="358" r="44"/>
-    <circle cx="238" cy="395" r="36"/><circle cx="362" cy="395" r="36"/>
-    <circle cx="190" cy="200" r="50"/><circle cx="410" cy="200" r="50"/>
-    <circle cx="225" cy="130" r="52"/><circle cx="375" cy="130" r="52"/>
-    <circle cx="300" cy="100" r="58"/>
+    <circle cx="300" cy="205" r="100"/>
+    <circle cx="214" cy="250" r="44"/><circle cx="386" cy="250" r="44"/>
+    <circle cx="212" cy="300" r="40"/><circle cx="388" cy="300" r="40"/>
+    <circle cx="224" cy="345" r="34"/><circle cx="376" cy="345" r="34"/>
+    <circle cx="206" cy="200" r="40"/><circle cx="394" cy="200" r="40"/>
+    <circle cx="236" cy="140" r="42"/><circle cx="364" cy="140" r="42"/>
+    <circle cx="300" cy="115" r="46"/>
   </g>
   <g fill="none" stroke="#8E5631" stroke-width="7" stroke-linecap="round">
-    <path d="M178 250 q12 -18 26 0"/><path d="M180 312 q14 -18 28 0"/>
-    <path d="M196 365 q12 -16 26 0"/><path d="M392 250 q14 -18 28 0"/>
-    <path d="M390 312 q14 -18 28 0"/><path d="M376 365 q12 -16 26 0"/>
-    <path d="M222 400 q10 -14 22 0"/><path d="M356 400 q10 -14 22 0"/>
+    <path d="M184 250 q12 -16 24 0"/><path d="M186 302 q12 -16 24 0"/>
+    <path d="M202 350 q11 -14 22 0"/><path d="M392 250 q12 -16 24 0"/>
+    <path d="M390 302 q12 -16 24 0"/><path d="M376 350 q11 -14 22 0"/>
   </g>
 
   <!-- legs -->
-  <rect x="252" y="660" width="34" height="150" rx="16" fill="url(#skin)"/>
-  <rect x="314" y="660" width="34" height="150" rx="16" fill="url(#skin)"/>
+  <rect x="256" y="660" width="30" height="150" rx="16" fill="url(#skin)"/>
+  <rect x="314" y="660" width="30" height="150" rx="16" fill="url(#skin)"/>
   <!-- shoes -->
-  <path d="M238 805 q0 -16 18 -16 h30 q8 0 8 10 v14 h-56z" fill="#1F2937"/>
-  <path d="M306 799 q0 -10 8 -10 h30 q18 0 18 16 v8 h-56z" fill="#1F2937"/>
+  <path d="M244 805 q0 -16 16 -16 h26 q8 0 8 10 v14 h-50z" fill="#1F2937"/>
+  <path d="M306 799 q0 -10 8 -10 h26 q16 0 16 16 v8 h-50z" fill="#1F2937"/>
 
   <!-- arms -->
-  <path d="M222 365 q-38 90 -40 190" stroke="url(#skin)" stroke-width="32" stroke-linecap="round" fill="none"/>
-  <path d="M378 365 q38 90 40 190" stroke="url(#skin)" stroke-width="32" stroke-linecap="round" fill="none"/>
-  <circle cx="182" cy="562" r="20" fill="#EDB98F"/>
-  <circle cx="418" cy="562" r="20" fill="#EDB98F"/>
+  <path d="M232 365 q-34 90 -36 190" stroke="url(#skin)" stroke-width="27" stroke-linecap="round" fill="none"/>
+  <path d="M368 365 q34 90 36 190" stroke="url(#skin)" stroke-width="27" stroke-linecap="round" fill="none"/>
+  <circle cx="196" cy="562" r="17" fill="#EDB98F"/>
+  <circle cx="404" cy="562" r="17" fill="#EDB98F"/>
 
   <!-- neck -->
   <rect x="280" y="300" width="40" height="55" rx="10" fill="#EDB98F"/>
 
   <!-- dress -->
-  <path d="M232 350 Q300 372 368 350 Q392 360 388 420 L380 480 Q440 600 450 690 Q300 725 150 690 Q160 600 220 480 L212 420 Q208 360 232 350Z" fill="url(#dress)"/>
+  <path d="M240 350 Q300 370 360 350 Q380 360 376 420 L370 480 Q420 600 432 690 Q300 722 168 690 Q180 600 230 480 L224 420 Q220 360 240 350Z" fill="url(#dress)"/>
   <!-- neckline -->
   <path d="M262 352 Q300 395 338 352" fill="#EDB98F"/>
   <path d="M258 350 Q300 402 342 350" fill="none" stroke="#1A43A0" stroke-width="5"/>
   <!-- waist belt -->
-  <path d="M218 478 Q300 498 382 478 L384 496 Q300 516 216 496Z" fill="#1A3A8C"/>
+  <path d="M228 478 Q300 496 372 478 L374 496 Q300 514 226 496Z" fill="#1A3A8C"/>
   <!-- skirt folds -->
   <g stroke="#1A43A0" stroke-width="4" fill="none" opacity="0.6" stroke-linecap="round">
-    <path d="M250 510 Q238 600 222 695"/><path d="M300 515 L300 705"/><path d="M350 510 Q362 600 378 695"/>
+    <path d="M255 510 Q245 600 232 698"/><path d="M300 515 L300 705"/><path d="M345 510 Q355 600 368 698"/>
   </g>
   <!-- puff sleeves -->
-  <ellipse cx="222" cy="372" rx="34" ry="30" fill="#2F6FE0"/>
-  <ellipse cx="378" cy="372" rx="34" ry="30" fill="#2F6FE0"/>
+  <ellipse cx="232" cy="372" rx="29" ry="26" fill="#2F6FE0"/>
+  <ellipse cx="368" cy="372" rx="29" ry="26" fill="#2F6FE0"/>
   <!-- dress highlight -->
-  <path d="M245 380 Q240 430 238 470" stroke="#fff" stroke-width="6" opacity="0.25" stroke-linecap="round" fill="none"/>
+  <path d="M252 382 Q248 430 246 470" stroke="#fff" stroke-width="6" opacity="0.25" stroke-linecap="round" fill="none"/>
 
   <!-- ears -->
   <ellipse cx="222" cy="240" rx="14" ry="20" fill="#EDB98F"/>
