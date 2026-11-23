@@ -11,8 +11,8 @@ const OUT = path.resolve(process.argv[3] || path.join(__dirname, 'png'));
 const DPR = 1.5;
 const LIBS = ['lib.js', 'series.js', 'rosa.js', 'v04.js', 'v05.js', 'v06.js', 'v07.js', 'v08.js', 'v09.js', 'v10.js', 'maria.js', 'v11.js'];
 const FILES = {
-  maria: { senalando: 'maria_senalando', sonriendo: 'maria_sonriendo', sorprendida: 'maria_sorprendida', etiqueta: 'maria_etiqueta', movil: 'maria_movil' },
-  pedro: { senalando: 'pedro_senalando', sonriendo: 'pedro_sonriendo', sorprendido: 'pedro_sorprendido', etiqueta: 'pedro_etiqueta', movil: 'pedro_movil' }
+  maria: { senalando: 'maria_senalando', sonriendo: 'maria_sonriendo', sorprendida: 'maria_sorprendida', cartel: 'maria_cartel', movil: 'maria_movil' },
+  pedro: { senalando: 'pedro_senalando', sonriendo: 'pedro_sonriendo', sorprendido: 'pedro_sorprendido', cartel: 'pedro_cartel', movil: 'pedro_movil' }
 };
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });

@@ -1,14 +1,13 @@
 /* Poses sueltas de María y Pedro para carruseles de Instagram.
    Se dibujan con el MISMO código de la serie de vídeos (rama video-11-marta-cuatro-motivos):
    María = src/maria.js (placeMaria), Pedro = src/v05.js (placePedro, el del cartel),
-   manos = hand11 (src/v11.js), etiqueta = hangTag (src/v04.js). Nada redibujado a mano.
+   manos = hand11 (src/v11.js). Nada redibujado a mano.
    Misma escala para los dos personajes -> mismo grosor de contorno (SW ≈ 8,5 px a escala 1). */
 'use strict';
 
 const CW = 1000, CH = 1250;         // lienzo en px CSS (se exporta x1,5 -> 1500x1875)
 const SC = 7.5;                     // escala de los personajes (vídeo 11: 7-8,3)
 const PX = 500, FOOT = 1200;        // centro y suelo en el lienzo
-const TAG_S = 2.0;                  // escala de la etiqueta roja del vídeo 04
 
 // ---------- móvil grande de frente, pantalla blanca lisa (estilo de la serie) ----------
 const PH = { w: 44, h: 72, r: 6, bez: 3.2 };
@@ -19,6 +18,9 @@ function bigPhone(cx, top, w) {
   return g;
 }
 const PH_TOP_M = 113, PH_TOP_P = 104, PH_CX_P = 194;
+// ---------- cartel blanco grande (apaisado, liso, mismo contorno) ----------
+const BD = { x0: 149, x1: 231, h: 50, r: 3, topM: 116, topP: 110, hyM: 140 };
+const board = (top, w) => `<rect x="${BD.x0}" y="${top}" width="${BD.x1 - BD.x0}" height="${BD.h}" rx="${BD.r}" fill="#FFFFFF" stroke="${INK}" stroke-width="${w(3)}" stroke-linejoin="round"/>`;
 
 // ---------- utilidades ----------
 const mW = (lx, ly) => [PX + (lx - 190) * SC, FOOT + (ly - 204) * SC];   // local María -> lienzo
@@ -42,10 +44,13 @@ const POSE_MARIA = {
     armF: { h: [221, 101], side: -1, hand: 'open', hs: 1.2, hrot: 22 },
     armB: { h: [159, 101], side: 1, hand: 'open', hs: 1.2, hrot: -22 }
   }),
-  etiqueta: () => {
-    const H = [231, 112], [tx, ty] = mW(H[0], H[1]);
-    return hangTag(tx, ty, TAG_S, 'oferta', 0) + placeMaria(PX, FOOT, SC, {
-      expr: 'happy', head: 3, armF: { h: H, side: -1, hand: 'fist', hs: 1.2 }, armB: restB
+  cartel: () => {
+    const HF = [BD.x1 - 0.5, BD.hyM], HB = [BD.x0 + 0.5, BD.hyM];
+    return placeMaria(PX, FOOT, SC, {
+      expr: 'sparkle',
+      armF: { h: HF, side: -1, hand: 'fist', hs: 1.2 }, armB: { h: HB, side: 1, hand: 'fist', hs: 1.2 },
+      front: w => board(BD.topM, w) +
+        hand11('fist', HF, w, { fill: MG.skin, hs: 1.2 }) + hand11('fist', HB, w, { fill: MG.skin, hs: 1.2 })
     });
   },
   movil: () => {
@@ -74,10 +79,14 @@ const POSE_PEDRO = {
     itemF: (w, x, y) => hand11('open', [x, y], w, { fill: P5.skin, hs: 1.2, hrot: armDir(-150) + 90 }),
     itemB: (w, x, y) => hand11('open', [x, y], w, { fill: P5.skinS, hs: 1.2, hrot: armDir(150) + 90 })
   }),
-  etiqueta: () => {
-    const a = -55, hl = handLocal(PF, a), [tx, ty] = pW(hl[0], hl[1]);
-    return hangTag(tx, ty, TAG_S, 'oferta', 0) + placePedro(PX, FOOT, SC, {
-      expr: 'grin', armF: a, armB: 4, itemF: (w, x, y) => handC(w, x, y)
+  cartel: () => {
+    const hy = 137, aF = pAng(PF, BD.x1 - 0.5, hy), aB = pAng(PB, BD.x0 + 0.5, hy);
+    return placePedro(PX, FOOT, SC, {
+      expr: 'grin', armF: aF, armB: aB,
+      itemF: w => {
+        const hF = handLocal(PF, aF), hB = handLocal(PB, aB);
+        return board(BD.topP, w) + handC(w, hB[0], hB[1], P5.skin, 4.4) + handC(w, hF[0], hF[1], P5.skin, 4.4);
+      }
     });
   },
   movil: () => {

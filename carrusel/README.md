@@ -9,7 +9,7 @@ posición quedan alineados entre una diapositiva y otra.
 | Señalando | `png/maria_senalando.png` | `png/pedro_senalando.png` |
 | Sonriendo | `png/maria_sonriendo.png` | `png/pedro_sonriendo.png` |
 | Sorprendido/a | `png/maria_sorprendida.png` | `png/pedro_sorprendido.png` |
-| Sosteniendo una etiqueta | `png/maria_etiqueta.png` | `png/pedro_etiqueta.png` |
+| Sujetando un cartel blanco grande | `png/maria_cartel.png` | `png/pedro_cartel.png` |
 | Móvil grande, pantalla en blanco | `png/maria_movil.png` | `png/pedro_movil.png` |
 
 ## De dónde salen
@@ -20,9 +20,8 @@ Nada está redibujado a mano: las poses se generan con el código de los vídeos
 - **María**: `src/maria.js` (`placeMaria`), el personaje fijo del vídeo 11, con contorno negro.
 - **Pedro**: `src/v05.js` (`placePedro`), el mismo Pedro del cartel (camiseta verde y gafas).
 - Manos (señalar, abiertas, puño): `hand11` de `src/v11.js`.
-- Etiqueta roja con «%»: `hangTag` de `src/v04.js`.
-- El móvil grande es una pieza nueva en el estilo de la serie: carcasa negra con el mismo
-  contorno y pantalla blanca lisa (#FFFFFF). La pantalla mide lo mismo en los dos personajes.
+- El cartel blanco (apaisado, liso, para escribir encima) y el móvil grande son piezas nuevas en el estilo de la serie: carcasa negra con el mismo
+  contorno; cartel y pantalla en blanco liso (#FFFFFF). Miden lo mismo en los dos personajes.
 
 Los dos personajes se dibujan a la misma escala (7,5), así que el contorno tiene el mismo
 grosor en todos los archivos, y los colores salen de las mismas paletas del código (`MG`, `P5`, `C`).
