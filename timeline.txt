@@ -3,7 +3,7 @@ escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
 01	0.000	4.000	4.000	120	Calle soleada con 4 tiendas; logo y «¿Qué es Escaparate de Tudela?»
 02	4.000	12.000	8.000	240	Móvil del portal; los comercios lanzan Oferta, Novedad y Evento
 03	12.000	18.000	6.000	180	Calle llena de gente; las tarjetas llegan a todos los móviles, «Directo a tu móvil»
-04	18.000	24.000	6.000	180	Móvil en la mano; 3 toques, 3 fachadas y los números 1-2-3, «Con solo 3 toques»
+04	18.000	24.000	6.000	180	Móvil en la mano; 3 toques: ¿Qué ofreces? Novedad, foto del bolso y precio 30 €, números 1-2-3, «Con solo 3 toques»
 05	24.000	27.000	3.000	90	Persona con el móvil y burbujas, «Los escaparates de Tudela, en tu mano»
 06	27.000	37.000	10.000	300	Entra a conocernos / ¿Eres comercio? Escríbenos + tarjeta final
 TOTAL	0.000	37.000

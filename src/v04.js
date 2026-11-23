@@ -261,3 +261,43 @@ function finger(x, y, rot = -8) { // dedo índice que llega desde la derecha y p
     <path d="M70 -26 Q76 0 70 26 M150 -40 Q140 0 156 40" fill="none" stroke="${INK}" stroke-width="${f(SW * 0.6)}" stroke-linecap="round"/>
     <path d="M170 50 L420 60 V-90 L170 -60" fill="${C.red}" ${st}/>`, rot);
 }
+
+/* ---------- pasos de una publicación (escena 4): qué ofreces, foto y precio ---------- */
+function handbag(cx, by, s) { // bolso: (cx, by) = centro inferior; mide ~ 200*s x 170*s
+  const st = (v = 1) => `stroke="${INK}" stroke-width="${f(SW * v / s)}" stroke-linejoin="round"`;
+  const body = 'M-92 -100 H92 Q100 -100 102 -90 L112 -12 Q114 0 100 0 H-100 Q-114 0 -112 -12 L-102 -90 Q-100 -100 -92 -100Z';
+  return `<g transform="translate(${f(cx)} ${f(by)}) scale(${f(s)})">
+    <path d="M-58 -100 Q-58 -168 0 -168 Q58 -168 58 -100" fill="none" stroke="${INK}" stroke-width="${f(SW * 3.2 / s)}" stroke-linecap="round"/>
+    <path d="M-58 -100 Q-58 -168 0 -168 Q58 -168 58 -100" fill="none" stroke="${C.dred}" stroke-width="${f(SW * 1.4 / s)}" stroke-linecap="round"/>
+    <path d="${body}" transform="translate(8 8)" fill="${INK}"/>
+    <path d="${body}" fill="${C.red}" ${st()}/>
+    <path d="M-100 -100 L100 -100 L106 -52 Q0 -30 -106 -52Z" fill="${C.redS}" ${st()}/>
+    <path d="M-30 -66 L-58 -96 M30 -66 L58 -96" stroke="#FFFFFF" stroke-width="${f(SW * 0.6 / s)}" stroke-dasharray="6 6" opacity="0.7"/>
+    <rect x="-20" y="-60" width="40" height="30" rx="8" fill="${C.yel}" ${st(0.9)}/>
+    <circle cx="0" cy="-45" r="5" fill="${INK}"/>
+    <path d="M-80 -24 Q-84 -10 -72 -10" fill="none" stroke="#FFFFFF" stroke-width="${f(SW * 0.8 / s)}" stroke-linecap="round" opacity="0.8"/>
+  </g>`;
+}
+// tarjeta de un paso (x, y, w, h); i = 0 «¿Qué ofreces?» / 1 «Foto» / 2 «Precio»
+function postStep(x, y, w, h, i) {
+  const st = (v = 1) => `stroke="${INK}" stroke-width="${f(SW * v)}" stroke-linejoin="round"`;
+  let s = `<rect x="${f(x + 8)}" y="${f(y + 8)}" width="${f(w)}" height="${f(h)}" rx="22" fill="${INK}"/>`;
+  s += `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" rx="22" fill="#FFFFFF" ${st()}/>`;
+  const lab = ['¿Qué ofreces?', 'Foto', 'Precio'][i];
+  s += text(lab, x + 26, y + 40, { size: 40, anchor: 'start', fill: '#6B6262', stroke: null });
+  if (i === 0) {
+    s += yelStar(x + 70, y + 148, 44);
+    s += text('Novedad', x + 132, y + 152, { size: fit('Novedad', 108, w - 160), anchor: 'start', fill: C.red, sw: SW * 2, sd: 6 });
+  } else if (i === 1) {
+    const px = x + 26, py = y + 66, pw = w - 52, ph = h - 86;
+    s += `<rect x="${f(px)}" y="${f(py)}" width="${f(pw)}" height="${f(ph)}" rx="16" fill="${C.glass}" ${st(0.8)}/>`;
+    for (let yy = py + 18; yy < py + ph - 6; yy += 28) for (let xx = px + 18; xx < px + pw - 6; xx += 28) s += `<circle cx="${xx}" cy="${yy}" r="3" fill="#FFFFFF"/>`;
+    s += `<rect x="${f(px)}" y="${f(py + ph - 26)}" width="${f(pw)}" height="26" fill="${C.cream}" ${st(0.6)}/>`;
+    s += handbag(x + w / 2, py + ph - 22, 0.62);
+    s += sparkle(px + pw - 40, py + 34, 18) + sparkle(px + 44, py + 44, 12);
+  } else {
+    s += text('30 €', x + w * 0.5, y + 150, { size: 100, anchor: 'middle', fill: C.red, sw: SW * 2, sd: 6 });
+    s += hangTag(x + w - 48, y + 52, 0.8, 'oferta', -8);
+  }
+  return s;
+}

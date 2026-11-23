@@ -9,7 +9,7 @@
     { "id": 1, "name": "Calle soleada con 4 tiendas; logo y «¿Qué es Escaparate de Tudela?»", "duration": 4.0, "still": 2.0 },
     { "id": 2, "name": "Móvil del portal; los comercios lanzan Oferta, Novedad y Evento", "duration": 8.0, "still": 6.2 },
     { "id": 3, "name": "Calle llena de gente; las tarjetas llegan a todos los móviles, «Directo a tu móvil»", "duration": 6.0, "still": 3.2 },
-    { "id": 4, "name": "Móvil en la mano; 3 toques, 3 fachadas y los números 1-2-3, «Con solo 3 toques»", "duration": 6.0, "still": 4.2 },
+    { "id": 4, "name": "Móvil en la mano; 3 toques: ¿Qué ofreces? Novedad, foto del bolso y precio 30 €, números 1-2-3, «Con solo 3 toques»", "duration": 6.0, "still": 4.2 },
     { "id": 5, "name": "Persona con el móvil y burbujas, «Los escaparates de Tudela, en tu mano»", "duration": 3.0, "still": 1.6 },
     { "id": 6, "name": "Entra a conocernos / ¿Eres comercio? Escríbenos + tarjeta final", "duration": 10.0, "still": 6.6, "swap": 4.0, "cut": 8.0 }
   ]

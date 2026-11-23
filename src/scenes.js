@@ -178,7 +178,7 @@ S[4] = (t, T) => {
       g += `<rect x="${sx + 20}" y="${y}" width="${sw_ - 40}" height="240" rx="20" fill="none" stroke="${INK}" stroke-width="${f(SW * 0.6)}" stroke-dasharray="18 14" opacity="0.35"/>`;
       if (t >= land[i]) {
         const sq = 1 + 0.12 * Math.max(0, damp(t - land[i], 16, 6));
-        g += at(540, y + 120, 1, `<g transform="scale(${f(2 - sq)} ${f(sq)}) translate(-540 ${-(y + 120)})">${wideShop(sx + 20, y, sw_ - 40, 240, i)}</g>`);
+        g += at(540, y + 120, 1, `<g transform="scale(${f(2 - sq)} ${f(sq)}) translate(-540 ${-(y + 120)})">${postStep(sx + 20, y, sw_ - 40, 240, i)}</g>`);
       }
     }
     return g;
@@ -191,7 +191,7 @@ S[4] = (t, T) => {
     const from = i % 2 ? [1300, 200] : [-260, 260], to = [540, SLOT4(i) + 120];
     const fn = arcPath(from, to, 180), ue = easeInOut(u), [x, y] = fn(ue);
     w += trail(fn, ue, 0.35, 50);
-    w += at(x, y, lerp(0.45, 1, ue), `<g transform="translate(-198 -120)">${wideShop(0, 0, 396, 240, i)}</g>`, lerp(i % 2 ? 30 : -30, 0, ue));
+    w += at(x, y, lerp(0.45, 1, ue), `<g transform="translate(-198 -120)">${postStep(0, 0, 396, 240, i)}</g>`, lerp(i % 2 ? 30 : -30, 0, ue));
   }
   // ondas de cada toque
   TP4.forEach((tp, i) => {
