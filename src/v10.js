@@ -120,7 +120,7 @@ function tendera(P, o) {
     <g transform="rotate(-14 178 63)"><path d="M178 63 L169 57 L170 69Z M178 63 L187 57 L186 69Z" fill="${C.pink}" ${st(2)}/><circle cx="178" cy="63" r="2.8" fill="${K10.pinkS}" ${st(1.8)}/></g>`;
   if (P.hair === 'bob') hd += `<path d="M175 90 Q170 63 190 63 Q207 63 207 76 Q204 71 199 70.4 Q192 75 183 73.6 Q180 78 180.4 90Z" fill="${P.hairC}" ${st()}/>
     <path d="M186 67 Q193 66 199 69" stroke="#FFFFFF" stroke-width="${w(0.9)}" fill="none" stroke-linecap="round" opacity="0.4"/>`;
-  hd += o.faceFn ? o.faceFn(P, o, w) : tFace(P, o, w); // (vídeo 11) cara a cámara con boca que habla
+  hd += tFace(P, o, w);
   if (o.headItem) hd += o.headItem(w);
   b += `<g transform="rotate(${f(o.head || 0)} 190 96)">${hd}</g>`;
   if (o.front) b += o.front(w);

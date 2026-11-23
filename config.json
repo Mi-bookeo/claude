@@ -1,6 +1,7 @@
 {
   "title": "4 motivos para estar en el canal",
-  "output": "marta_cuatro_motivos.mp4",
+  "output": "maria_cuatro_motivos.mp4",
+  "character": "maria",
   "width": 1080,
   "height": 1920,
   "fps": 30,

@@ -1,5 +1,9 @@
 # 4 motivos para estar en el canal (vídeo 11 · Escaparate Tudela)
 
+Dos versiones: con **María** (actual, `"character": "maria"` en config.json → `maria_cuatro_motivos*.mp4`) y con
+**Marta** (`marta_cuatro_motivos*.mp4`; quita `"character"` y pon `"output": "marta_cuatro_motivos.mp4"` para volver a generarla).
+María: `src/maria.js`, referencia en `assets/personajes/maria_referencia.png`.
+
 Vídeo vertical 1080x1920, 30 fps, H.264 (crf 18, yuv420p), 48,8 s (escenas ajustadas a la voz de Marta). Marta habla a cámara y enumera cuatro motivos
 para estar en el canal (el cuarto, «El mejor»: apoyas al comercio local). Dirigido al público.
 

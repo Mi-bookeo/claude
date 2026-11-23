@@ -224,8 +224,8 @@ const bigT = (str, x, y, size, k, rot = 0, o = {}) => at(x, y, k, text(str, 0, 0
 
 /* ===================== MARTA EN EL CÍRCULO (planos B) ===================== */
 function martaCircle(cx, cy, r, t, T, ranges, o = {}) {
-  const sc = r / 22, id = 'mc' + (uid++);
-  const px = cx - 2 * sc, foot = cy + (isMaria() ? 208 - 93 : 204 - 90) * sc;
+  const sc = r / (isMaria() ? 27 : 22), id = 'mc' + (uid++);
+  const px = cx - (isMaria() ? 0 : 2) * sc, foot = cy + (isMaria() ? 204 - 99 : 204 - 90) * sc;
   let g = `<circle cx="${f(cx + 10)}" cy="${f(cy + 10)}" r="${r}" fill="${INK}"/>`;
   g += `<clipPath id="${id}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath><g clip-path="url(#${id})">`;
   g += `<rect x="${cx - r}" y="${cy - r}" width="${2 * r}" height="${2 * r}" fill="${C.sky}"/>`;
@@ -681,57 +681,24 @@ function channelPill(x, y, k) {
   return at(x, y, k, g);
 }
 
-/* ===================== MARÍA (la tendera del vídeo 10) EN LUGAR DE MARTA =====================
-   config.json "character": "maria" | "marta". María usa tendera(MARIA) de v10.js (suelo local y=208, cabeza en 190,80)
-   con cara a cámara que habla y las mismas poses de manos que Marta. */
-function mariaFace11(P, o, w) {
-  const e = o.expr || 'happy', m = clamp(o.talk || 0);
-  const L = (d, sw = 1.6, col = INK) => `<path d="${d}" stroke="${col}" stroke-width="${w(sw)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
-  const E1 = 196, E2 = 204, EY = 81, MX = 200.5, MY = 88.2;
-  let s = '';
-  const dot = (x, r = 1.95) => `<circle cx="${x}" cy="${EY}" r="${r}" fill="${INK}"/><circle cx="${f(x + 0.7)}" cy="${f(EY - 0.8)}" r="0.7" fill="#FFFFFF"/>`;
-  const arc = x => L(`M${f(x - 2.6)} ${f(EY + 0.6)} Q${x} ${f(EY - 2.2)} ${f(x + 2.6)} ${f(EY + 0.6)}`, 1.7);
-  if (o.blink && e !== 'wink' && e !== 'joy') s += L(`M193.4 81.2 Q196 83 198.6 81.2 M201.4 81.2 Q204 83 206.6 81.2`, 1.4);
-  else if (e === 'sparkle') [E1, E2].forEach(x => { s += `<circle cx="${x}" cy="${EY}" r="3" fill="${INK}"/><circle cx="${f(x + 1)}" cy="${f(EY - 1.1)}" r="1.15" fill="#FFFFFF"/><circle cx="${f(x - 0.9)}" cy="${f(EY + 1.1)}" r="0.5" fill="#FFFFFF"/>`; });
-  else if (e === 'surprise') [E1, E2].forEach(x => { s += `<circle cx="${x}" cy="80.6" r="3" fill="#FFFFFF" stroke="${INK}" stroke-width="${w(1.4)}"/><circle cx="${x}" cy="80.8" r="1.3" fill="${INK}"/>`; });
-  else if (e === 'wink') s += arc(E1) + dot(E2);
-  else if (e === 'joy') s += arc(E1) + arc(E2);
-  else s += dot(E1) + dot(E2);
-  // gafas rectangulares azul marino
-  s += `<rect x="192.2" y="77.6" width="7.6" height="6.6" rx="1.6" fill="#FFFFFF" fill-opacity="0.25" stroke="${K10.mFrame}" stroke-width="${w(1.5)}"/>
-    <rect x="200.6" y="77.6" width="7.6" height="6.6" rx="1.6" fill="#FFFFFF" fill-opacity="0.25" stroke="${K10.mFrame}" stroke-width="${w(1.5)}"/>
-    <path d="M199.8 80 H200.6 M192.2 79.6 L181 78.6" stroke="${K10.mFrame}" stroke-width="${w(1.5)}" stroke-linecap="round"/>`;
-  // cejas (color del pelo)
-  const B = d => L(d, 1.5, K10.mHair);
-  if (e === 'surprise' || e === 'sparkle') s += B('M192.8 72.6 Q195.6 69.8 198.6 71.8 M201.4 71.8 Q204.4 69.8 207.2 72.6');
-  else if (e === 'wink') s += B('M193 75 L198.4 74.2 M201.4 72 Q204.2 70 207 72.2');
-  else s += B('M193 73.4 Q195.8 71.8 198.6 73 M201.4 73 Q204.2 71.8 207 73.4');
-  s += `<circle cx="194" cy="88" r="3" fill="${C.pink}" opacity="0.6"/><circle cx="206.4" cy="87.4" r="2.3" fill="${C.pink}" opacity="0.6"/>`;
-  // boca
-  const grin = e === 'sparkle' || e === 'wink' || e === 'joy';
-  if (m > 0.05) {
-    const hw = grin ? 4.4 : 3.8, op = (grin ? 1.8 : 0.8) + 5.6 * m;
-    s += `<path d="M${f(MX - hw)} ${MY} Q${MX} ${f(MY + 0.9)} ${f(MX + hw)} ${MY} Q${MX} ${f(MY + op)} ${f(MX - hw)} ${MY}Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.6)}" stroke-linejoin="round"/>`;
-    if (m > 0.4) s += `<ellipse cx="${MX}" cy="${f(MY + op * 0.62)}" rx="${f(hw * 0.42)}" ry="${f(op * 0.16)}" fill="${C.pink}"/>`;
-  } else if (grin) s += `<path d="M195.8 87.6 Q200.4 95 205.2 87.4 Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.6)}" stroke-linejoin="round"/><path d="M196.8 88.1 H204.2 L203.4 89.3 H197.6Z" fill="#FFFFFF"/>`;
-  else if (e === 'surprise') s += `<ellipse cx="200.6" cy="90.4" rx="2.3" ry="3" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.4)}"/>`;
-  else s += L('M196 88.4 Q200.4 92.8 205 88.2', 2);
-  return s;
-}
-// pose de Marta {h, side, hand, …} -> brazo de la tendera {ik, side} + mano dibujada encima
-function mArm(A, dx, dy, front) {
-  if (!A) return undefined;
-  return { ik: [A.h[0] + dx, A.h[1] + dy], side: front ? 1 : -(A.side || 1), item: (w, x, y) => hand11(A.hand || 'fist', [x, y], w, Object.assign({ fill: C.skin }, A)) };
+/* ===================== MARÍA (src/maria.js) EN LUGAR DE MARTA =====================
+   config.json "character": "maria" | "marta". Las poses de Marta (manos en su sistema local) se trasladan a los
+   hombros de María (de frente: brazo derecho de la imagen = armF). */
+const MPOSE_D = [4.2, 13];
+function mPose(A, back) {
+  if (!A) return {};
+  if (A === POSE.restF || A === POSE.restB) return { h: back ? [171.6, 154.6] : [208.4, 154.6], side: back ? 1 : -1, hand: 'fist', hs: 1.1 };
+  const h = [A.h[0] + (back ? -MPOSE_D[0] : MPOSE_D[0]), A.h[1] + MPOSE_D[1]];
+  return Object.assign({}, A, { h, side: back ? 1 : -1 });
 }
 function maria11(px, foot, sc, o = {}) {
-  const F = mArm(o.armF || POSE.restF, 2.5, 2, true), B = mArm(o.armB || POSE.restB, -2.5, 2, false);
-  const opts = Object.assign({}, o, { faceFn: mariaFace11, armF: { ik: F.ik, side: F.side }, armB: { ik: B.ik, side: B.side }, itemF: F.item, itemB: B.item, pony: 0 });
-  return placeT(MARIA, px, foot, sc, opts);
+  const opts = Object.assign({}, o, { armF: mPose(o.armF || POSE.restF, false), armB: mPose(o.armB || POSE.restB, true), curl: (o.pony || 0) * 0.5 });
+  return placeMaria(px, foot, sc, opts);
 }
 const isMaria = () => CFG && CFG.character === 'maria';
 const hero11 = (px, foot, sc, o) => isMaria() ? maria11(px, foot, sc, o) : marta11(px, foot, sc, o);
-const heroPt = (px, foot, sc, lx, ly) => isMaria() ? [px + (lx + 2.5 - 190) * sc, foot + (ly + 2 - 208) * sc] : mPt(px, foot, sc, lx, ly);
+const heroPt = (px, foot, sc, lx, ly) => isMaria() ? [px + (lx + MPOSE_D[0] - 190) * sc, foot + (ly + MPOSE_D[1] - 204) * sc] : mPt(px, foot, sc, lx, ly);
 // encuadres [escala, x, pies] por plano: María más cerca de cámara (pies fuera del suelo dibujado, cabeza bajo la cabecera)
 const FR_MARTA = { A: [7, 400, 1370], C: [7, 540, 1370], s1: [5, 540, 1370], s6: [6, 255, 1370], s7: [6, 255, 1370], p2: [6, 540, 1370], num: [800, 610, 150, 860] };
-const FR_MARIA = { A: [8.3, 350, 1545], C: [8.3, 540, 1545], s1: [6, 540, 1560], s6: [7, 285, 1530], s7: [6.8, 285, 1525], p2: [7.6, 540, 1560], num: [830, 600, 140, 840] };
+const FR_MARIA = { A: [8.3, 350, 1545], C: [8.3, 540, 1545], s1: [6, 540, 1560], s6: [7, 325, 1530], s7: [6.8, 300, 1525], p2: [7.6, 540, 1560], num: [830, 600, 140, 840] };
 const FR = () => isMaria() ? FR_MARIA : FR_MARTA;
