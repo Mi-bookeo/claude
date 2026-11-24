@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
-"""Subtítulos del vídeo 14 «Ana y el cuentacuentos», sincronizados con las voces colocadas en config.json ('voices':
+"""Subtítulos del vídeo 15 «Se lanza Escaparate de Tudela», sincronizados con las voces colocadas en config.json ('voices':
    inicio, duración real medida con ffprobe y tramos con voz). Cada frase se parte en bloques cortos (4-7 palabras,
    máx. 2 líneas de 28 caracteres); el tiempo con voz de la frase se reparte entre sus bloques en proporción a las letras.
    Salida: subtitles.srt y tmp/subtitles.ass (página 1080x1920, Baloo 2 ExtraBold (Fontsize 112 en libass ≈ letra de 72 px), blanca con contorno negro de
-   4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba ana_cuentacuentos_subtitulado.mp4."""
+   4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba escaparate_lanzamiento_subtitulado.mp4."""
 import json, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 cfg = json.load(open(os.path.join(ROOT, 'config.json')))
 BLOCKS = {
-    'narradora_1': ['Ana tiene una librería en Tudela', 'y quiere organizar', 'un cuentacuentos para niños.'],
-    'ana_1': ['Me encantaría organizar', 'un cuentacuentos... pero...'],
-    'ana_2': ['El año pasado no vino nadie.'],
-    'narradora_2': ['Pero dicen los expertos', 'que la gente atrae a la gente.', 'Se llama prueba social.'],
-    'ana_3': ['Pues esta vez lo voy a anunciar', 'en Escaparate de Tudela.'],
-    'madre_1': ['¡Mira, cariño!', '¡Cuentacuentos en la librería!'],
-    'narradora_3': ['Y el evento les llega al móvil.'],
-    'vecino_1': ['¿Qué pasa en la librería?', '¡Cuántos niños!'],
-    'madre_2': ['Hay un cuentacuentos para niños.', '¡Ven!'],
-    'vecino_2': ['Venga, hijo, vamos a entrar.'],
-    'narradora_4': ['Los primeros atraen a los siguientes,', 'y la librería se llena.'],
-    'ana_4': ['¡Este año, la librería llena!'],
-    'ana_5': ['Los primeros atraen a los demás.'],
-    'ana_6': ['Si tienes un negocio,', 'comenta alta', 'y te enviamos el formulario.'],
+    'maria_1': ['¿Te estás perdiendo las ofertas', 'y novedades de Tudela?', 'Pues se acabó:', 'hoy empieza algo nuevo.'],
+    'maria_2': ['Se acaba de lanzar', 'Escaparate de Tudela:', 'los comercios de la ciudad', 'publican sus ofertas,', 'novedades y eventos,', 'y te llegan directamente al móvil.'],
+    'maria_3': ['Y ahora, lo mejor', 'para los comercios.'],
+    'mari_1': ['Para los comercios y servicios', 'es muy fácil publicar:', 'solo con tres toques.'],
+    'maria_4': ['Y los vecinos vemos todo', 'lo que tienen los comercios', 'en un solo lugar,', 'y además nos llega al WhatsApp', 'para no perdernos nada.'],
+    'maria_5': ['Y así apoyamos al comercio', 'de nuestra ciudad.'],
+    'maria_6': ['En la descripción tienes', 'el enlace al canal de WhatsApp,', 'o comenta canal', 'y te lo enviamos.'],
+    'mari_2': ['Y si tienes un comercio,', 'escríbenos y te informamos.'],
+    'maria_7': ['Entra en escaparatetudela.es...'],
+    'mari_3': ['...y empieza a beneficiarte.'],
 }
 MAXC = 28
 def wrap(s):
@@ -81,7 +77,7 @@ with open(ass, 'w') as fh:
     for q in subs: fh.write(f"Dialogue: 0,{tass(q['start'])},{tass(q['end'])},Sub,,0,0,0,,{'\\N'.join(wrap(q['text']))}\n")
 for q in subs: print(f"{q['start']:6.2f}-{q['end']:6.2f}  [{q['who']}] {' / '.join(wrap(q['text']))}")
 if '--burn' in sys.argv:
-    src = os.path.join(ROOT, 'ana_cuentacuentos_con_audio.mp4'); out = os.path.join(ROOT, 'ana_cuentacuentos_subtitulado.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
+    src = os.path.join(ROOT, 'escaparate_lanzamiento_con_audio.mp4'); out = os.path.join(ROOT, 'escaparate_lanzamiento_subtitulado.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
     vf = f"subtitles=filename={ass}:fontsdir={os.path.join(ROOT, 'fonts')}:original_size=1080x1920"
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-vf', vf, '-c:v', 'libx264', '-crf', '18', '-preset', 'medium', '-pix_fmt', 'yuv420p',
                     '-r', str(FPS), '-c:a', 'copy', '-movflags', '+faststart', tmp], check=True)
