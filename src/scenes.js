@@ -70,7 +70,7 @@ S[2] = (t, T, sc) => {
   const head = t < c.back ? lerp(0, -7, lc) : lerp(-7, 0, lb);
   w += shadowEll(820, 1504, 120);
   w += placeSara(820, 1500, 5.0, Object.assign(sBase(T, 5.0, 1.1), {
-    expr: t > c.sigh ? 'worried' : (t > c.lookChairs ? 'worried' : 'think'), look, head,
+    expr: t > c.sigh ? 'worried' : (t > c.lookChairs ? 'worried' : 'think'), look, head, talk: talkA(t, talkOf(sc, 'sara'), 10),
     arms: 'tablet', tabRot: -8 + 2 * Math.sin(T * 1.7), tabScreen: miniAgenda(on, 0)
   }));
   // flechita de mirada hacia los sillones
@@ -95,7 +95,7 @@ S[3] = (t, T, sc) => {
     : (t < c.decide + 0.3 ? { h: lerp2([196, 100], [221, 98], easeOut(seg(t, c.decide, c.decide + 0.3))), side: 1, hand: 'fist', hs: 1.4 }
       : { h: [221, 98 - 3 * Math.max(0, damp(t - c.decide - 0.3, 12, 5))], side: 1, hand: 'thumb', hs: 1.5 });
   w += placeSara(SX, py, SC, Object.assign(sBase(T, SC, 0.6), {
-    expr: dec ? (t < c.decide + 0.5 ? 'joy' : 'determined') : 'think', look: dec ? [0, 0] : [0.9, -1.2],
+    expr: dec ? (t < c.decide + 0.5 ? 'joy' : 'determined') : 'think', talk: talkA(t, talkOf(sc, 'sara'), 10), look: dec ? [0, 0] : [0.9, -1.2],
     head: dec ? 2 * Math.sin(T * 2) + nod(t, c.decide + 0.4) : 5 + 2 * Math.sin(t * 1.3),
     armB: SP.restB, armF
   }));
@@ -229,7 +229,7 @@ S[6] = (t, T, sc) => {
     inside: (dx, dy, dw, dh) => {
       if (op <= 0.02) return '';
       const sx = dx + dw * 0.56, s1 = 3.55;
-      let o = { expr: t > c.thumb ? 'proud' : 'smile', look: t > c.look ? [-1.4, 0.5] : [0, 0], head: t > c.look ? -4 : 0 };
+      let o = { expr: t > c.thumb ? 'proud' : 'smile', talk: talkA(t, talkOf(sc, 'sara'), 10), look: t > c.look ? [-1.4, 0.5] : [0, 0], head: t > c.look ? -4 : 0 };
       if (t > c.thumb) o.armF = { h: [221, 98 - 3 * Math.max(0, damp(t - c.thumb, 12, 5))], side: 1, hand: 'thumb', hs: 1.5 };
       else if (t > c.wave) o.armF = { h: [224, 80], side: 1, hand: 'open', hs: 1.45, hrot: 18 * Math.sin((t - c.wave) * 9) };
       else o.armF = SP.restF;
@@ -246,7 +246,7 @@ S[6] = (t, T, sc) => {
   if (t > c.show) armF = { h: lerp2([212, 140], [226, 102], easeOut(seg(t, c.show, c.show + 0.3))), side: 1, hand: 'phone', hs: 1.7, rot: 14 };
   w += shadowEll(cx, cf + 4, 100);
   w += placeClienta(cx, cf, cs, Object.assign(sBase(T, cs, 1.7), {
-    expr: t > c.show ? 'joy' : 'smile', walk: walking ? t * 9.4 : undefined, bob: (walking ? -1.5 * Math.abs(Math.sin(t * 9.4)) : 0) + breathA(T, cs),
+    expr: t > c.show ? 'joy' : 'smile', talk: talkA(t, talkOf(sc, 'clienta'), 10), walk: walking ? t * 9.4 : undefined, bob: (walking ? -1.5 * Math.abs(Math.sin(t * 9.4)) : 0) + breathA(T, cs),
     look: t > c.open ? [1.2, 0] : [0.6, 0], head: walking ? 2 * Math.sin(t * 9.4) : (t > c.open ? 4 : 0), sway: walking ? 4 * Math.sin(t * 9.4) : 2 * Math.sin(T * 2),
     armB: { h: [168 - 4 * Math.sin(t * 9.4) * (walking ? 1 : 0), 140], side: 1, hand: 'fist', hs: 1.2 }, armF
   }));

@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""Vídeo 15 «Se lanza Escaparate de Tudela»: corta las dos grabaciones (ElevenLabs) en un archivo por frase, en las
-   pausas entre frases (medidas por energía en ventanas de 20 ms). Salida: audio/voces/<voz>_<n>.wav (48 kHz, mono).
-     original_maria.mp3 (Sofia) -> maria_1…7
-     original_mari.mp3  (Lydia) -> mari_1…3   (Mari Carmen)
+"""Vídeo 16 «El hueco de las cinco»: corta las grabaciones (ElevenLabs) en un archivo por frase, en las pausas entre
+   frases (medidas con silencedetect). Salida: audio/voces/<voz>_<n>.wav (48 kHz, mono).
+     original_narradora.mp3 (Javier Rojas) -> narradora_1…5
+     original_sara.mp3      (Cristina, Premium) -> sara_1…6
+     original_clienta.mp3   (Cristina, Empathetic) -> clienta_1
    Después: python3 audio/colocar_voces.py"""
 import os, subprocess
 import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 V = lambda *p: os.path.join(ROOT, 'audio', 'voces', *p)
 CUTS = {  # segundos donde se corta (dentro de las pausas entre frases)
-    'maria': [5.74, 14.38, 16.98, 24.04, 26.90, 31.83],
-    'mari': [4.90, 8.22],
+    'narradora': [3.50, 8.13, 10.62, 13.43],
+    'sara': [3.27, 8.09, 9.93, 13.58, 16.21],
+    'clienta': [],
 }
 def dur(p): return float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', p], capture_output=True, text=True, check=True).stdout)
 def trim(src, a, b):

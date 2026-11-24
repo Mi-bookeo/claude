@@ -1,5 +1,5 @@
 {
-  "title": "Se lanza Escaparate de Tudela (TikTok)",
+  "title": "El hueco de las cinco (TikTok)",
   "output": "tmp/tiktok_mudo.mp4",
   "width": 1080,
   "height": 1920,
@@ -10,412 +10,521 @@
     "preset": "medium",
     "pix_fmt": "yuv420p"
   },
-  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'shots' = planos de la escena [inicio, fin] en tiempo local de la escena (cortes secos). 'talk' = tramos en los que la boca de cada personaje abre y cierra (tiempo local de la escena). 'cues' = momentos de aparición de textos y acciones (tiempo local de la escena). 'still' = instante del PNG de stills/. Si cambias una duración, revisa los shots, talk y cues de esa escena.",
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'shots' = planos [inicio, fin] en tiempo local de la escena (cortes secos). 'cues' = momentos de textos y acciones (tiempo local del plano). 'talk' = tramos en los que la boca de Sara se mueve. 'still' = instante del PNG de stills/. 'ejemplo' = datos editables del ejemplo (hora del hueco, hora del reloj, citas de la agenda). 'textos' = textos en pantalla (si cambias la hora del hueco, cambia también los textos que dicen «a las 5»).",
+  "ejemplo": {
+    "hueco": 17,
+    "reloj": 15,
+    "inicio": 9,
+    "fin": 20,
+    "citas": {
+      "9": "Eva",
+      "10": "Ana",
+      "11": "Lola",
+      "12": "Inés",
+      "13": "Pili",
+      "14": "Sofía",
+      "15": "Noa",
+      "16": "Mar",
+      "18": "Bea",
+      "19": "Luz",
+      "20": "Alba"
+    },
+    "nombreHueco": "Clienta"
+  },
+  "textos": {
+    "s1": [
+      "Una hora vacía",
+      "no se recupera"
+    ],
+    "s2": [
+      "Hoy tiene un hueco",
+      "a las 5"
+    ],
+    "s3a": "¿Descuento o regalo?",
+    "s3b": [
+      "Regalo: cuesta poco,",
+      "se nota mucho"
+    ],
+    "s4": [
+      "Oferta flash",
+      "en Escaparate"
+    ],
+    "chatClienta": "Hola, he visto tu oferta en Escaparate de Tudela. ¿Me reservas esa hora?",
+    "chatSara": "¡Reservado! Te espero a las 17:00.",
+    "s5": "Reservado",
+    "s6": "A las 5, puntual",
+    "s7": "Hueco ocupado",
+    "s8": [
+      "Las horas vacías,",
+      "con partido"
+    ],
+    "s9a": "¿Tienes un comercio",
+    "s9b": "o un servicio?",
+    "s9c": "Formulario en la descripción",
+    "s9d": "Comenta ALTA y te lo enviamos",
+    "s9e": "escaparatetudela.es"
+  },
   "scenes": [
     {
       "id": 1,
-      "name": "Gancho: cartel.png a pantalla completa (zoom con rebote), dolly out hasta María que lo sostiene sorprendida; «Se acabó»; baja el cartel y sonríe",
-      "duration": 6.2,
-      "still": 3.83,
+      "name": "Gancho: agenda a pantalla completa, el hueco de las 17:00 late en rojo; «Una hora vacía no se recupera»; Sara entra con las manos en la cabeza",
+      "duration": 5.0,
+      "still": 3.2,
+      "cues": {
+        "t1": 0.2,
+        "t2": 0.45,
+        "tag": 0.85,
+        "saraIn": 1.5
+      },
       "shots": {
         "A": [
           0,
-          6.2
+          5.0
         ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            2.7
-          ],
-          [
-            3.02,
-            3.9
-          ],
-          [
-            4.2,
-            5.74
-          ]
-        ]
-      },
-      "cues": {
-        "dollyStart": 1.8,
-        "dollyEnd": 2.95,
-        "title": 3.23,
-        "lower": 4.23,
-        "smile": 4.68
       },
       "voices": [
         {
-          "file": "audio/voces/maria_1.wav",
-          "who": "maria",
+          "file": "audio/voces/narradora_1.wav",
+          "who": "narradora",
           "start": 0.15,
-          "duration": 5.69,
-          "text": "¿Te estás perdiendo las ofertas y novedades de Tudela? Pues se acabó: hoy empieza algo nuevo.",
+          "duration": 3.23,
+          "text": "Una hora vacía en la agenda no se recupera nunca.",
           "segments": [
             [
               0.19,
-              2.65
-            ],
-            [
-              3.05,
-              3.85
-            ],
-            [
-              4.23,
-              5.69
+              3.27
             ]
           ]
         }
-      ]
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.16,
+            3.32
+          ]
+        ]
+      }
     },
     {
       "id": 2,
-      "name": "María en plano medio; tres tarjetas (Oferta, Novedad, Evento) vuelan al móvil con ondas; «Acaba de nacer Escaparate de Tudela», «Ofertas, novedades y eventos de tu ciudad»",
-      "duration": 10.0,
-      "still": 6.2,
+      "name": "Peluquería casi vacía; reloj y recuadro «15:00»; Sara con la tableta mira la agenda y los sillones vacíos; «Hoy tiene un hueco a las 5»",
+      "duration": 7.967,
+      "still": 3.6,
+      "cues": {
+        "clock": 0.35,
+        "t1": 0.9,
+        "t2": 1.15,
+        "lookChairs": 4.53,
+        "back": 7.02,
+        "sigh": 7.67
+      },
       "shots": {
         "A": [
           0,
-          10.0
+          7.967
         ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.18,
-            2.7
-          ],
-          [
-            3.04,
-            8.5
-          ]
-        ]
-      },
-      "cues": {
-        "title": 0.25,
-        "title2": 0.5,
-        "sub": 1.0,
-        "launch": [
-          4.65,
-          5.13,
-          5.78
-        ],
-        "flight": 0.75,
-        "point": 6.72,
-        "thumb": 7.96
       },
       "voices": [
         {
-          "file": "audio/voces/maria_2.wav",
-          "who": "maria",
+          "file": "audio/voces/narradora_2.wav",
+          "who": "narradora",
           "start": 0.15,
-          "duration": 8.43,
-          "text": "Se acaba de lanzar Escaparate de Tudela: los comercios de la ciudad publican sus ofertas, novedades y eventos, y te llegan directamente al móvil.",
+          "duration": 4.23,
+          "text": "Sara tiene una peluquería en Tudela y hoy se le ha quedado un hueco a las cinco.",
           "segments": [
             [
               0.21,
-              2.65
+              4.27
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/sara_1.wav",
+          "who": "sara",
+          "start": 4.63,
+          "duration": 2.99,
+          "text": "Si nadie lo ocupa, esa hora se pierde.",
+          "segments": [
+            [
+              4.67,
+              4.87
             ],
             [
-              3.07,
-              8.45
+              5.23,
+              7.51
             ]
           ]
         }
-      ]
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.18,
+            4.32
+          ]
+        ],
+        "sara": [
+          [
+            4.64,
+            4.92
+          ],
+          [
+            5.2,
+            7.56
+          ]
+        ]
+      }
     },
     {
       "id": 3,
-      "name": "Mini gancho: María señala hacia un lado, cómplice; «Y ahora, lo mejor para los comercios»",
-      "duration": 4.0,
-      "still": 1.6,
+      "name": "Nube de pensamiento con la balanza (% frente a regalo con espuma); duda, se rasca la barbilla; se inclina al regalo; «¿Descuento o regalo?» -> «Regalo: cuesta poco, se nota mucho»",
+      "duration": 6.0,
+      "still": 4.6,
+      "cues": {
+        "cloud": 0.25,
+        "q": 0.15,
+        "tilt": 1.7,
+        "decide": 2.05,
+        "a1": 2.91,
+        "a2": 3.68
+      },
       "shots": {
         "A": [
           0,
-          4.0
+          6.0
         ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            2.38
-          ]
-        ]
-      },
-      "cues": {
-        "point": 0.2,
-        "t1": 0.3,
-        "t2": 0.55,
-        "t3": 0.85
       },
       "voices": [
         {
-          "file": "audio/voces/maria_3.wav",
-          "who": "maria",
+          "file": "audio/voces/sara_2.wav",
+          "who": "sara",
           "start": 0.15,
-          "duration": 2.29,
-          "text": "Y ahora, lo mejor para los comercios.",
+          "duration": 4.51,
+          "text": "¿Descuento o regalo? Mejor un regalo: cuesta poco y se nota mucho.",
+          "segments": [
+            [
+              0.21,
+              1.45
+            ],
+            [
+              1.85,
+              2.67
+            ],
+            [
+              2.97,
+              4.55
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "sara": [
+          [
+            0.18,
+            1.5
+          ],
+          [
+            1.82,
+            2.72
+          ],
+          [
+            2.94,
+            4.6
+          ]
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "Primer plano del móvil: tarjeta de oferta flash «Hueco hoy 17:00 · Corte con lavado de regalo»; pulsa Publicar -> Publicada; «Oferta flash en Escaparate»",
+      "duration": 6.0,
+      "still": 3.4,
+      "cues": {
+        "phone": 0,
+        "t1": 0.3,
+        "t2": 0.55,
+        "seal": 0.75,
+        "fIn": 1.5,
+        "press": 2.25,
+        "done": 2.45,
+        "fOut": 3.1
+      },
+      "shots": {
+        "A": [
+          0,
+          6.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_3.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 2.17,
+          "text": "Y lo publica en Escaparate de Tudela.",
+          "segments": [
+            [
+              0.19,
+              2.21
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.16,
+            2.26
+          ]
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "A) el móvil vibra y Sara lo coge sorprendida; B) chat con la clienta y respuesta «¡Reservado! Te espero a las 17:00.» con dos ticks; C) puñetazo al aire, «Reservado»",
+      "duration": 6.0,
+      "still": 4.1,
+      "shots": {
+        "A": [
+          0,
+          1.6
+        ],
+        "B": [
+          1.6,
+          4.6
+        ],
+        "C": [
+          4.6,
+          6.0
+        ]
+      },
+      "cues": {
+        "buzz": 0.15,
+        "grab": 0.7,
+        "lift": 1.0,
+        "msg1": 0.35,
+        "typeA": 1.05,
+        "typeB": 2.15,
+        "send": 2.3,
+        "ticks": 2.65,
+        "title": 0.1
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_4.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 2.53,
+          "text": "En pocos minutos, alguien se lo reserva.",
+          "segments": [
+            [
+              0.21,
+              2.57
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.18,
+            2.62
+          ]
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "Exterior, tarde cálida: recuadro «17:00»; la clienta llega a la fachada morada, suena la campanilla, Sara abre y la recibe; la clienta enseña la tarjeta; «A las 5, puntual»",
+      "duration": 6.0,
+      "still": 4.8,
+      "cues": {
+        "clock": 0.2,
+        "title": 0.55,
+        "arrive": 1.96,
+        "ring": 2.01,
+        "open": 2.26,
+        "wave": 2.81,
+        "show": 3.4,
+        "look": 3.9,
+        "thumb": 4.6
+      },
+      "shots": {
+        "A": [
+          0,
+          6.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/clienta_1.wav",
+          "who": "clienta",
+          "start": 0.15,
+          "duration": 2.31,
+          "text": "Hola, vengo por la oferta de las cinco.",
           "segments": [
             [
               0.19,
               2.33
             ]
           ]
+        },
+        {
+          "file": "audio/voces/sara_3.wav",
+          "who": "sara",
+          "start": 2.71,
+          "duration": 1.63,
+          "text": "¡Pasa, te estaba esperando!",
+          "segments": [
+            [
+              2.77,
+              4.21
+            ]
+          ]
         }
-      ]
+      ],
+      "talk": {
+        "clienta": [
+          [
+            0.16,
+            2.38
+          ]
+        ],
+        "sara": [
+          [
+            2.74,
+            4.26
+          ]
+        ]
+      }
     },
     {
-      "id": 4,
-      "name": "Tienda de Mari Carmen: habla tras el mostrador «Publicar es muy fácil»; móvil de los 3 toques (foto, texto, publicar) con 1-2-3; tarjeta publicada con tic verde; Mari Carmen sonríe",
-      "duration": 13.1,
-      "still": 10.5,
+      "id": 7,
+      "name": "Interior: la clienta en el sillón con espuma; Sara la lava y luego la peina y corta con tijeras; agenda en la esquina con el hueco ocupado y tic verde; «Hueco ocupado»",
+      "duration": 5.0,
+      "still": 3.6,
+      "cues": {
+        "title": 0.35,
+        "tick": 0.7,
+        "rinse": 2.3,
+        "cut": 2.7
+      },
       "shots": {
         "A": [
           0,
-          5.3
-        ],
-        "B": [
-          5.3,
-          11.7
-        ],
-        "C": [
-          11.7,
-          13.1
+          5.0
         ]
       },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_5.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 3.65,
+          "text": "Un hueco que se iba a perder, convertido en una clienta nueva.",
+          "segments": [
+            [
+              0.19,
+              3.67
+            ]
+          ]
+        }
+      ],
       "talk": {
-        "maricarmen": [
+        "narradora": [
           [
-            0.18,
-            3.2
-          ],
+            0.16,
+            3.72
+          ]
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "name": "Primer plano: Sara se acerca a cámara hasta cabeza y hombros, ventana con cielo detrás; cómplice; «Las horas vacías, con partido»",
+      "duration": 5.0,
+      "still": 3.3,
+      "talk": {
+        "sara": [
           [
-            3.48,
-            4.9
+            0.16,
+            3.58
           ]
         ]
       },
       "cues": {
-        "title": 0.35,
-        "title2": 0.6,
-        "taps": [
-          0.9,
-          2.3,
-          4.0
-        ],
-        "typeDur": 1.1,
-        "card": 4.45
+        "t1": 1.45,
+        "t2": 1.75,
+        "wink": 3.75
+      },
+      "shots": {
+        "A": [
+          0,
+          5.0
+        ]
       },
       "voices": [
         {
-          "file": "audio/voces/mari_1.wav",
-          "who": "maricarmen",
+          "file": "audio/voces/sara_4.wav",
+          "who": "sara",
           "start": 0.15,
-          "duration": 4.81,
-          "text": "Para los comercios y servicios es muy fácil publicar: solo con tres toques.",
+          "duration": 3.51,
+          "text": "Con Escaparate de Tudela, esas horas vacías ya les saco partido.",
+          "segments": [
+            [
+              0.19,
+              3.53
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «Comenta ALTA y te lo enviamos», «escaparatetudela.es»; tarjeta final roja con el logo [TikTok: sin «comenta»]",
+      "duration": 6.6,
+      "still": 6.5,
+      "shots": {
+        "A": [
+          0,
+          4.6
+        ],
+        "FIN": [
+          4.6,
+          6.6
+        ]
+      },
+      "talk": {
+        "sara": [
+          [
+            0.18,
+            2.42
+          ]
+        ]
+      },
+      "cues": {
+        "q1": 0.3,
+        "q2": 0.55,
+        "strip": 1.0,
+        "com": 5.12,
+        "url": 1.9,
+        "wave": 0.2,
+        "point": 0.45,
+        "thumb": 2.6,
+        "wink": 3.2
+      },
+      "voices": [
+        {
+          "file": "audio/voces/sara_5.wav",
+          "who": "sara",
+          "start": 0.15,
+          "duration": 2.35,
+          "text": "En la descripción tienes el enlace al formulario.",
           "segments": [
             [
               0.21,
-              3.15
-            ],
-            [
-              3.51,
-              4.85
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "María y el móvil con la web (carrusel de comercios) «Todo en un solo lugar»; el chat del canal recibe ofertas «Y te llega al WhatsApp»; calle con corazón gigante «Apoyas al comercio de tu ciudad»",
-      "duration": 11.0,
-      "still": 6.37,
-      "shots": {
-        "A": [
-          0,
-          4.067
-        ],
-        "B": [
-          4.067,
-          7.6
-        ],
-        "C": [
-          7.6,
-          11.0
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            3.86
-          ],
-          [
-            4.16,
-            6.84
-          ],
-          [
-            7.76,
-            10.18
-          ]
-        ]
-      },
-      "cues": {
-        "titleA": 0.25,
-        "titleB": 0.3,
-        "msgs": [
-          0.5,
-          1.3,
-          2.1
-        ],
-        "titleC": 0.3,
-        "heart": 0.15
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_4.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 6.77,
-          "text": "Y los vecinos vemos todo lo que tienen los comercios en un solo lugar, y además nos llega al WhatsApp para no perdernos nada.",
-          "segments": [
-            [
-              0.19,
-              3.81
-            ],
-            [
-              4.19,
-              6.79
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/maria_5.wav",
-          "who": "maria",
-          "start": 7.75,
-          "duration": 2.51,
-          "text": "Y así apoyamos al comercio de nuestra ciudad.",
-          "segments": [
-            [
-              7.79,
-              10.13
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "name": "Cierre: A) María «Enlace al canal de WhatsApp en la descripción» (clientes); B) Mari Carmen «¿Tienes un comercio?» (comercios); C) las dos saludan «Entra en escaparatetudela.es»; tarjeta final roja [TikTok: sin «comenta»]",
-      "duration": 14.067,
-      "still": 10.8,
-      "shots": {
-        "A": [
-          0,
-          3.133
-        ],
-        "B": [
-          3.133,
-          7.133
-        ],
-        "C": [
-          7.133,
-          12.067
-        ],
-        "FIN": [
-          12.067,
-          14.067
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            2.66
-          ],
-          [
-            7.31,
-            9.69
-          ]
-        ],
-        "maricarmen": [
-          [
-            3.29,
-            6.35
-          ],
-          [
-            10.03,
-            11.65
-          ]
-        ]
-      },
-      "cues": {
-        "A_link": 0.15,
-        "A_strip": 99.0,
-        "A_who": 1.45,
-        "B_strip": 0.15,
-        "B_sub": 1.62,
-        "B_form": 3.1,
-        "B_who": 3.6,
-        "C_t1": 0.15,
-        "C_t2": 0.88,
-        "C_sub": 2.87,
-        "A_thumb": 2.11
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_6_tiktok.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 2.54,
-          "text": "En la descripción tienes el enlace al canal de WhatsApp.",
-          "segments": [
-            [
-              0.19,
-              2.61
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/mari_2.wav",
-          "who": "maricarmen",
-          "start": 3.283,
-          "duration": 3.15,
-          "text": "Y si tienes un comercio, escríbenos y te informamos.",
-          "segments": [
-            [
-              3.32,
-              6.3
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/maria_7.wav",
-          "who": "maria",
-          "start": 7.283,
-          "duration": 2.47,
-          "text": "Entra en escaparatetudela.es...",
-          "segments": [
-            [
-              7.34,
-              9.64
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/mari_3.wav",
-          "who": "maricarmen",
-          "start": 10.003,
-          "duration": 1.71,
-          "text": "...y empieza a beneficiarte.",
-          "segments": [
-            [
-              10.06,
-              11.6
+              2.37
             ]
           ]
         }
@@ -428,7 +537,7 @@
   "musicWav": "audio/musica_tiktok.wav",
   "mixWav": "mezcla_tiktok.wav",
   "srt": "subtitles_tiktok.srt",
-  "subtitledOut": "escaparate_lanzamiento_tiktok.mp4",
+  "subtitledOut": "hueco_de_las_cinco_tiktok.mp4",
   "burnCrf": 23,
   "burnPreset": "slow"
 }

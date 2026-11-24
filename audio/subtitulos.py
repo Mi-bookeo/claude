@@ -3,22 +3,23 @@
    inicio, duración real medida con ffprobe y tramos con voz). Cada frase se parte en bloques cortos (4-7 palabras,
    máx. 2 líneas de 28 caracteres); el tiempo con voz de la frase se reparte entre sus bloques en proporción a las letras.
    Salida: subtitles.srt y tmp/subtitles.ass (página 1080x1920, Baloo 2 ExtraBold (Fontsize 112 en libass ≈ letra de 72 px), blanca con contorno negro de
-   4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba escaparate_lanzamiento_subtitulado.mp4."""
+   4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba <output>_subtitulado.mp4."""
 import json, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 cfg = json.load(open(os.path.join(ROOT, os.environ.get('CONFIG', 'config.json'))))
 BLOCKS = {
-    'maria_1': ['¿Te estás perdiendo las ofertas', 'y novedades de Tudela?', 'Pues se acabó:', 'hoy empieza algo nuevo.'],
-    'maria_2': ['Se acaba de lanzar', 'Escaparate de Tudela:', 'los comercios de la ciudad', 'publican sus ofertas,', 'novedades y eventos,', 'y te llegan directamente al móvil.'],
-    'maria_3': ['Y ahora, lo mejor', 'para los comercios.'],
-    'mari_1': ['Para los comercios y servicios', 'es muy fácil publicar:', 'solo con tres toques.'],
-    'maria_4': ['Y los vecinos vemos todo', 'lo que tienen los comercios', 'en un solo lugar,', 'y además nos llega al WhatsApp', 'para no perdernos nada.'],
-    'maria_5': ['Y así apoyamos al comercio', 'de nuestra ciudad.'],
-    'maria_6': ['En la descripción tienes', 'el enlace al canal de WhatsApp,', 'o comenta canal', 'y te lo enviamos.'],
-    'mari_2': ['Y si tienes un comercio,', 'escríbenos y te informamos.'],
-    'maria_7': ['Entra en escaparatetudela.es...'],
-    'mari_3': ['...y empieza a beneficiarte.'],
-    'maria_6_tiktok': ['En la descripción tienes', 'el enlace al canal de WhatsApp.'],  # versión TikTok (sin «o comenta canal…»)
+    'narradora_1': ['Una hora vacía en la agenda', 'no se recupera nunca.'],
+    'narradora_2': ['Sara tiene una peluquería en Tudela', 'y hoy se le ha quedado', 'un hueco a las cinco.'],
+    'narradora_3': ['Y lo publica en Escaparate de Tudela.'],
+    'narradora_4': ['En pocos minutos,', 'alguien se lo reserva.'],
+    'narradora_5': ['Un hueco que se iba a perder,', 'convertido en una clienta nueva.'],
+    'sara_1': ['Si nadie lo ocupa,', 'esa hora se pierde.'],
+    'sara_2': ['¿Descuento o regalo?', 'Mejor un regalo:', 'cuesta poco y se nota mucho.'],
+    'sara_3': ['¡Pasa, te estaba esperando!'],
+    'sara_4': ['Con Escaparate de Tudela,', 'esas horas vacías', 'ya les saco partido.'],
+    'sara_5': ['En la descripción tienes', 'el enlace al formulario.'],
+    'sara_6': ['Y si tienes un comercio', 'o un servicio, comenta alta', 'y te lo enviamos.'],
+    'clienta_1': ['Hola, vengo por la oferta', 'de las cinco.'],
 }
 MAXC = 28
 def wrap(s):

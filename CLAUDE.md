@@ -31,3 +31,6 @@ con el mismo vídeo; el usuario ya no recorta nada:
 - María: `src/maria.js` (diadema negra y rizos; referencia en la rama `video-11-marta-cuatro-motivos`).
 - Mari Carmen: `src/maricarmen.js` (de frente y con cuello desde el vídeo 15; mismos rizos castaños, gafas rojas,
   delantal rojo, pantalón azul marino). Sustituye a la versión de perfil del vídeo 06; misma interfaz `placeMC()`.
+- Sara (peluquera, vídeo 16): `src/sara.js` (`placeSara()`, suelo y=208, de frente; pelo rapado a un lado con mechón
+  morado, aros dorados, camiseta blanca, delantal negro con tijeras y peine). En el mismo archivo, la clienta
+  (`placeClienta()`, melena ondulada, chaqueta verde, bolso) y el sillón de peluquería.

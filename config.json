@@ -16,21 +16,48 @@
     "reloj": 15,
     "inicio": 9,
     "fin": 20,
-    "citas": { "9": "Eva", "10": "Ana", "11": "Lola", "12": "Inés", "13": "Pili", "14": "Sofía", "15": "Noa", "16": "Mar", "18": "Bea", "19": "Luz", "20": "Alba" },
+    "citas": {
+      "9": "Eva",
+      "10": "Ana",
+      "11": "Lola",
+      "12": "Inés",
+      "13": "Pili",
+      "14": "Sofía",
+      "15": "Noa",
+      "16": "Mar",
+      "18": "Bea",
+      "19": "Luz",
+      "20": "Alba"
+    },
     "nombreHueco": "Clienta"
   },
   "textos": {
-    "s1": ["Una hora vacía", "no se recupera"],
-    "s2": ["Hoy tiene un hueco", "a las 5"],
+    "s1": [
+      "Una hora vacía",
+      "no se recupera"
+    ],
+    "s2": [
+      "Hoy tiene un hueco",
+      "a las 5"
+    ],
     "s3a": "¿Descuento o regalo?",
-    "s3b": ["Regalo: cuesta poco,", "se nota mucho"],
-    "s4": ["Oferta flash", "en Escaparate"],
+    "s3b": [
+      "Regalo: cuesta poco,",
+      "se nota mucho"
+    ],
+    "s4": [
+      "Oferta flash",
+      "en Escaparate"
+    ],
     "chatClienta": "Hola, he visto tu oferta en Escaparate de Tudela. ¿Me reservas esa hora?",
     "chatSara": "¡Reservado! Te espero a las 17:00.",
     "s5": "Reservado",
     "s6": "A las 5, puntual",
     "s7": "Hueco ocupado",
-    "s8": ["Las horas vacías,", "con partido"],
+    "s8": [
+      "Las horas vacías,",
+      "con partido"
+    ],
     "s9a": "¿Tienes un comercio",
     "s9b": "o un servicio?",
     "s9c": "Formulario en la descripción",
@@ -38,27 +65,495 @@
     "s9e": "escaparatetudela.es"
   },
   "scenes": [
-    { "id": 1, "name": "Gancho: agenda a pantalla completa, el hueco de las 17:00 late en rojo; «Una hora vacía no se recupera»; Sara entra con las manos en la cabeza", "duration": 5.0, "still": 3.2,
-      "cues": { "t1": 0.2, "t2": 0.45, "tag": 0.85, "saraIn": 1.5 } },
-    { "id": 2, "name": "Peluquería casi vacía; reloj y recuadro «15:00»; Sara con la tableta mira la agenda y los sillones vacíos; «Hoy tiene un hueco a las 5»", "duration": 7.0, "still": 3.6,
-      "cues": { "clock": 0.35, "t1": 0.9, "t2": 1.15, "lookChairs": 2.6, "back": 4.9, "sigh": 5.4 } },
-    { "id": 3, "name": "Nube de pensamiento con la balanza (% frente a regalo con espuma); duda, se rasca la barbilla; se inclina al regalo; «¿Descuento o regalo?» -> «Regalo: cuesta poco, se nota mucho»", "duration": 6.0, "still": 4.6,
-      "cues": { "cloud": 0.25, "q": 0.45, "tilt": 3.0, "decide": 3.45, "a1": 3.55, "a2": 3.8 } },
-    { "id": 4, "name": "Primer plano del móvil: tarjeta de oferta flash «Hueco hoy 17:00 · Corte con lavado de regalo»; pulsa Publicar -> Publicada; «Oferta flash en Escaparate»", "duration": 6.0, "still": 3.4,
-      "cues": { "phone": 0, "t1": 0.3, "t2": 0.55, "seal": 0.75, "fIn": 1.5, "press": 2.25, "done": 2.45, "fOut": 3.1 } },
-    { "id": 5, "name": "A) el móvil vibra y Sara lo coge sorprendida; B) chat con la clienta y respuesta «¡Reservado! Te espero a las 17:00.» con dos ticks; C) puñetazo al aire, «Reservado»", "duration": 6.0, "still": 4.1,
-      "shots": { "A": [0, 1.6], "B": [1.6, 4.6], "C": [4.6, 6.0] },
-      "cues": { "buzz": 0.15, "grab": 0.7, "lift": 1.0, "msg1": 0.35, "typeA": 1.05, "typeB": 2.15, "send": 2.3, "ticks": 2.65, "title": 0.1 } },
-    { "id": 6, "name": "Exterior, tarde cálida: recuadro «17:00»; la clienta llega a la fachada morada, suena la campanilla, Sara abre y la recibe; la clienta enseña la tarjeta; «A las 5, puntual»", "duration": 6.0, "still": 4.8,
-      "cues": { "clock": 0.2, "title": 0.55, "arrive": 2.0, "ring": 2.05, "open": 2.3, "wave": 2.75, "show": 3.4, "look": 3.9, "thumb": 4.6 } },
-    { "id": 7, "name": "Interior: la clienta en el sillón con espuma; Sara la lava y luego la peina y corta con tijeras; agenda en la esquina con el hueco ocupado y tic verde; «Hueco ocupado»", "duration": 5.0, "still": 3.6,
-      "cues": { "title": 0.35, "tick": 0.7, "rinse": 2.3, "cut": 2.7 } },
-    { "id": 8, "name": "Primer plano: Sara se acerca a cámara hasta cabeza y hombros, ventana con cielo detrás; cómplice; «Las horas vacías, con partido»", "duration": 5.0, "still": 3.3,
-      "talk": { "sara": [[1.5, 3.1], [3.8, 4.7]] },
-      "cues": { "t1": 1.45, "t2": 1.75, "wink": 3.2 } },
-    { "id": 9, "name": "Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «Comenta ALTA y te lo enviamos», «escaparatetudela.es»; tarjeta final roja con el logo", "duration": 12.0, "still": 6.5,
-      "shots": { "A": [0, 10.0], "FIN": [10.0, 12.0] },
-      "talk": { "sara": [[0.3, 2.2], [2.5, 4.6], [5.0, 7.2], [7.9, 9.6]] },
-      "cues": { "q1": 0.3, "q2": 0.55, "strip": 1.4, "com": 2.3, "url": 3.0, "wave": 0.2, "point": 1.4, "thumb": 5.2, "wink": 7.4 } }
+    {
+      "id": 1,
+      "name": "Gancho: agenda a pantalla completa, el hueco de las 17:00 late en rojo; «Una hora vacía no se recupera»; Sara entra con las manos en la cabeza",
+      "duration": 5.0,
+      "still": 3.2,
+      "cues": {
+        "t1": 0.2,
+        "t2": 0.45,
+        "tag": 0.85,
+        "saraIn": 1.5
+      },
+      "shots": {
+        "A": [
+          0,
+          5.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_1.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 3.23,
+          "text": "Una hora vacía en la agenda no se recupera nunca.",
+          "segments": [
+            [
+              0.19,
+              3.27
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.16,
+            3.32
+          ]
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "Peluquería casi vacía; reloj y recuadro «15:00»; Sara con la tableta mira la agenda y los sillones vacíos; «Hoy tiene un hueco a las 5»",
+      "duration": 7.967,
+      "still": 3.6,
+      "cues": {
+        "clock": 0.35,
+        "t1": 0.9,
+        "t2": 1.15,
+        "lookChairs": 4.53,
+        "back": 7.02,
+        "sigh": 7.67
+      },
+      "shots": {
+        "A": [
+          0,
+          7.967
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_2.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 4.23,
+          "text": "Sara tiene una peluquería en Tudela y hoy se le ha quedado un hueco a las cinco.",
+          "segments": [
+            [
+              0.21,
+              4.27
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/sara_1.wav",
+          "who": "sara",
+          "start": 4.63,
+          "duration": 2.99,
+          "text": "Si nadie lo ocupa, esa hora se pierde.",
+          "segments": [
+            [
+              4.67,
+              4.87
+            ],
+            [
+              5.23,
+              7.51
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.18,
+            4.32
+          ]
+        ],
+        "sara": [
+          [
+            4.64,
+            4.92
+          ],
+          [
+            5.2,
+            7.56
+          ]
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "Nube de pensamiento con la balanza (% frente a regalo con espuma); duda, se rasca la barbilla; se inclina al regalo; «¿Descuento o regalo?» -> «Regalo: cuesta poco, se nota mucho»",
+      "duration": 6.0,
+      "still": 4.6,
+      "cues": {
+        "cloud": 0.25,
+        "q": 0.15,
+        "tilt": 1.7,
+        "decide": 2.05,
+        "a1": 2.91,
+        "a2": 3.68
+      },
+      "shots": {
+        "A": [
+          0,
+          6.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/sara_2.wav",
+          "who": "sara",
+          "start": 0.15,
+          "duration": 4.51,
+          "text": "¿Descuento o regalo? Mejor un regalo: cuesta poco y se nota mucho.",
+          "segments": [
+            [
+              0.21,
+              1.45
+            ],
+            [
+              1.85,
+              2.67
+            ],
+            [
+              2.97,
+              4.55
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "sara": [
+          [
+            0.18,
+            1.5
+          ],
+          [
+            1.82,
+            2.72
+          ],
+          [
+            2.94,
+            4.6
+          ]
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "Primer plano del móvil: tarjeta de oferta flash «Hueco hoy 17:00 · Corte con lavado de regalo»; pulsa Publicar -> Publicada; «Oferta flash en Escaparate»",
+      "duration": 6.0,
+      "still": 3.4,
+      "cues": {
+        "phone": 0,
+        "t1": 0.3,
+        "t2": 0.55,
+        "seal": 0.75,
+        "fIn": 1.5,
+        "press": 2.25,
+        "done": 2.45,
+        "fOut": 3.1
+      },
+      "shots": {
+        "A": [
+          0,
+          6.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_3.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 2.17,
+          "text": "Y lo publica en Escaparate de Tudela.",
+          "segments": [
+            [
+              0.19,
+              2.21
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.16,
+            2.26
+          ]
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "A) el móvil vibra y Sara lo coge sorprendida; B) chat con la clienta y respuesta «¡Reservado! Te espero a las 17:00.» con dos ticks; C) puñetazo al aire, «Reservado»",
+      "duration": 6.0,
+      "still": 4.1,
+      "shots": {
+        "A": [
+          0,
+          1.6
+        ],
+        "B": [
+          1.6,
+          4.6
+        ],
+        "C": [
+          4.6,
+          6.0
+        ]
+      },
+      "cues": {
+        "buzz": 0.15,
+        "grab": 0.7,
+        "lift": 1.0,
+        "msg1": 0.35,
+        "typeA": 1.05,
+        "typeB": 2.15,
+        "send": 2.3,
+        "ticks": 2.65,
+        "title": 0.1
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_4.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 2.53,
+          "text": "En pocos minutos, alguien se lo reserva.",
+          "segments": [
+            [
+              0.21,
+              2.57
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.18,
+            2.62
+          ]
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "name": "Exterior, tarde cálida: recuadro «17:00»; la clienta llega a la fachada morada, suena la campanilla, Sara abre y la recibe; la clienta enseña la tarjeta; «A las 5, puntual»",
+      "duration": 6.0,
+      "still": 4.8,
+      "cues": {
+        "clock": 0.2,
+        "title": 0.55,
+        "arrive": 1.96,
+        "ring": 2.01,
+        "open": 2.26,
+        "wave": 2.81,
+        "show": 3.4,
+        "look": 3.9,
+        "thumb": 4.6
+      },
+      "shots": {
+        "A": [
+          0,
+          6.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/clienta_1.wav",
+          "who": "clienta",
+          "start": 0.15,
+          "duration": 2.31,
+          "text": "Hola, vengo por la oferta de las cinco.",
+          "segments": [
+            [
+              0.19,
+              2.33
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/sara_3.wav",
+          "who": "sara",
+          "start": 2.71,
+          "duration": 1.63,
+          "text": "¡Pasa, te estaba esperando!",
+          "segments": [
+            [
+              2.77,
+              4.21
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "clienta": [
+          [
+            0.16,
+            2.38
+          ]
+        ],
+        "sara": [
+          [
+            2.74,
+            4.26
+          ]
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "name": "Interior: la clienta en el sillón con espuma; Sara la lava y luego la peina y corta con tijeras; agenda en la esquina con el hueco ocupado y tic verde; «Hueco ocupado»",
+      "duration": 5.0,
+      "still": 3.6,
+      "cues": {
+        "title": 0.35,
+        "tick": 0.7,
+        "rinse": 2.3,
+        "cut": 2.7
+      },
+      "shots": {
+        "A": [
+          0,
+          5.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_5.wav",
+          "who": "narradora",
+          "start": 0.15,
+          "duration": 3.65,
+          "text": "Un hueco que se iba a perder, convertido en una clienta nueva.",
+          "segments": [
+            [
+              0.19,
+              3.67
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "narradora": [
+          [
+            0.16,
+            3.72
+          ]
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "name": "Primer plano: Sara se acerca a cámara hasta cabeza y hombros, ventana con cielo detrás; cómplice; «Las horas vacías, con partido»",
+      "duration": 5.0,
+      "still": 3.3,
+      "talk": {
+        "sara": [
+          [
+            0.16,
+            3.58
+          ]
+        ]
+      },
+      "cues": {
+        "t1": 1.45,
+        "t2": 1.75,
+        "wink": 3.75
+      },
+      "shots": {
+        "A": [
+          0,
+          5.0
+        ]
+      },
+      "voices": [
+        {
+          "file": "audio/voces/sara_4.wav",
+          "who": "sara",
+          "start": 0.15,
+          "duration": 3.51,
+          "text": "Con Escaparate de Tudela, esas horas vacías ya les saco partido.",
+          "segments": [
+            [
+              0.19,
+              3.53
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «Comenta ALTA y te lo enviamos», «escaparatetudela.es»; tarjeta final roja con el logo",
+      "duration": 12.0,
+      "still": 6.5,
+      "shots": {
+        "A": [
+          0,
+          10.0
+        ],
+        "FIN": [
+          10.0,
+          12.0
+        ]
+      },
+      "talk": {
+        "sara": [
+          [
+            0.18,
+            2.42
+          ],
+          [
+            2.76,
+            4.8
+          ],
+          [
+            4.98,
+            6.76
+          ]
+        ]
+      },
+      "cues": {
+        "q1": 0.3,
+        "q2": 0.55,
+        "strip": 1.0,
+        "com": 5.12,
+        "url": 5.82,
+        "wave": 0.2,
+        "point": 0.45,
+        "thumb": 6.81,
+        "wink": 7.4
+      },
+      "voices": [
+        {
+          "file": "audio/voces/sara_5.wav",
+          "who": "sara",
+          "start": 0.15,
+          "duration": 2.35,
+          "text": "En la descripción tienes el enlace al formulario.",
+          "segments": [
+            [
+              0.21,
+              2.37
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/sara_6.wav",
+          "who": "sara",
+          "start": 2.75,
+          "duration": 4.07,
+          "text": "Y si tienes un comercio o un servicio, comenta alta y te lo enviamos.",
+          "segments": [
+            [
+              2.79,
+              4.75
+            ],
+            [
+              5.01,
+              6.71
+            ]
+          ]
+        }
+      ]
+    }
   ]
 }

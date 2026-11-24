@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Música de fondo original y suave, sintetizada con código (vídeo 15 «Se lanza Escaparate de Tudela»; no hay audio/musica.mp3).
-   Estructura leída de config.json (inicio de cada escena, planos y cues):
-     escena 1     intro suave (pad y cuerda punteada) bajo el cartel y golpe de energía al descubrir a María
-     escenas 2-3  ritmo animado (marimba, bombo, palmas, shaker) en Do mayor, 96 bpm
-     escena 4     baja (sin palmas ni shaker) para que se oigan el móvil y sus toques
-     escena 5     sube con emoción (melodía; acorde al entrar en la calle del corazón)
-     escena 6     cierra con energía (bajo las voces lo atenúa make_audio.py) y acorde final en la tarjeta.
+"""Música de fondo original y suave, sintetizada con código (vídeo 16 «El hueco de las cinco»; no hay audio/musica.mp3).
+   Estructura leída de config.json (inicio de cada escena y planos), 100 bpm:
+     escenas 1-2  tensión ligera y ritmo medio (La menor: pad, cuerda punteada, bombo suave y tictac de charles)
+     escena 3     curiosa (pizzicato saltarín y campanitas, sin bombo)
+     escena 4     sube con energía (Do mayor, bombo, palmas y redoble que crece hasta «Publicada»)
+     escenas 5-7  alegre y animada (marimba, bombo, palmas, shaker y melodía)
+     escena 8     baja un poco (pad y marimba suave) para la frase de Sara
+     escena 9     cierra con energía (bajo las voces lo atenúa make_audio.py) y acorde final en la tarjeta.
    Salida: audio/musica.wav (48 kHz, estéreo). Si existe audio/musica.mp3, make_audio.py usa esa en su lugar."""
-import json, os, wave
+import os, json, wave
 import numpy as np
-
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
 cfg = json.load(open(os.path.join(ROOT, os.environ.get('CONFIG', 'config.json'))))
@@ -20,9 +20,9 @@ for s in cfg['scenes']:
 TOTAL = fr / FPS
 N = int(TOTAL * SR) + SR
 L = np.zeros(N); R = np.zeros(N)
-rng = np.random.default_rng(15)
+rng = np.random.default_rng(16)
 
-BPM = 96.0
+BPM = 100.0
 BEAT = 60 / BPM
 BAR = 4 * BEAT
 mid = lambda m: 440.0 * 2 ** ((m - 69) / 12)
@@ -77,61 +77,68 @@ def section(t):
         if t >= starts[i]: return i + 1
     return 1
 sc_ = cfg['scenes']
-cue = lambda i, k, d: sc_[i - 1].get('cues', {}).get(k, d)
 shot = lambda i, k: starts[i - 1] + sc_[i - 1]['shots'][k][0]
-LIVELY = [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [57, 60, 64]), (41, [57, 60, 65])]    # C G Am F
-fin = shot(6, 'FIN')
-hit = starts[0] + cue(1, 'title', 3.2) - 0.15      # golpe de energía al descubrir a María («Pues se acabó»)
+TENSE = [(45, [57, 60, 64]), (41, [57, 60, 65]), (45, [57, 60, 64]), (40, [56, 59, 64])]    # Am F Am E
+CURIO = [(50, [62, 65, 69]), (45, [61, 64, 69]), (50, [62, 65, 69]), (43, [62, 67, 71])]    # Dm A Dm G
+LIVELY = [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [57, 60, 64]), (41, [57, 60, 65])]   # C G Am F
+fin = shot(9, 'FIN')
 def pluck(freq, dur):  # cuerda punteada (Karplus-Strong sencillo)
     n = int(dur * SR); p = max(2, int(SR / freq)); buf = rng.uniform(-1, 1, p); out = np.zeros(n)
     for i in range(n):
         out[i] = buf[i % p]; buf[i % p] = 0.5 * (buf[i % p] + buf[(i + 1) % p]) * 0.996
     return out * np.minimum(1, np.arange(n) / (0.004 * SR))
 PL = {}
-def pl(m, d=1.2):
+def pl(m, d=1.0):
     if m not in PL: PL[m] = pluck(mid(m), d)
     return PL[m]
-# intensidad por escena: 2-3 animada · 4 baja (se oye el móvil) · 5 sube con emoción · 6 cierra con energía
-EN = {1: 0.8, 2: 0.85, 3: 0.9, 4: 0.5, 5: 1.0, 6: 0.85}
+def hat(g=1.0):
+    n = int(0.04 * SR); t = np.arange(n) / SR; w = np.diff(np.concatenate([[0], rng.standard_normal(n)]))
+    return w * np.exp(-t * 120) * 0.2 * g
+EN = {1: 0.7, 2: 0.75, 3: 0.7, 4: 0.9, 5: 1.0, 6: 1.0, 7: 1.0, 8: 0.55, 9: 0.95}
 nb = int(fin / BEAT) + 1
 for b in range(nb):
     t = b * BEAT
     if t >= fin: break
-    sec = section(t); bar = int(t / BAR); beat = b % 4
-    root, chord = LIVELY[bar % 4]
-    if t < hit:  # intro suave bajo el cartel: pad y cuerda punteada
+    sec = section(t); bar = int(t / BAR); beat = b % 4; en = EN[sec]
+    if sec <= 2:  # tensión ligera, ritmo medio
+        root, chord = TENSE[bar % 4]
         if beat == 0:
-            for k, m in enumerate(chord): add(tone(mid(m), BAR + 0.4, 'pad', a=0.5, d=1.2, s=0.7, r=0.6), t, 0.035, pan=(k - 1) * 0.5)
-        add(pl(chord[beat % 3] + 12), t, 0.08, pan=0.3 * (1 if beat % 2 else -1))
+            for k, m in enumerate(chord): add(tone(mid(m), BAR + 0.4, 'pad', a=0.4, d=1.2, s=0.7, r=0.5), t, 0.04 * en, pan=(k - 1) * 0.5)
+            add(tone(mid(root - 12), BAR, 'tri', a=0.02, d=0.6, s=0.6, r=0.3), t, 0.14 * en)
+        for h in range(2): add(pl(chord[(beat * 2 + h) % 3] + 12), t + h * BEAT / 2, 0.07 * en, pan=0.3 if h else -0.3)
+        if beat in (0, 2): add(kick(), t, 0.15)
+        for h in range(2): add(hat(1.0 if h else 0.6), t + h * BEAT / 2, 0.8, pan=0.35)
         continue
-    en = EN[sec]
+    if sec == 3:  # curiosa: pizzicato saltarín y campanitas
+        root, chord = CURIO[bar % 4]
+        if beat == 0: add(tone(mid(root - 12), BEAT * 1.2, 'tri', a=0.01, d=0.2, s=0.2, r=0.1), t, 0.14)
+        pat = [0, 2, 1, 2]
+        add(pl(chord[pat[beat]] + 12, 0.5), t, 0.09, pan=-0.3); add(pl(chord[(pat[beat] + 1) % 3] + 24, 0.4), t + BEAT * 0.5, 0.06, pan=0.3)
+        if beat == 3: add(tone(mid(chord[2] + 24), 0.8, 'bell', a=0.002, d=0.3, s=0.0, r=0.2), t + BEAT * 0.75, 0.03, pan=0.4)
+        continue
+    root, chord = LIVELY[bar % 4]
     if beat == 0:
         for k, m in enumerate(chord): add(tone(mid(m), BAR + 0.3, 'pad', a=0.2, d=1.0, s=0.7, r=0.4), t, 0.045 * en, pan=(k - 1) * 0.5)
         add(tone(mid(root), BEAT * 1.8, 'tri', a=0.01, d=0.4, s=0.5, r=0.1), t, 0.16 * en)
     if beat == 2: add(tone(mid(root + 7 if root < 45 else root), BEAT * 1.6, 'tri', a=0.01, d=0.4, s=0.5, r=0.1), t, 0.12 * en)
     for h in range(2):
-        tt = t + h * BEAT / 2
-        seq = chord + [chord[1] + 12]
-        m = seq[(beat * 2 + h) % 4] + 12 + (12 if sec == 5 and h == 1 else 0)
+        tt = t + h * BEAT / 2; seq = chord + [chord[1] + 12]
+        m = seq[(beat * 2 + h) % 4] + 12
         add(tone(mid(m), 0.35, 'marimba', a=0.004, d=0.12, s=0.0, r=0.05), tt, 0.07 * en, pan=0.35 if h else -0.35)
-        if sec != 4: add(shaker(en), tt + 0.002, 0.8, pan=0.4)
-    if sec == 4:  # baja: solo un bombo suave en el 1
-        if beat == 0: add(kick(), t, 0.1)
+        if sec != 8: add(shaker(en), tt + 0.002, 0.8, pan=0.4)
+    if sec == 8:
+        if beat == 0: add(kick(), t, 0.08)
         continue
     if beat in (0, 2): add(kick(), t, 0.2 * en)
-    if beat in (1, 3) and sec in (2, 3, 5, 6): add(clap(), t, 0.75 * en, pan=-0.1)
-    if sec in (5, 6) and beat in (0, 1, 3):  # melodía: emoción en la 5 y cierre en la 6
+    if beat in (1, 3): add(clap(), t, 0.75 * en, pan=-0.1)
+    if sec in (5, 6, 7, 9) and beat in (0, 1, 3):
         mel = [76, 79, 81, 79, 76, 74, 72, 74][b % 8]
         add(tone(mid(mel), BEAT * 0.9, 'sine', a=0.02, d=0.25, s=0.4, r=0.1), t, 0.05 * en, pan=0.1)
-# golpe de energía al descubrir a María (escena 1)
-for k, m in enumerate([72, 76, 79, 84]):
-    add(tone(mid(m), 1.4, 'bell', a=0.002, d=0.5, s=0.0, r=0.3), hit + k * 0.045, 0.06, pan=(k - 1.5) * 0.3)
-    add(tone(mid(m - 12), 1.2, 'pad', a=0.01, d=0.6, s=0.4, r=0.4), hit, 0.05, pan=(k - 1.5) * 0.3)
-add(kick(), hit, 0.35); add(tone(mid(36), 0.8, 'tri', a=0.005, d=0.3, s=0.2, r=0.2), hit, 0.2)
-for k in range(6): add(shaker(1.4), hit - 0.36 + k * 0.06, 0.5 + k * 0.1)
-# subida emotiva al entrar en la calle del corazón (escena 5, plano C)
-hc = shot(5, 'C')
-for k, m in enumerate([67, 72, 76, 79]): add(tone(mid(m), 1.8, 'pad', a=0.05, d=0.8, s=0.5, r=0.6), hc, 0.04, pan=(k - 1.5) * 0.3)
+# escena 4: redoble de shaker que crece y acorde al publicar
+pub = starts[3] + sc_[3]['cues'].get('done', 2.45)
+for k in range(12): add(shaker(1.2), pub - 0.6 + k * 0.05, 0.3 + k * 0.06)
+for k, m in enumerate([72, 76, 79, 84]): add(tone(mid(m), 1.2, 'bell', a=0.002, d=0.5, s=0.0, r=0.3), pub + k * 0.04, 0.05, pan=(k - 1.5) * 0.3)
+add(kick(), pub, 0.3)
 # cierre: acorde final sostenido en la tarjeta
 for k, m in enumerate([60, 64, 67, 72, 76]):
     add(tone(mid(m), 2.4, 'pad', a=0.03, d=1.2, s=0.6, r=1.0), fin, 0.06, pan=(k - 2) * 0.3)

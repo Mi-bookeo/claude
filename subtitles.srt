@@ -1,126 +1,108 @@
 1
-00:00:00,130 --> 00:00:01,720
-¿Te estás perdiendo
-las ofertas
+00:00:00,130 --> 00:00:01,820
+Una hora vacía en la agenda
 
 2
-00:00:01,760 --> 00:00:03,270
-y novedades de Tudela?
+00:00:01,860 --> 00:00:03,520
+no se recupera nunca.
 
 3
-00:00:03,310 --> 00:00:04,380
-Pues se acabó:
+00:00:05,150 --> 00:00:06,930
+Sara tiene una
+peluquería en Tudela
 
 4
-00:00:04,420 --> 00:00:05,940
-hoy empieza algo nuevo.
+00:00:06,970 --> 00:00:08,080
+y hoy se le ha quedado
 
 5
-00:00:06,350 --> 00:00:07,320
-Se acaba de lanzar
+00:00:08,120 --> 00:00:09,520
+un hueco a las cinco.
 
 6
-00:00:07,360 --> 00:00:08,490
-Escaparate de Tudela:
+00:00:09,610 --> 00:00:11,140
+Si nadie lo ocupa,
 
 7
-00:00:08,530 --> 00:00:10,360
-los comercios de la ciudad
+00:00:11,180 --> 00:00:12,760
+esa hora se pierde.
 
 8
-00:00:10,400 --> 00:00:11,530
-publican sus ofertas,
+00:00:13,120 --> 00:00:14,210
+¿Descuento o regalo?
 
 9
-00:00:11,570 --> 00:00:12,650
-novedades y eventos,
+00:00:14,250 --> 00:00:15,520
+Mejor un regalo:
 
 10
-00:00:12,690 --> 00:00:14,900
-y te llegan
-directamente al móvil.
+00:00:15,560 --> 00:00:17,770
+cuesta poco y se nota mucho.
 
 11
-00:00:16,330 --> 00:00:17,300
-Y ahora, lo mejor
+00:00:19,100 --> 00:00:21,430
+Y lo publica en
+Escaparate de Tudela.
 
 12
-00:00:17,340 --> 00:00:18,780
-para los comercios.
+00:00:25,120 --> 00:00:26,110
+En pocos minutos,
 
 13
-00:00:20,350 --> 00:00:22,070
-Para los comercios
-y servicios
+00:00:26,150 --> 00:00:27,790
+alguien se lo reserva.
 
 14
-00:00:22,110 --> 00:00:23,720
-es muy fácil publicar:
+00:00:31,100 --> 00:00:32,460
+Hola, vengo por la oferta
 
 15
-00:00:23,760 --> 00:00:25,300
-solo con tres toques.
+00:00:32,500 --> 00:00:33,550
+de las cinco.
 
 16
-00:00:33,430 --> 00:00:34,620
-Y los vecinos vemos todo
+00:00:33,680 --> 00:00:35,430
+¡Pasa, te estaba esperando!
 
 17
-00:00:34,660 --> 00:00:36,010
-lo que tienen los comercios
+00:00:37,100 --> 00:00:38,710
+Un hueco que se
+iba a perder,
 
 18
-00:00:36,050 --> 00:00:36,890
-en un solo lugar,
+00:00:38,750 --> 00:00:40,890
+convertido en una
+clienta nueva.
 
 19
-00:00:36,930 --> 00:00:38,810
-y además nos
-llega al WhatsApp
+00:00:42,100 --> 00:00:43,400
+Con Escaparate de Tudela,
 
 20
-00:00:38,850 --> 00:00:40,340
-para no perdernos nada.
+00:00:43,440 --> 00:00:44,320
+esas horas vacías
 
 21
-00:00:41,030 --> 00:00:42,370
-Y así apoyamos al comercio
+00:00:44,360 --> 00:00:45,750
+ya les saco partido.
 
 22
-00:00:42,410 --> 00:00:43,680
-de nuestra ciudad.
-
-23
-00:00:44,430 --> 00:00:45,520
+00:00:47,120 --> 00:00:48,160
 En la descripción tienes
 
+23
+00:00:48,200 --> 00:00:49,590
+el enlace al formulario.
+
 24
-00:00:45,560 --> 00:00:47,300
-el enlace al
-canal de WhatsApp,
+00:00:49,700 --> 00:00:50,910
+Y si tienes un comercio
 
 25
-00:00:47,340 --> 00:00:48,010
-o comenta canal
+00:00:50,950 --> 00:00:52,650
+o un servicio, comenta alta
 
 26
-00:00:48,050 --> 00:00:49,160
+00:00:52,690 --> 00:00:53,930
 y te lo enviamos.
-
-27
-00:00:49,530 --> 00:00:50,890
-Y si tienes un comercio,
-
-28
-00:00:50,930 --> 00:00:52,820
-escríbenos y te informamos.
-
-29
-00:00:53,550 --> 00:00:56,160
-Entra en
-escaparatetudela.es...
-
-30
-00:00:56,270 --> 00:00:58,120
-...y empieza a beneficiarte.
 

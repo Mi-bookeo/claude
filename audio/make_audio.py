@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Pista de sonido del vídeo 15 «Se lanza Escaparate de Tudela» y vídeo con audio (la imagen NO se vuelve a codificar: -c:v copy).
+"""Pista de sonido del vídeo 16 «El hueco de las cinco» y vídeo con audio (la imagen NO se vuelve a codificar: -c:v copy).
    1) Voces: según config.json ('voices' de cada escena, lo escribe colocar_voces.py), igualadas a -20 dBFS RMS.
    2) Efectos: audio/sfx/<nombre>.wav|.mp3 si existe; si no, se sintetizan con código (básicos) -> audio/efectos.wav.
    3) Música: audio/musica.mp3 si existe; si no, la música original sintetizada por make_music.py (audio/musica.wav).
       Queda unos 17 dB por debajo de las voces (y 4 dB menos mientras hay voz).
-   Salida: audio/mezcla.wav y escaparate_lanzamiento_con_audio.mp4 (AAC 192 kb/s)."""
+   Salida: audio/mezcla.wav y <output>_con_audio.mp4 (AAC 192 kb/s)."""
 import json, os, subprocess, wave
 import numpy as np
 
@@ -230,6 +230,26 @@ def syn(name):
         s = lp(s, 0.3)
     elif name.startswith('tienda_'):  # ambiente de tienda: rumor de sala suave
         d = float(name.split('_')[1]); s = fade(lp(noise(d), 0.008) * 6 + murmur(d, 1.4, 2) * 0.12)
+    elif name == 'tick':  # «tic» de reloj suelto
+        t = t_(0.05); s = np.sin(2 * np.pi * 2400 * t) * np.exp(-t * 260) + hp(noise(0.05), 0.5) * np.exp(-t * 400) * 0.3
+    elif name == 'pip':  # «pip» de alarma suave
+        t = t_(0.09); s = np.sin(2 * np.pi * 1760 * t) * np.minimum(1, t / 0.004) * np.exp(-np.maximum(t - 0.06, 0) * 120)
+    elif name.startswith('secador_'):  # secador de pelo lejano: zumbido de motor y aire
+        d = float(name.split('_')[1]); t = t_(d)
+        s = lp(noise(d), 0.05) * 2.2 + 0.25 * np.sin(2 * np.pi * 118 * t) + 0.12 * np.sin(2 * np.pi * 236 * t)
+        s = fade(lp(s, 0.2) * (0.85 + 0.15 * np.sin(2 * np.pi * 0.7 * t)), 0.6, 0.6)
+    elif name.startswith('agua_'):  # agua del lavacabezas: chorro (ruido) con borboteo
+        d = float(name.split('_')[1]); t = t_(d); s = hp(lp(noise(d), 0.35), 0.05) * 1.2
+        for k in range(int(d * 9)):
+            o = rng.uniform(0, d - 0.1); tt = np.maximum(t - o, 0); f = rng.uniform(500, 1200) * (1 + 2 * tt)
+            s += (t >= o) * np.sin(2 * np.pi * f * tt) * np.exp(-tt * 60) * 0.35
+        s = fade(s, 0.15, 0.3)
+    elif name == 'chas':  # tijeras: chasquido metálico corto
+        t = t_(0.12); s = hp(noise(0.12), 0.6) * np.exp(-t * 70) + sum(np.sin(2 * np.pi * fq * t) * np.exp(-t * 50) for fq in (3800, 5300)) * 0.4
+    elif name == 'yes':  # «¡yes!» cómico muy básico: vocal que sube y «s» final
+        d = 0.6; t = t_(d); f0 = 180 + 160 * np.minimum(t / 0.25, 1)
+        src = np.sign(np.sin(2 * np.pi * np.cumsum(f0) / SR)); g = (t < 0.36) * np.minimum(1, t / 0.02) * np.minimum(1, (0.36 - t) / 0.06 + 0.01)
+        s = hp(lp(src, 0.18), 0.04) * g * 0.8 + hp(noise(d), 0.7) * ((t > 0.33) & (t < 0.58)) * np.sin(np.pi * np.clip((t - 0.33) / 0.25, 0, 1)) * 0.35
     else: raise KeyError(name)
     SYN[name] = s.astype(np.float64); return SYN[name]
 def syn_raw_clink():
@@ -241,43 +261,49 @@ def ev(name, t, g_db=0.0, env=None): EV.append((name, t, g_db, env))
 D = lambda i: SC[i - 1]['end'] - SC[i - 1]['start']
 F2 = lambda x: f'{x:.2f}'
 c = lambda i: SC[i - 1]['cues']
-# 1) «whoosh» del zoom hacia atrás y «ting» al descubrir a María; «pop» del título
-ev('calle_' + F2(D(1) + 0.2), st(1), -24)
-ev('whoosh', at(1, 'dollyStart'), -4); ev('ting', at(1, 'dollyEnd') - 0.05, -8); ev('pop', at(1, 'title'), -9)
-# 2) «pop» por cada tarjeta que vuela al móvil y «ding» de notificación al llegar
-ev('pop_s', at(2, 'title'), -13); ev('pop_s', at(2, 'title2'), -13); ev('pop_s', at(2, 'sub'), -15)
-for j, l in enumerate(c(2)['launch']):
-    ev('pop', st(2) + l, -7); ev('ding2' if j % 2 else 'ding', st(2) + l + c(2)['flight'], -9); ev('buzz', st(2) + l + c(2)['flight'], -19)
-# 3) «whoosh» suave de transición
-ev('whoosh_s', st(3) + 0.05, -6); ev('pop_s', at(3, 't1'), -13); ev('pop', at(3, 't3'), -10)
-ev('whoosh_s', SC[2]['end'] - 0.45, -9)
-# 4) ambiente de tienda con tictac; en los 3 toques, «pop» por toque, «clic» de publicar y «ding» del tic verde
-ev('tienda_' + F2(D(4)), st(4), -21); ev('clock_' + F2(D(4)), st(4), -22)
-ev('pop_s', at(4, 'title'), -13); ev('pop_s', at(4, 'title2'), -13)
-b4 = shot(4, 'B'); tp = c(4)['taps']
-ev('pop_s', b4 + 0.15, -14)
-for j, x in enumerate(tp):
-    ev('tap', b4 + x, -8); ev('pop', b4 + x + 0.03, -7)
-ev('tecleo', b4 + tp[1] + 0.15, -14)
-ev('click', b4 + tp[2] + 0.06, -4); ev('ding', b4 + tp[2] + 0.12, -8); ev('pop', b4 + c(4)['card'], -9); ev('ding_b', b4 + c(4)['card'] + 0.35, -9)
-ev('ting', shot(4, 'C') + 0.15, -14)
-# 5) web: «pop» del título; chat: notificaciones superpuestas y «ding» del chat; calle: latido «pum-pum» y murmullo agradable
-ev('pop_s', st(5) + c(5)['titleA'], -13); ev('pop_s', st(5) + c(5)['titleA'] + 0.25, -13)
-b5 = shot(5, 'B')
-ev('pop_s', b5 + c(5)['titleB'], -13)
-for j, m in enumerate(c(5)['msgs']):
-    for k, o in enumerate((0.0, 0.08, 0.17)): ev('ding2' if (j + k) % 2 else 'ding', b5 + m + o, -9 - 2 * k)
-    ev('buzz', b5 + m, -17)
-c5 = shot(5, 'C'); dC = SC[4]['end'] - c5
-ev('murmullo_' + F2(dC) + '_1.8_6', c5, -18); ev('calle_' + F2(dC), c5, -22)
-ev('latido_' + F2(dC - c(5)['heart']), c5 + c(5)['heart'], -9); ev('pop_s', c5 + c(5)['titleC'], -13)
-# 6) «pop» al aparecer cada franja, «whoosh» de las dos juntas, «ding» brillante final y «whoosh» del logo
-a6, b6, c6, f6 = shot(6, 'A'), shot(6, 'B'), shot(6, 'C'), shot(6, 'FIN')
-ev('pop_s', st(6) + c(6)['A_link'], -13); ev('pop', st(6) + c(6)['A_strip'], -6); ev('pop_s', st(6) + c(6)['A_who'], -14)
-ev('whoosh_s', b6 - 0.25, -12); ev('pop', b6 + c(6)['B_strip'], -6); ev('pop_s', b6 + c(6)['B_sub'], -13); ev('pop_s', b6 + c(6)['B_form'], -14); ev('pop_s', b6 + c(6)['B_who'], -14)
-ev('whoosh', c6 - 0.2, -5); ev('pop_s', c6 + c(6)['C_t1'], -13); ev('pop', c6 + c(6)['C_t2'], -9); ev('pop_s', c6 + c(6)['C_sub'], -13)
-ev('calle_' + F2(f6 - c6), c6, -24)
-ev('whoosh', f6 - 0.25, -4); ev('ding_b', f6 + 0.05, -7)
+# 1) tictac del reloj y «pip» que se acelera con el parpadeo del hueco; «pop» de los textos y la cartela
+ev('clock_' + F2(D(1)), st(1), -20)
+o, gap = 0.3, 0.62
+while o < D(1) - 0.1: ev('pip', st(1) + o, -18 + 4 * o / D(1)); o += gap; gap = max(0.28, gap * 0.9)
+ev('pop_s', at(1, 't1'), -13); ev('pop_s', at(1, 't2'), -13); ev('pop', at(1, 'tag'), -9); ev('whoosh_s', at(1, 'saraIn') - 0.1, -10)
+# 2) ambiente de peluquería: secador lejano y tictac del reloj de pared; «pop» del recuadro 15:00 y textos; suspiro
+ev('secador_' + F2(D(2)), st(2), -27); ev('clock_' + F2(D(2)), st(2), -21)
+ev('pop', at(2, 'clock'), -9); ev('pop_s', at(2, 't1'), -13); ev('pop_s', at(2, 't2'), -13); ev('suspiro', at(2, 'sigh'), -16)
+# 3) nube, «ding» de la balanza al inclinarse y «ta-chán» al decidir
+ev('secador_' + F2(D(3)), st(3), -30)
+ev('pop_s', at(3, 'cloud'), -12); ev('ding', at(3, 'tilt') + 0.15, -9); ev('tachan', at(3, 'decide'), -8)
+ev('pop_s', at(3, 'a1'), -14); ev('pop_s', at(3, 'a2'), -14)
+# 4) «pop» al pulsar Publicar y «ding» del tic
+ev('whoosh_s', st(4) + 0.02, -10); ev('pop_s', at(4, 't1'), -13); ev('pop_s', at(4, 't2'), -13)
+ev('pop', at(4, 'press'), -5); ev('ding', at(4, 'done') + 0.05, -7)
+# 5) vibración, «ding» de mensaje recibido, tecleo, «pop» de mensaje enviado y «yes» cómico al puñetazo
+ev('buzz', at(5, 'buzz'), -10); ev('buzz', at(5, 'buzz') + 0.6, -11)
+b5 = shot(5, 'B'); cc = c(5)
+ev('ding2', b5 + cc['msg1'], -8); ev('buzz', b5 + cc['msg1'], -15)
+ev('tecleo', b5 + cc['typeA'], -15)
+ev('pop', b5 + cc['send'], -7); ev('pop_s', b5 + cc['ticks'], -16)
+c5 = shot(5, 'C'); ev('yes', c5 + 0.05, -8); ev('pop', c5 + cc['title'], -9)
+# 6) calle de tarde con pájaros, pasos de la clienta, campanilla de la puerta
+ev('calle_' + F2(D(6)), st(6), -21)
+ev('pop', at(6, 'clock'), -9); ev('pop_s', at(6, 'title'), -13)
+o = 0.1
+while o < c(6)['arrive']: ev('step', st(6) + o, -13); o += 3.14159 / 9.4
+ev('bell', at(6, 'ring'), -8)
+# 7) agua del lavacabezas, tijeras «chas, chas» y «ding» suave del tic de la agenda
+ev('secador_' + F2(D(7)), st(7), -30)
+ev('agua_' + F2(c(7)['rinse'] + 0.3), st(7), -17); ev('pop_s', at(7, 'title'), -13); ev('ding', at(7, 'tick') + 0.1, -15)
+o = c(7)['cut'] + (1.5 * 3.14159) / 18
+while o < D(7) - 0.05: ev('chas', st(7) + o, -11); o += 2 * 3.14159 / 18
+# 8) «whoosh» suave al acercarse Sara a cámara
+ev('whoosh_s', st(8) + 0.05, -8); ev('pop_s', at(8, 't1'), -14); ev('pop_s', at(8, 't2'), -14)
+# 9) «pop» al aparecer cada franja y «whoosh» del logo final; calle de tarde con pájaros
+f9 = shot(9, 'FIN')
+ev('calle_' + F2(f9 - st(9)), st(9), -23)
+for k in ('q1', 'q2', 'com', 'url'):
+    if k == 'com' and cfg.get('variant') == 'tiktok': continue
+    ev('pop_s', at(9, k), -12)
+ev('pop', at(9, 'strip'), -6)
+ev('whoosh', f9 - 0.2, -4); ev('ding_b', f9 + 0.05, -8)
 
 fx = np.zeros(N)
 for name, t, g, _ in EV:
