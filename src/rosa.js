@@ -170,6 +170,8 @@ function folk(o) {
   if (p.hair === 'long') b += `<path d="M191 61 Q171 61 171 82 Q170 99 173 107 Q181 110 189 105 L191 88Z" fill="${p.hairC}" ${st()}/>`;
   if (p.hair === 'pony') b += `<g transform="rotate(${f(o.pony || 0)} 178 70)"><path d="M180 66 Q154 66 158 94 Q160 104 166 108 Q170 90 182 78Z" fill="${p.hairC}" ${st()}/></g>`;
   if (p.hair === 'bun') b += `<circle cx="176" cy="65" r="7" fill="${p.hairC}" ${st()}/>`;
+  // (vídeo 14) mochila a la espalda
+  if (p.pack) b += `<rect x="163" y="100" width="18" height="38" rx="6" fill="${p.pack}" ${st()}/><rect x="164.5" y="118" width="12" height="12" rx="3" fill="${p.pack}" ${st(2)}/>`;
   b += arm([178, 108], armBang, true, extraB);
   // torso
   let tor = `<rect x="186.5" y="86" width="7" height="14" rx="2" fill="${p.skinS}" ${st()}/>`;
@@ -194,6 +196,7 @@ function folk(o) {
   }
   if (p.apron) tor += `<path d="M183 98 L186 116 M197 98 L194 116" stroke="${p.apron}" stroke-width="${w(2.4)}" stroke-linecap="round"/>
     <path d="M181 116 H200 L203 ${bodyLen + 16} Q191 ${bodyLen + 19} 178 ${bodyLen + 16}Z" fill="${p.apron}" ${st()}/><path d="M179 128 H202" stroke="#FFFFFF" stroke-width="${w(1.4)}" opacity="0.5"/>`;
+  if (p.pack) tor += `<path d="M182 98.4 Q186 112 183.6 128" stroke="${INK}" stroke-width="${w(4.4)}" fill="none" stroke-linecap="round"/><path d="M182 98.4 Q186 112 183.6 128" stroke="${p.pack}" stroke-width="${w(2)}" fill="none" stroke-linecap="round"/>`;
   b += tor;
   if (o.front0) b += o.front0(w);
   b += arm([202, 108], o.armF || 0, false, o.handF ? o.handF(w) : '');
@@ -207,6 +210,7 @@ function folk(o) {
   if (p.hair === 'bun') hd += `<path d="M176 80 Q174 62 191 62 Q204 62 204.5 72 Q196 67 187 68.5 Q181 71 176 80Z" fill="${p.hairC}" ${st()}/>`;
   if (p.hair === 'curly') { let a = ''; [[178, 70, 6], [183, 63, 6.5], [191, 61, 6.5], [199, 63.5, 6], [176, 79, 5.5], [204, 69, 4.5]].forEach(([x, y, r]) => { a += `<circle cx="${x}" cy="${y}" r="${r}"/>`; }); hd += `<g fill="${p.hairC}" stroke="${INK}" stroke-width="${w(2.4)}">${a}</g><g fill="${p.hairC}">${a}</g>`; }
   if (p.hair === 'cap') hd += `<path d="M176 72 Q177 58 191 58 Q204 58.5 205 69 Z" fill="${p.capC}" ${st()}/><path d="M203 68 H215 Q217 68 216 70.5 H202Z" fill="${p.capC}" ${st(2.4)}/>`;
+  if (p.beret) hd += `<path d="M174.6 72 Q175 58.4 192 58 Q208 58.6 207.6 68.6 Q196 64.4 174.6 72Z" fill="${p.beret}" ${st()}/><path d="M190 58.4 l1.4 -4" stroke="${INK}" stroke-width="${w(2.4)}" stroke-linecap="round"/>`;
   hd += face(o, w);
   if (p.glasses) hd += `<circle cx="196" cy="81" r="3.6" fill="none" stroke="${INK}" stroke-width="${w(1.5)}"/><circle cx="203.6" cy="81" r="3.6" fill="none" stroke="${INK}" stroke-width="${w(1.5)}"/><path d="M199.6 80.6 H200 M192.4 80 L186 78.5" stroke="${INK}" stroke-width="${w(1.4)}" stroke-linecap="round"/>`;
   if (p.phones) hd += `<path d="M184 79 Q181 57 196 58.5 Q205 59.8 205 68" fill="none" stroke="${INK}" stroke-width="${w(5)}" stroke-linecap="round"/><path d="M184 79 Q181 57 196 58.5 Q205 59.8 205 68" fill="none" stroke="${C.red}" stroke-width="${w(2)}" stroke-linecap="round"/><rect x="179.5" y="73" width="9" height="13" rx="4" fill="${C.red}" ${st(2.4)}/>`;
