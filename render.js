@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Renderizador determinista: Playwright (Chromium) dibuja cada fotograma a partir de su tiempo
    y se envía por tubería a ffmpeg (sin fotogramas en disco).
-   Vídeo 15 «Se lanza Escaparate de Tudela» (sin audio ni subtítulos).
+   Vídeo 16 «El hueco de las cinco» (sin audio ni subtítulos).
    Uso:
      node render.js stills 4,7,8      -> PNG a tamaño real en stills/
      node render.js stills all

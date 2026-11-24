@@ -1,6 +1,6 @@
 {
-  "title": "Se lanza Escaparate de Tudela",
-  "output": "escaparate_lanzamiento.mp4",
+  "title": "El hueco de las cinco",
+  "output": "hueco_de_las_cinco.mp4",
   "width": 1080,
   "height": 1920,
   "fps": 30,
@@ -10,423 +10,55 @@
     "preset": "medium",
     "pix_fmt": "yuv420p"
   },
-  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'shots' = planos de la escena [inicio, fin] en tiempo local de la escena (cortes secos). 'talk' = tramos en los que la boca de cada personaje abre y cierra (tiempo local de la escena). 'cues' = momentos de aparición de textos y acciones (tiempo local de la escena). 'still' = instante del PNG de stills/. Si cambias una duración, revisa los shots, talk y cues de esa escena.",
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'shots' = planos [inicio, fin] en tiempo local de la escena (cortes secos). 'cues' = momentos de textos y acciones (tiempo local del plano). 'talk' = tramos en los que la boca de Sara se mueve. 'still' = instante del PNG de stills/. 'ejemplo' = datos editables del ejemplo (hora del hueco, hora del reloj, citas de la agenda). 'textos' = textos en pantalla (si cambias la hora del hueco, cambia también los textos que dicen «a las 5»).",
+  "ejemplo": {
+    "hueco": 17,
+    "reloj": 15,
+    "inicio": 9,
+    "fin": 20,
+    "citas": { "9": "Eva", "10": "Ana", "11": "Lola", "12": "Inés", "13": "Pili", "14": "Sofía", "15": "Noa", "16": "Mar", "18": "Bea", "19": "Luz", "20": "Alba" },
+    "nombreHueco": "Clienta"
+  },
+  "textos": {
+    "s1": ["Una hora vacía", "no se recupera"],
+    "s2": ["Hoy tiene un hueco", "a las 5"],
+    "s3a": "¿Descuento o regalo?",
+    "s3b": ["Regalo: cuesta poco,", "se nota mucho"],
+    "s4": ["Oferta flash", "en Escaparate"],
+    "chatClienta": "Hola, he visto tu oferta en Escaparate de Tudela. ¿Me reservas esa hora?",
+    "chatSara": "¡Reservado! Te espero a las 17:00.",
+    "s5": "Reservado",
+    "s6": "A las 5, puntual",
+    "s7": "Hueco ocupado",
+    "s8": ["Las horas vacías,", "con partido"],
+    "s9a": "¿Tienes un comercio",
+    "s9b": "o un servicio?",
+    "s9c": "Formulario en la descripción",
+    "s9d": "Comenta ALTA y te lo enviamos",
+    "s9e": "escaparatetudela.es"
+  },
   "scenes": [
-    {
-      "id": 1,
-      "name": "Gancho: cartel.png a pantalla completa (zoom con rebote), dolly out hasta María que lo sostiene sorprendida; «Se acabó»; baja el cartel y sonríe",
-      "duration": 6.2,
-      "still": 3.83,
-      "shots": {
-        "A": [
-          0,
-          6.2
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            2.7
-          ],
-          [
-            3.02,
-            3.9
-          ],
-          [
-            4.2,
-            5.74
-          ]
-        ]
-      },
-      "cues": {
-        "dollyStart": 1.8,
-        "dollyEnd": 2.95,
-        "title": 3.23,
-        "lower": 4.23,
-        "smile": 4.68
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_1.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 5.69,
-          "text": "¿Te estás perdiendo las ofertas y novedades de Tudela? Pues se acabó: hoy empieza algo nuevo.",
-          "segments": [
-            [
-              0.19,
-              2.65
-            ],
-            [
-              3.05,
-              3.85
-            ],
-            [
-              4.23,
-              5.69
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "María en plano medio; tres tarjetas (Oferta, Novedad, Evento) vuelan al móvil con ondas; «Acaba de nacer Escaparate de Tudela», «Ofertas, novedades y eventos de tu ciudad»",
-      "duration": 10.0,
-      "still": 6.2,
-      "shots": {
-        "A": [
-          0,
-          10.0
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.18,
-            2.7
-          ],
-          [
-            3.04,
-            8.5
-          ]
-        ]
-      },
-      "cues": {
-        "title": 0.25,
-        "title2": 0.5,
-        "sub": 1.0,
-        "launch": [
-          4.65,
-          5.13,
-          5.78
-        ],
-        "flight": 0.75,
-        "point": 6.72,
-        "thumb": 7.96
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_2.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 8.43,
-          "text": "Se acaba de lanzar Escaparate de Tudela: los comercios de la ciudad publican sus ofertas, novedades y eventos, y te llegan directamente al móvil.",
-          "segments": [
-            [
-              0.21,
-              2.65
-            ],
-            [
-              3.07,
-              8.45
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Mini gancho: María señala hacia un lado, cómplice; «Y ahora, lo mejor para los comercios»",
-      "duration": 4.0,
-      "still": 1.6,
-      "shots": {
-        "A": [
-          0,
-          4.0
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            2.38
-          ]
-        ]
-      },
-      "cues": {
-        "point": 0.2,
-        "t1": 0.3,
-        "t2": 0.55,
-        "t3": 0.85
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_3.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 2.29,
-          "text": "Y ahora, lo mejor para los comercios.",
-          "segments": [
-            [
-              0.19,
-              2.33
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Tienda de Mari Carmen: habla tras el mostrador «Publicar es muy fácil»; móvil de los 3 toques (foto, texto, publicar) con 1-2-3; tarjeta publicada con tic verde; Mari Carmen sonríe",
-      "duration": 13.1,
-      "still": 10.5,
-      "shots": {
-        "A": [
-          0,
-          5.3
-        ],
-        "B": [
-          5.3,
-          11.7
-        ],
-        "C": [
-          11.7,
-          13.1
-        ]
-      },
-      "talk": {
-        "maricarmen": [
-          [
-            0.18,
-            3.2
-          ],
-          [
-            3.48,
-            4.9
-          ]
-        ]
-      },
-      "cues": {
-        "title": 0.35,
-        "title2": 0.6,
-        "taps": [
-          0.9,
-          2.3,
-          4.0
-        ],
-        "typeDur": 1.1,
-        "card": 4.45
-      },
-      "voices": [
-        {
-          "file": "audio/voces/mari_1.wav",
-          "who": "maricarmen",
-          "start": 0.15,
-          "duration": 4.81,
-          "text": "Para los comercios y servicios es muy fácil publicar: solo con tres toques.",
-          "segments": [
-            [
-              0.21,
-              3.15
-            ],
-            [
-              3.51,
-              4.85
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "María y el móvil con la web (carrusel de comercios) «Todo en un solo lugar»; el chat del canal recibe ofertas «Y te llega al WhatsApp»; calle con corazón gigante «Apoyas al comercio de tu ciudad»",
-      "duration": 11.0,
-      "still": 6.37,
-      "shots": {
-        "A": [
-          0,
-          4.067
-        ],
-        "B": [
-          4.067,
-          7.6
-        ],
-        "C": [
-          7.6,
-          11.0
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            3.86
-          ],
-          [
-            4.16,
-            6.84
-          ],
-          [
-            7.76,
-            10.18
-          ]
-        ]
-      },
-      "cues": {
-        "titleA": 0.25,
-        "titleB": 0.3,
-        "msgs": [
-          0.5,
-          1.3,
-          2.1
-        ],
-        "titleC": 0.3,
-        "heart": 0.15
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_4.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 6.77,
-          "text": "Y los vecinos vemos todo lo que tienen los comercios en un solo lugar, y además nos llega al WhatsApp para no perdernos nada.",
-          "segments": [
-            [
-              0.19,
-              3.81
-            ],
-            [
-              4.19,
-              6.79
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/maria_5.wav",
-          "who": "maria",
-          "start": 7.75,
-          "duration": 2.51,
-          "text": "Y así apoyamos al comercio de nuestra ciudad.",
-          "segments": [
-            [
-              7.79,
-              10.13
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "name": "Cierre: A) María «Comenta CANAL» (clientes); B) Mari Carmen «¿Tienes un comercio?» (comercios); C) las dos saludan «Entra en escaparatetudela.es»; tarjeta final roja",
-      "duration": 16.033,
-      "still": 10.8,
-      "shots": {
-        "A": [
-          0,
-          5.1
-        ],
-        "B": [
-          5.1,
-          9.1
-        ],
-        "C": [
-          9.1,
-          14.033
-        ],
-        "FIN": [
-          14.033,
-          16.033
-        ]
-      },
-      "talk": {
-        "maria": [
-          [
-            0.16,
-            2.66
-          ],
-          [
-            2.9,
-            4.66
-          ],
-          [
-            9.28,
-            11.66
-          ]
-        ],
-        "maricarmen": [
-          [
-            5.26,
-            8.32
-          ],
-          [
-            12.0,
-            13.62
-          ]
-        ]
-      },
-      "cues": {
-        "A_link": 0.15,
-        "A_strip": 2.93,
-        "A_who": 3.73,
-        "B_strip": 0.15,
-        "B_sub": 1.62,
-        "B_form": 3.1,
-        "B_who": 3.6,
-        "C_t1": 0.15,
-        "C_t2": 0.88,
-        "C_sub": 2.87
-      },
-      "voices": [
-        {
-          "file": "audio/voces/maria_6.wav",
-          "who": "maria",
-          "start": 0.15,
-          "duration": 4.59,
-          "text": "En la descripción tienes el enlace al canal de WhatsApp, o comenta canal y te lo enviamos.",
-          "segments": [
-            [
-              0.19,
-              2.61
-            ],
-            [
-              2.93,
-              4.61
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/mari_2.wav",
-          "who": "maricarmen",
-          "start": 5.25,
-          "duration": 3.15,
-          "text": "Y si tienes un comercio, escríbenos y te informamos.",
-          "segments": [
-            [
-              5.29,
-              8.27
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/maria_7.wav",
-          "who": "maria",
-          "start": 9.25,
-          "duration": 2.47,
-          "text": "Entra en escaparatetudela.es...",
-          "segments": [
-            [
-              9.31,
-              11.61
-            ]
-          ]
-        },
-        {
-          "file": "audio/voces/mari_3.wav",
-          "who": "maricarmen",
-          "start": 11.97,
-          "duration": 1.71,
-          "text": "...y empieza a beneficiarte.",
-          "segments": [
-            [
-              12.03,
-              13.57
-            ]
-          ]
-        }
-      ]
-    }
+    { "id": 1, "name": "Gancho: agenda a pantalla completa, el hueco de las 17:00 late en rojo; «Una hora vacía no se recupera»; Sara entra con las manos en la cabeza", "duration": 5.0, "still": 3.2,
+      "cues": { "t1": 0.2, "t2": 0.45, "tag": 0.85, "saraIn": 1.5 } },
+    { "id": 2, "name": "Peluquería casi vacía; reloj y recuadro «15:00»; Sara con la tableta mira la agenda y los sillones vacíos; «Hoy tiene un hueco a las 5»", "duration": 7.0, "still": 3.6,
+      "cues": { "clock": 0.35, "t1": 0.9, "t2": 1.15, "lookChairs": 2.6, "back": 4.9, "sigh": 5.4 } },
+    { "id": 3, "name": "Nube de pensamiento con la balanza (% frente a regalo con espuma); duda, se rasca la barbilla; se inclina al regalo; «¿Descuento o regalo?» -> «Regalo: cuesta poco, se nota mucho»", "duration": 6.0, "still": 4.6,
+      "cues": { "cloud": 0.25, "q": 0.45, "tilt": 3.0, "decide": 3.45, "a1": 3.55, "a2": 3.8 } },
+    { "id": 4, "name": "Primer plano del móvil: tarjeta de oferta flash «Hueco hoy 17:00 · Corte con lavado de regalo»; pulsa Publicar -> Publicada; «Oferta flash en Escaparate»", "duration": 6.0, "still": 3.4,
+      "cues": { "phone": 0, "t1": 0.3, "t2": 0.55, "seal": 0.75, "fIn": 1.5, "press": 2.25, "done": 2.45, "fOut": 3.1 } },
+    { "id": 5, "name": "A) el móvil vibra y Sara lo coge sorprendida; B) chat con la clienta y respuesta «¡Reservado! Te espero a las 17:00.» con dos ticks; C) puñetazo al aire, «Reservado»", "duration": 6.0, "still": 4.1,
+      "shots": { "A": [0, 1.6], "B": [1.6, 4.6], "C": [4.6, 6.0] },
+      "cues": { "buzz": 0.15, "grab": 0.7, "lift": 1.0, "msg1": 0.35, "typeA": 1.05, "typeB": 2.15, "send": 2.3, "ticks": 2.65, "title": 0.1 } },
+    { "id": 6, "name": "Exterior, tarde cálida: recuadro «17:00»; la clienta llega a la fachada morada, suena la campanilla, Sara abre y la recibe; la clienta enseña la tarjeta; «A las 5, puntual»", "duration": 6.0, "still": 4.8,
+      "cues": { "clock": 0.2, "title": 0.55, "arrive": 2.0, "ring": 2.05, "open": 2.3, "wave": 2.75, "show": 3.4, "look": 3.9, "thumb": 4.6 } },
+    { "id": 7, "name": "Interior: la clienta en el sillón con espuma; Sara la lava y luego la peina y corta con tijeras; agenda en la esquina con el hueco ocupado y tic verde; «Hueco ocupado»", "duration": 5.0, "still": 3.6,
+      "cues": { "title": 0.35, "tick": 0.7, "rinse": 2.3, "cut": 2.7 } },
+    { "id": 8, "name": "Primer plano: Sara se acerca a cámara hasta cabeza y hombros, ventana con cielo detrás; cómplice; «Las horas vacías, con partido»", "duration": 5.0, "still": 3.3,
+      "talk": { "sara": [[1.5, 3.1], [3.8, 4.7]] },
+      "cues": { "t1": 1.45, "t2": 1.75, "wink": 3.2 } },
+    { "id": 9, "name": "Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «Comenta ALTA y te lo enviamos», «escaparatetudela.es»; tarjeta final roja con el logo", "duration": 12.0, "still": 6.5,
+      "shots": { "A": [0, 10.0], "FIN": [10.0, 12.0] },
+      "talk": { "sara": [[0.3, 2.2], [2.5, 4.6], [5.0, 7.2], [7.9, 9.6]] },
+      "cues": { "q1": 0.3, "q2": 0.55, "strip": 1.4, "com": 2.3, "url": 3.0, "wave": 0.2, "point": 1.4, "thumb": 5.2, "wink": 7.4 } }
   ]
 }
