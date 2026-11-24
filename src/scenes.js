@@ -6,6 +6,7 @@
 'use strict';
 
 const S = {};
+const TIKTOK = () => CFG && CFG.variant === 'tiktok';
 let SUBS = null;
 function shotAt(t, sc) {
   const e = Object.entries(sc.shots || { A: [0, sc.duration] });
@@ -363,13 +364,15 @@ S[6] = (t, T, sc) => {
   let s;
   if (shot === 'A') {
     const py = mWaist(1600, 11.5), base = mBase(T, 11.5, 0.3);
-    const kp = easeOut(seg(u, c.A_link - 0.2, c.A_link + 0.1)), kt = easeOut(seg(u, c.A_strip + 0.6, c.A_strip + 0.9));
-    const armF = u < c.A_strip + 0.6 ? mArm(true, lerp2([210.5, 152], [226, 140 + 2 * Math.sin(u * 6)], kp), kp > 0.5 ? 'point' : 'fist', { dir: 70, hs: 1.5 })
-      : mArm(true, lerp2([222, 132], [222, 98 - 3 * Math.max(0, damp(u - c.A_strip - 0.9, 12, 5))], kt), kt > 0.4 ? 'thumb' : 'fist', { hs: 1.5 });
+    const tT = c.A_thumb !== undefined ? c.A_thumb : c.A_strip + 0.6;  // pulgar arriba
+    const kp = easeOut(seg(u, c.A_link - 0.2, c.A_link + 0.1)), kt = easeOut(seg(u, tT, tT + 0.3));
+    const armF = u < tT ? mArm(true, lerp2([210.5, 152], [226, 140 + 2 * Math.sin(u * 6)], kp), kp > 0.5 ? 'point' : 'fist', { dir: 70, hs: 1.5 })
+      : mArm(true, lerp2([222, 132], [222, 98 - 3 * Math.max(0, damp(u - tT - 0.3, 12, 5))], kt), kt > 0.4 ? 'thumb' : 'fist', { hs: 1.5 });
     const expr = u > c.A_strip && u < c.A_strip + 0.6 ? 'wink' : 'sparkle';
     w += placeMaria(540, py, 11.5, Object.assign({}, base, { expr, talk: talk15(t, trM), armF, armB: mGestB(t, inRanges(t, trM) ? 1 : 0), head: 3 * Math.sin(T * 1.8) }));
     s = cam(comicZoom(u), 540, 900, w);
-    s += strip15('Comenta CANAL', 540, 290, pop(u, c.A_strip, 0.5), -2);
+    // versión TikTok (config.variant = 'tiktok'): sin la franja «Comenta CANAL»
+    if (!TIKTOK()) s += strip15('Comenta CANAL', 540, 290, pop(u, c.A_strip, 0.5), -2);
     s += bigT('Enlace al canal de WhatsApp', 540, 414, 62, pop(u, c.A_link, 0.5), 0, { sw: SW * 1.6, sd: 5 });
     s += bigT('en la descripción', 540, 480, 62, pop(u, c.A_link + 0.12, 0.5), 0, { sw: SW * 1.6, sd: 5 });
     s += whoPill('Para clientes', 540, 562, pop(u, c.A_who, 0.5), { size: 46 });
@@ -385,7 +388,7 @@ S[6] = (t, T, sc) => {
     s = cam(comicZoom(u), 540, 900, w);
     s += strip15('¿Tienes un comercio?', 540, 292, pop(u, c.B_strip, 0.5), -2);
     s += bigT('Escríbenos y te informamos', 540, 420, 70, pop(u, c.B_sub, 0.5), 1, { sw: SW * 1.7, sd: 6, fill: C.yel });
-    s += bigT('Formulario en la descripción · Comenta ALTA', 540, 508, 46, pop(u, c.B_form, 0.5), 0, { sw: SW * 1.3, sd: 4, maxW: 980 });
+    s += bigT(TIKTOK() ? 'Formulario en la descripción' : 'Formulario en la descripción · Comenta ALTA', 540, 508, 46, pop(u, c.B_form, 0.5), 0, { sw: SW * 1.3, sd: 4, maxW: 980 });
     s += whoPill('Para comercios', 540, 590, pop(u, c.B_who, 0.5), { size: 46 });
     return s;
   }

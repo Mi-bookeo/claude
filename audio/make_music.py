@@ -12,7 +12,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-cfg = json.load(open(os.path.join(ROOT, 'config.json')))
+cfg = json.load(open(os.path.join(ROOT, os.environ.get('CONFIG', 'config.json'))))
 FPS = cfg['fps']
 starts, fr = [], 0
 for s in cfg['scenes']:
@@ -146,7 +146,7 @@ L2, R2 = delay(L, 180, 0.18), delay(R, 230, 0.18)
 out = np.stack([L2, R2], 1)[: int(TOTAL * SR)]
 fade = int(0.6 * SR); out[-fade:] *= np.linspace(1, 0, fade)[:, None]
 out *= 0.5 / max(1e-6, np.abs(out).max())
-p = os.path.join(ROOT, 'audio', 'musica.wav')
+p = os.path.join(ROOT, cfg.get('musicWav', 'audio/musica.wav'))
 with wave.open(p, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(out, -1, 1) * 32767).astype('<i2').tobytes())

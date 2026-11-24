@@ -14,9 +14,17 @@ En la parte final de cada vídeo, siempre dos cosas, en este orden (en voz, en s
 2. **Después, la alternativa por comentario**: «O, si lo prefieres, comenta CANAL para el canal de WhatsApp»
    (clientes) o «O, si lo prefieres, comenta ALTA para el formulario de alta» (negocios).
 
-Motivo: el mismo vídeo se usa en TikTok y en Instagram; para una de las dos plataformas el usuario recorta él mismo
-la parte del comentario. No hace falta preparar tramos aparte: el vídeo se hace normal, con el audio completo que da
-el usuario, y la tarjeta final con el logo sigue al final, como siempre.
+## Dos archivos por vídeo: Instagram y TikTok (regla fija desde el vídeo 15)
+El usuario da el audio COMPLETO (el de Instagram, con las frases de «comenta»). Se entregan SIEMPRE dos archivos
+con el mismo vídeo; el usuario ya no recorta nada:
+- **Vídeo Instagram**: completo (enlace en la descripción + «o comenta CANAL / ALTA»).
+- **Vídeo TikTok**: el mismo vídeo SIN la parte de «comenta», quitada en la voz, en los subtítulos y en los textos en
+  pantalla (sin franja «Comenta CANAL», «Formulario en la descripción» sin «· Comenta ALTA»). Se genera aparte (no se
+  recorta el de Instagram): se corta la frase al final de su tramo, se acorta el plano y se adelantan los siguientes;
+  la tarjeta final con el logo sigue al final. Se vuelve a renderizar solo la escena que cambia.
+  Herramienta: `audio/variante_tiktok.py` (crea `config.tiktok.json`; los pasos están en su cabecera).
+- **Peso**: entregar versiones ligeras para redes (libx264 crf 23, preset slow, tune animation; ≈13 MB por minuto),
+  porque TikTok e Instagram vuelven a comprimir. La de máxima calidad (crf 18) solo si la pide.
 
 ## Personajes
 - **Todos los personajes se dibujan DE FRENTE**, mirando a cámara (nada de perfil ni 3/4), con cuello visible.

@@ -6,7 +6,7 @@
    4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba escaparate_lanzamiento_subtitulado.mp4."""
 import json, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-cfg = json.load(open(os.path.join(ROOT, 'config.json')))
+cfg = json.load(open(os.path.join(ROOT, os.environ.get('CONFIG', 'config.json'))))
 BLOCKS = {
     'maria_1': ['¿Te estás perdiendo las ofertas', 'y novedades de Tudela?', 'Pues se acabó:', 'hoy empieza algo nuevo.'],
     'maria_2': ['Se acaba de lanzar', 'Escaparate de Tudela:', 'los comercios de la ciudad', 'publican sus ofertas,', 'novedades y eventos,', 'y te llegan directamente al móvil.'],
@@ -18,6 +18,7 @@ BLOCKS = {
     'mari_2': ['Y si tienes un comercio,', 'escríbenos y te informamos.'],
     'maria_7': ['Entra en escaparatetudela.es...'],
     'mari_3': ['...y empieza a beneficiarte.'],
+    'maria_6_tiktok': ['En la descripción tienes', 'el enlace al canal de WhatsApp.'],  # versión TikTok (sin «o comenta canal…»)
 }
 MAXC = 28
 def wrap(s):
@@ -62,12 +63,12 @@ for q in subs: q['start'] = max(0, round(q['start'], 2)); q['end'] = round(min(q
 
 def ts(x, sep=','):
     ms = int(round(x * 1000)); return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d}{sep}{ms % 1000:03d}'
-with open(os.path.join(ROOT, 'subtitles.srt'), 'w') as fh:
+with open(os.path.join(ROOT, cfg.get('srt', 'subtitles.srt')), 'w') as fh:
     for i, q in enumerate(subs, 1): fh.write(f"{i}\n{ts(q['start'])} --> {ts(q['end'])}\n" + '\n'.join(wrap(q['text'])) + '\n\n')
 def tass(x):
     cs = int(round(x * 100)); return f'{cs // 360000}:{cs // 6000 % 60:02d}:{cs // 100 % 60:02d}.{cs % 100:02d}'
 os.makedirs(os.path.join(ROOT, 'tmp'), exist_ok=True)
-ass = os.path.join(ROOT, 'tmp', 'subtitles.ass')
+ass = os.path.join(ROOT, 'tmp', os.path.splitext(cfg.get('srt', 'subtitles.srt'))[0] + '.ass')
 with open(ass, 'w') as fh:
     fh.write('[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 2\nScaledBorderAndShadow: yes\n\n')
     fh.write('[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n')
@@ -77,8 +78,8 @@ with open(ass, 'w') as fh:
     for q in subs: fh.write(f"Dialogue: 0,{tass(q['start'])},{tass(q['end'])},Sub,,0,0,0,,{'\\N'.join(wrap(q['text']))}\n")
 for q in subs: print(f"{q['start']:6.2f}-{q['end']:6.2f}  [{q['who']}] {' / '.join(wrap(q['text']))}")
 if '--burn' in sys.argv:
-    src = os.path.join(ROOT, 'escaparate_lanzamiento_con_audio.mp4'); out = os.path.join(ROOT, 'escaparate_lanzamiento_subtitulado.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
+    src = os.path.join(ROOT, cfg['output'].replace('.mp4', '_con_audio.mp4')); out = os.path.join(ROOT, cfg.get('subtitledOut', cfg['output'].replace('.mp4', '_subtitulado.mp4'))); tmp = out.replace('.mp4', '.partial.mp4')
     vf = f"subtitles=filename={ass}:fontsdir={os.path.join(ROOT, 'fonts')}:original_size=1080x1920"
-    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-vf', vf, '-c:v', 'libx264', '-crf', '18', '-preset', 'medium', '-pix_fmt', 'yuv420p',
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-vf', vf, '-c:v', 'libx264', '-crf', str(cfg.get('burnCrf', 18)), '-preset', cfg.get('burnPreset', 'medium'), *(['-tune', 'animation'] if cfg.get('burnCrf', 18) > 18 else []), '-pix_fmt', 'yuv420p',
                     '-r', str(FPS), '-c:a', 'copy', '-movflags', '+faststart', tmp], check=True)
     os.replace(tmp, out); print('->', os.path.relpath(out, ROOT))

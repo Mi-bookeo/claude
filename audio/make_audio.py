@@ -11,7 +11,7 @@ import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A = lambda *p: os.path.join(ROOT, 'audio', *p)
 SR = 48000
-cfg = json.load(open(os.path.join(ROOT, 'config.json')))
+cfg = json.load(open(os.path.join(ROOT, os.environ.get('CONFIG', 'config.json'))))
 FPS = cfg['fps']
 SC, fr = [], 0
 for s in cfg['scenes']:
@@ -288,7 +288,8 @@ if synth: print('AVISO: efectos sintetizados con código (básicos):', ', '.join
 
 # ---------------- música ----------------
 mix = (voice + fx)[:, None] * np.array([1.0, 1.0])
-MUS = A('musica.mp3') if os.path.exists(A('musica.mp3')) else (A('musica.wav') if os.path.exists(A('musica.wav')) else None)
+MW = os.path.join(ROOT, cfg.get('musicWav', 'audio/musica.wav'))
+MUS = A('musica.mp3') if os.path.exists(A('musica.mp3')) else (MW if os.path.exists(MW) else None)
 if MUS:
     raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', MUS, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
     mus = np.frombuffer(raw, '<f4').astype(np.float64).reshape(-1, 2)
@@ -301,14 +302,15 @@ else:
     print('música: no hay audio/musica.mp3 ni audio/musica.wav -> sin música')
 pk = np.abs(mix).max()
 if pk > 0.95: mix *= 0.95 / pk
-with wave.open(A('mezcla.wav'), 'wb') as w:
+MEZ = A(cfg.get('mixWav', 'mezcla.wav'))
+with wave.open(MEZ, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(mix, -1, 1) * 32767).astype('<i2').tobytes())
 with wave.open(A('efectos.wav'), 'wb') as w:
     w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(fx, -1, 1) * 32767).astype('<i2').tobytes())
-vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, 'escaparate_lanzamiento_con_audio.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
-subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-i', A('mezcla.wav'), '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy',
+vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, cfg['output'].replace('.mp4', '_con_audio.mp4')); tmp = out.replace('.mp4', '.partial.mp4')
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-i', MEZ, '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy',
                 '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', tmp], check=True)
 os.replace(tmp, out)
 print('->', os.path.relpath(out, ROOT), f'({TOTAL:.2f} s)')

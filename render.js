@@ -17,11 +17,12 @@ const { spawn } = require('child_process');
 const { chromium } = require('playwright');
 
 const ROOT = __dirname;
-const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
+// CONFIG=config.tiktok.json -> versión TikTok (sus escenas van a cfg.scenesDir y su timeline a cfg.timeline)
+const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, process.env.CONFIG || 'config.json'), 'utf8'));
 const FPS = cfg.fps;
 const pad = n => String(n).padStart(2, '0');
 const SUBS = (process.argv[2] === 'subs' || process.env.SUBS) ? JSON.parse(fs.readFileSync(path.join(ROOT, 'subtitles.json'), 'utf8')) : null;
-const SCN = process.argv[2] === 'subs' ? 'scenes_sub' : 'scenes';
+const SCN = process.argv[2] === 'subs' ? 'scenes_sub' : (cfg.scenesDir || 'scenes');
 
 function sceneTiming() {
   let frame = 0;
@@ -130,7 +131,7 @@ async function concat() {
     });
   });
   tl += `TOTAL\t0.000\t${sc[sc.length - 1].end.toFixed(3)}\n`;
-  fs.writeFileSync(path.join(ROOT, 'timeline.txt'), tl);
+  fs.writeFileSync(path.join(ROOT, cfg.timeline || 'timeline.txt'), tl);
   console.log(tl);
 }
 
