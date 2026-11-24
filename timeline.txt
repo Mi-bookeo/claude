@@ -1,13 +1,22 @@
-Ana y el cuentacuentos — timeline (1080x1920, 30 fps)
-escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
-01	0.000	5.200	5.200	156	Exterior de la librería, calle tranquila: Ana coloca un libro en el caballete; «Librería · Tudela»
-02	5.200	10.200	5.000	150	Interior: Ana tras el mostrador con la cartulina en blanco, dudando y rascándose la barbilla; «¿?»; «¿Y si organizo un cuentacuentos?»
-03	10.200	15.200	5.000	150	Nube de pensamiento: «El año pasado», la librería vacía (sillas, telaraña, mosca, reloj); Ana suspira; «El año pasado… nadie»
-04	15.200	21.200	6.000	180	Dos viñetas: puerta vacía / puerta con gente que atrae a más; «La gente atrae a la gente»; sello «Prueba social»
-05	21.200	27.200	6.000	180	Ana chasquea los dedos y saca el móvil; tarjeta de evento, «Publicar» → «Publicada»; «Esta vez, en Escaparate»
-06	27.200	33.200	6.000	180	Calle: a la madre con su hija, al abuelo con su nieto y al joven les vibra el móvil; la niña salta y tira de su madre; «Directo a su móvil»
-07	33.200	41.433	8.233	247	Exterior: entran la madre y la niña, el abuelo y el nieto; el padre y su hijo se paran, la madre les hace señas y entran; se forma una fila; «Los primeros atraen a los demás»
-08	41.433	47.433	6.000	180	Interior lleno: la cuentacuentos en el puf con el dragón en la burbuja, niños en la alfombra, padres detrás, Ana con las manos en las mejillas; «¡Librería llena!»
-09	47.433	51.433	4.000	120	Pantalla partida: arriba la librería vacía («El año pasado»), abajo la llena («Este año»); destello final
-10	51.433	63.433	12.000	360	Ana sale de la librería y se acerca a cámara hasta el primer plano; «¿Tienes un negocio?», «Comenta ALTA»…; tarjeta final
-TOTAL	0.000	63.433
+Se lanza Escaparate de Tudela — timeline (1080x1920, 30 fps)
+escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
+01	0.000	6.200	6.200	186	Gancho: cartel.png a pantalla completa (zoom con rebote), dolly out hasta María que lo sostiene sorprendida; «Se acabó»; baja el cartel y sonríe
+  01-A	0.000	6.200	6.200	186	plano A
+02	6.200	16.200	10.000	300	María en plano medio; tres tarjetas (Oferta, Novedad, Evento) vuelan al móvil con ondas; «Acaba de nacer Escaparate de Tudela», «Ofertas, novedades y eventos de tu ciudad»
+  02-A	6.200	16.200	10.000	300	plano A
+03	16.200	20.200	4.000	120	Mini gancho: María señala hacia un lado, cómplice; «Y ahora, lo mejor para los comercios»
+  03-A	16.200	20.200	4.000	120	plano A
+04	20.200	33.300	13.100	393	Tienda de Mari Carmen: habla tras el mostrador «Publicar es muy fácil»; móvil de los 3 toques (foto, texto, publicar) con 1-2-3; tarjeta publicada con tic verde; Mari Carmen sonríe
+  04-A	20.200	25.500	5.300	159	plano A
+  04-B	25.500	31.900	6.400	192	plano B
+  04-C	31.900	33.300	1.400	42	plano C
+05	33.300	44.300	11.000	330	María y el móvil con la web (carrusel de comercios) «Todo en un solo lugar»; el chat del canal recibe ofertas «Y te llega al WhatsApp»; calle con corazón gigante «Apoyas al comercio de tu ciudad»
+  05-A	33.300	37.367	4.067	122	plano A
+  05-B	37.367	40.900	3.533	106	plano B
+  05-C	40.900	44.300	3.400	102	plano C
+06	44.300	60.333	16.033	481	Cierre: A) María «Comenta CANAL» (clientes); B) Mari Carmen «¿Tienes un comercio?» (comercios); C) las dos saludan «Entra en escaparatetudela.es»; tarjeta final roja
+  06-A	44.300	49.400	5.100	153	plano A
+  06-B	49.400	53.400	4.000	120	plano B
+  06-C	53.400	58.333	4.933	148	plano C
+  06-FIN	58.333	60.333	2.000	60	plano FIN
+TOTAL	0.000	60.333
