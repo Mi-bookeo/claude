@@ -14,7 +14,6 @@ En la parte final de cada vídeo, siempre dos cosas, en este orden (en voz, en s
 2. **Después, la alternativa por comentario**: «O, si lo prefieres, comenta CANAL para el canal de WhatsApp»
    (clientes) o «O, si lo prefieres, comenta ALTA para el formulario de alta» (negocios).
 
-Motivo: el mismo vídeo se usa en TikTok y en Instagram; para una de las dos plataformas se quita solo la parte del
-comentario y el resto queda tal cual. Por eso la parte 2 va en un tramo propio y separado (su propia escena/plano,
-con corte seco, frase completa y sin textos ni voz que crucen el corte), de modo que se pueda recortar limpiamente sin
-tocar la parte 1 ni la tarjeta final. Al terminar cada vídeo, decir en qué segundo empieza y acaba ese tramo.
+Motivo: el mismo vídeo se usa en TikTok y en Instagram; para una de las dos plataformas el usuario recorta él mismo
+la parte del comentario. No hace falta preparar tramos aparte: el vídeo se hace normal, con el audio completo que da
+el usuario, y la tarjeta final con el logo sigue al final, como siempre.
