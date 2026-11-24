@@ -290,10 +290,10 @@ function entering(svgFn, u) {
   return `<clipPath id="${id}"><rect x="${f(d.x)}" y="${f(d.y)}" width="${f(d.w)}" height="${f(d.h + 4)}"/></clipPath><g clip-path="url(#${id})">${svgFn(DC7, foot, k)}</g>`;
 }
 S[7] = (t, T, sc) => {
-  const c = cues(sc, { title: 0.2, title2: 0.5 });
-  const ASC = 3.05, KSC = 3.05;
+  const c = cues(sc, { title: 0.2, title2: 0.5, stop: 2.8, wave: 3.0, go: 4.6 });
+  const ASC = 3.05, KSC = 3.05, ST = c.stop, GO = Math.max(c.go, c.stop + 1.2);
   // aperturas de puerta: [abre, cierra]
-  const OPEN = [[1.35, 2.25], [2.25, 3.35], [5.15, 6.2], [6.05, 6.9]];
+  const OPEN = [[1.35, 2.25], [2.25, 3.35], [GO + 0.55, GO + 1.6], [GO + 1.45, GO + 2.3]];
   const op = OPEN.reduce((m, [a, b]) => Math.max(m, easeOut(seg(t, a, a + 0.25)) * (1 - easeInOut(seg(t, b - 0.25, b)))), 0);
   const ringT = OPEN.map(r => r[0]).filter(a => t >= a).pop();
   const ring = ringT !== undefined ? Math.max(0, damp(t - ringT, 18, 4)) : 0;
@@ -304,7 +304,7 @@ S[7] = (t, T, sc) => {
   w += easel(380, FEET + 2, 0.92, { book: C.red });
   let back = '', front = '', inside = '';
   // --- gente del fondo que se para, mira y se suma (fila a la derecha de la puerta) ---
-  const JOIN = [[4, 1300, 960, 3.9, 5.0], [6, 1400, 1060, 4.5, 5.6], [3, -200, 230, 4.2, 5.4]];
+  const JOIN = [[4, 1300, 960, ST + 1.1, ST + 2.2], [6, 1400, 1060, ST + 1.7, ST + 2.8], [3, -200, 230, ST + 1.4, ST + 2.6]];
   JOIN.forEach(([i, x0, x1, a, b], j) => {
     if (t < a) return;
     const u = seg(t, a, b), x = lerp(x0, x1, easeOut(u)), walking = u < 1;
@@ -314,10 +314,10 @@ S[7] = (t, T, sc) => {
     if (!walking) back += mark('!', x + (x > DC7 ? -20 : 20), 880, pop(t, b, 0.4) * (1 - seg(t, b + 0.6, b + 0.8)), 8, 80, C.red);
   });
   // --- madre y niña: llegan desde la izquierda; la niña entra; la madre se queda en la puerta y hace señas ---
-  const mStop = 520, mWalk = seg(t, 0, 1.6), mx = t < 6.0 ? lerp(-180, mStop, easeOut(mWalk)) : mStop;
+  const mStop = 520, mWalk = seg(t, 0, 1.6), mx = lerp(-180, mStop, easeOut(mWalk));
   const girlIn = seg(t, 1.6, 2.1);
-  const wave = t > 3.0 && t < 4.8;
-  const momIn = seg(t, 6.05, 6.8);
+  const wave = t > c.wave && t < GO + 0.2;
+  const momIn = seg(t, GO + 1.45, GO + 2.2);
   const momPose = Object.assign(mWalk < 1 ? walkPose(2 * PI * t / 0.6, 0.9) : {}, { expr: wave ? 'wink' : 'happy', look: wave ? [1, -0.4] : [0.6, 0], blink: blinkA(T),
     armF: wave ? -150 + 22 * Math.sin(t * 11) : (mWalk < 1 ? 12 : 4), handF: wave ? waveHand(t * 11) : null });
   if (momIn <= 0) front += shadowEll(mx, FEET + 4, 72) + placeFolk(F_MADRE, mx, FEET, ASC, momPose);
@@ -340,20 +340,21 @@ S[7] = (t, T, sc) => {
     }
   } else if (gIn < 1) inside += entering((x, foot, k) => placeFolk(F_ABUELO, x, foot, ASC * k, Object.assign(walkPose(2 * PI * t / 0.7, 0.6), { expr: 'smile' })) + placeKid(x + 60, foot, KSC * 0.96 * k, { who: 'nieto', expr: 'wow' }), gIn);
   // --- padre (chaqueta gris y mochila) con su hijo: pasan, se paran, el niño tira hacia la puerta, entran ---
-  const dA = seg(t, 1.0, 2.8), dB = seg(t, 4.6, 5.5), dIn = seg(t, 5.4, 6.1);
-  const pull = t > 2.9 && t < 4.6 ? easeOut(seg(t, 2.9, 3.3)) * (0.8 + 0.2 * Math.sin(t * 10)) : 0;
-  let dx = dA < 1 ? lerp(1320, 900, dA) : lerp(lerp(900, 860, easeOut(seg(t, 3.6, 4.3))), DC7 + 60, easeInOut(dB));
-  const dWalking = dA < 1 || (dB > 0 && dB < 1) || (t > 3.6 && t < 4.3);
+  const dA = seg(t, ST - 1.8, ST), dB = seg(t, GO, GO + 0.9), dIn = seg(t, GO + 0.8, GO + 1.5);
+  const pull = t > ST + 0.1 && t < GO ? easeOut(seg(t, ST + 0.1, ST + 0.5)) * (0.8 + 0.2 * Math.sin(t * 10)) : 0;
+  const A1 = Math.min(ST + 0.8, GO - 0.7), A2 = Math.min(ST + 1.5, GO);
+  let dx = dA < 1 ? lerp(1320, 900, dA) : lerp(lerp(900, 860, easeOut(seg(t, A1, A2))), DC7 + 60, easeInOut(dB));
+  const dWalking = (dA > 0 && dA < 1) || (dB > 0 && dB < 1) || (t > A1 && t < A2);
   if (dIn <= 0) {
-    const dPose = Object.assign(dWalking ? walkPose(2 * PI * t / 0.68, 0.8) : {}, { flip: true, expr: t < 2.9 ? 'happy' : (t < 4.6 ? 'curious' : 'smile'), look: t > 2.9 ? [-1, 0] : [0, 0], head: t > 2.9 && t < 4.6 ? 4 : 0,
+    const dPose = Object.assign(dWalking ? walkPose(2 * PI * t / 0.68, 0.8) : {}, { flip: true, expr: t < ST + 0.1 ? 'happy' : (t < GO ? 'curious' : 'smile'), look: t > ST + 0.1 ? [-1, 0] : [0, 0], head: t > ST + 0.1 && t < GO ? 4 : 0,
       lean: -pull * 5, armF: dWalking ? 10 : lerp(8, 34, pull), blink: blinkA(T, 0.9) });
     const [hx, hy] = folkHand(F_PADRE, dx, FEET, ASC, dPose.armF, true, true);
     const sx = dx - 118 - 22 * pull;
-    const son = { who: 'hijo', expr: t > 2.8 ? 'wow' : 'happy', look: [-1.6, -0.4], head: -4 * pull, lean: -10 * pull, legPh: dWalking ? 2 * PI * t / 0.44 : undefined,
+    const son = { who: 'hijo', expr: t > ST ? 'wow' : 'happy', look: [-1.6, -0.4], head: -4 * pull, lean: -10 * pull, legPh: dWalking ? 2 * PI * t / 0.44 : undefined,
       armF: { h: kidLocal(sx, FEET, KSC, hx, hy, false), side: -1, hand: 'ball' }, armB: pull > 0.2 ? { h: [164, 140], side: 1, hand: 'point', dir: 180, hs: 0.95 } : null, blink: blinkA(T, 0.2) };
     front += shadowEll(dx, FEET + 4, 74) + placeFolk(F_PADRE, dx, FEET, ASC, dPose);
     front += shadowEll(sx, FEET + 4, 42) + placeKid(sx, FEET, KSC, son);
-    if (pull > 0) { const [sx2, sy2] = [sx - 20, FEET - 330]; front += sparkle(sx2 - 40, sy2, 20, pop(t, 3.0, 0.4)) + sparkle(sx2 + 40, sy2 - 30, 16, pop(t, 3.1, 0.4), C.yel); }
+    if (pull > 0) { const [sx2, sy2] = [sx - 20, FEET - 330]; front += sparkle(sx2 - 40, sy2, 20, pop(t, ST + 0.2, 0.4)) + sparkle(sx2 + 40, sy2 - 30, 16, pop(t, ST + 0.3, 0.4), C.yel); }
   } else if (dIn < 1) inside += entering((x, foot, k) => placeFolk(F_PADRE, x + 30, foot, ASC * k, Object.assign(walkPose(2 * PI * t / 0.68, 0.6), { flip: true, expr: 'smile' })) + placeKid(x - 60, foot, KSC * k, { who: 'hijo', expr: 'wow' }), dIn);
   w += back;
   // quien entra se dibuja dentro del hueco de la puerta (por encima de la puerta, por debajo de los de delante)

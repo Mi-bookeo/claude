@@ -1,13 +1,13 @@
-José y las tortillas — timeline (1080x1920, 30 fps)
+Ana y el cuentacuentos — timeline (1080x1920, 30 fps)
 escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
-01	0.000	4.000	4.000	120	Exterior 16:00: fachada del bar La Tortilla, calle tranquila; recuadro «16:00»; «Bar La Tortilla»
-02	4.000	9.000	5.000	150	Interior casi vacío: José con los brazos cruzados ante la barra llena de tortillas, cansado; «Poca gente esta mañana»
-03	9.000	13.000	4.000	120	José con la mano en la cabeza; nube: las tortillas al cubo de basura; «¿Tirarlas?»
-04	13.000	17.000	4.000	120	Ojos muy abiertos, chasquido y bombilla; nube con el logo de Escaparate de Tudela y destello; «¡Idea!»
-05	17.000	27.000	10.000	300	17:00: José teclea en el móvil; tarjeta de oferta flash, pulsa «Publicar» → «Publicada»; José sonríe mirando el reloj, nube con el bar lleno y «20:00»; «A las 6, flash»
-06	27.000	32.000	5.000	150	Exterior 17:00: a todos les vibra el móvil y leen la oferta; Pedro sonríe y va al bar; «Oferta flash»
-07	32.000	38.000	6.000	180	Interior 18:00: montaje con cortes secos, 3 clientes, 8 y bar lleno; Pedro entre ellos con su pincho y su caña; José sirve cañas
-08	38.000	45.000	7.000	210	Interior 20:00: barra vacía (platos y migas), clientes contentos, José pulgar arriba; «¡Todo vendido!»
-09	45.000	53.000	8.000	240	José orgulloso ante la barra vacía; para comercios: «¿Te sobra género?» «¡Lánzalo en oferta flash!» Escaparate de Tudela
-10	53.000	68.300	15.300	459	Atardecer tras las 20:00, farolas encendidas y pájaros: José en primer plano; para comercios «¿Tienes un negocio?» «Comenta ALTA» «y te enviamos el formulario»; para el público «Y tú, apúntate al canal»; tarjeta final con logo y web
-TOTAL	0.000	68.300
+01	0.000	4.000	4.000	120	Exterior de la librería, calle tranquila: Ana coloca un libro en el caballete; «Librería · Tudela»
+02	4.000	9.000	5.000	150	Interior: Ana tras el mostrador con la cartulina en blanco, dudando y rascándose la barbilla; «¿?»; «¿Y si organizo un cuentacuentos?»
+03	9.000	14.000	5.000	150	Nube de pensamiento: «El año pasado», la librería vacía (sillas, telaraña, mosca, reloj); Ana suspira; «El año pasado… nadie»
+04	14.000	20.000	6.000	180	Dos viñetas: puerta vacía / puerta con gente que atrae a más; «La gente atrae a la gente»; sello «Prueba social»
+05	20.000	26.000	6.000	180	Ana chasquea los dedos y saca el móvil; tarjeta de evento, «Publicar» → «Publicada»; «Esta vez, en Escaparate»
+06	26.000	32.000	6.000	180	Calle: a la madre con su hija, al abuelo con su nieto y al joven les vibra el móvil; la niña salta y tira de su madre; «Directo a su móvil»
+07	32.000	39.000	7.000	210	Exterior: entran la madre y la niña, el abuelo y el nieto; el padre y su hijo se paran, la madre les hace señas y entran; se forma una fila; «Los primeros atraen a los demás»
+08	39.000	45.000	6.000	180	Interior lleno: la cuentacuentos en el puf con el dragón en la burbuja, niños en la alfombra, padres detrás, Ana con las manos en las mejillas; «¡Librería llena!»
+09	45.000	49.000	4.000	120	Pantalla partida: arriba la librería vacía («El año pasado»), abajo la llena («Este año»); destello final
+10	49.000	61.000	12.000	360	Ana sale de la librería y se acerca a cámara hasta el primer plano; «¿Tienes un negocio?», «Comenta ALTA»…; tarjeta final
+TOTAL	0.000	61.000

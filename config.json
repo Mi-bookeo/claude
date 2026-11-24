@@ -98,15 +98,15 @@
       "id": 6,
       "name": "Calle: a la madre con su hija, al abuelo con su nieto y al joven les vibra el móvil; la niña salta y tira de su madre; «Directo a su móvil»",
       "duration": 6.0,
-      "still": 3.6,
+      "still": 3.2,
       "cues": {
         "title": 0.25,
-        "buzz": 0.35,
-        "take": 0.85,
-        "card": 1.15,
-        "smile": 1.9,
-        "jump": 2.4,
-        "tug": 3.2
+        "buzz": 0.1,
+        "take": 0.45,
+        "card": 0.7,
+        "smile": 1.4,
+        "jump": 1.9,
+        "tug": 2.6
       }
     },
     {

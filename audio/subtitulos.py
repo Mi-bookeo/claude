@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
-"""Subtítulos del vídeo 13 «José y las tortillas», sincronizados con las voces colocadas en config.json ('voices':
+"""Subtítulos del vídeo 14 «Ana y el cuentacuentos», sincronizados con las voces colocadas en config.json ('voices':
    inicio, duración real medida con ffprobe y tramos con voz). Cada frase se parte en bloques cortos (4-7 palabras,
    máx. 2 líneas de 28 caracteres); el tiempo con voz de la frase se reparte entre sus bloques en proporción a las letras.
    Salida: subtitles.srt y tmp/subtitles.ass (página 1080x1920, Baloo 2 ExtraBold (Fontsize 112 en libass ≈ letra de 72 px), blanca con contorno negro de
-   4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba jose_la_tortilla_subtitulado.mp4."""
+   4 px y sombra, centrada, dentro de la franja y=1450..1750). Con --burn graba ana_cuentacuentos_subtitulado.mp4."""
 import json, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 cfg = json.load(open(os.path.join(ROOT, 'config.json')))
 BLOCKS = {
-    'narradora_1': ['Las cuatro de la tarde', 'en el bar La Tortilla.'],
-    'narradora_2': ['Ha tenido poca gente por la mañana', 'y le han sobrado muchas tortillas.'],
-    'narradora_3': ['Publica una oferta flash:', 'pincho de tortilla y bebida', 'por tres euros con cincuenta,', 'de seis a ocho.'],
-    'narradora_4': ['Y la oferta le llega', 'directamente a la gente.'],
-    'narradora_5': ['A las seis, el bar empieza a llenarse.'],
-    'narradora_6': ['Y a las ocho, la barra', 'de tortillas está vacía.'],
-    'jose_1': ['Voy a tener que tirarlas...'],
-    'jose_2': ['¡Espera! ¡Escaparate de Tudela!'],
-    'jose_3': ['Así, con suerte, se quedan', 'después de las ocho.'],
-    'jose_4': ['¡Día terminado con éxito!', '¡Todas las tortillas vendidas!'],
-    'jose_5': ['Si tú también tienes un negocio,', 'comenta alta y te enviamos el formulario.'],
-    'jose_6': ['Y si no, busca en la descripción', 'el canal de WhatsApp,', 'para que te lleguen', 'todas las publicaciones a tu móvil', 'y no te pierdas ninguna.'],
+    'narradora_1': ['Ana tiene una librería en Tudela', 'y quiere organizar', 'un cuentacuentos para niños.'],
+    'ana_1': ['Me encantaría organizar', 'un cuentacuentos... pero...'],
+    'ana_2': ['El año pasado no vino nadie.'],
+    'narradora_2': ['Pero dicen los expertos', 'que la gente atrae a la gente.', 'Se llama prueba social.'],
+    'ana_3': ['Pues esta vez lo voy a anunciar', 'en Escaparate de Tudela.'],
+    'madre_1': ['¡Mira, cariño!', '¡Cuentacuentos en la librería!'],
+    'narradora_3': ['Y el evento les llega al móvil.'],
+    'vecino_1': ['¿Qué pasa en la librería?', '¡Cuántos niños!'],
+    'madre_2': ['Hay un cuentacuentos para niños.', '¡Ven!'],
+    'vecino_2': ['Venga, hijo, vamos a entrar.'],
+    'narradora_4': ['Los primeros atraen a los siguientes,', 'y la librería se llena.'],
+    'ana_4': ['¡Este año, la librería llena!'],
+    'ana_5': ['Los primeros atraen a los demás.'],
+    'ana_6': ['Si tienes un negocio,', 'comenta alta', 'y te enviamos el formulario.'],
 }
 MAXC = 28
 def wrap(s):
@@ -79,7 +81,7 @@ with open(ass, 'w') as fh:
     for q in subs: fh.write(f"Dialogue: 0,{tass(q['start'])},{tass(q['end'])},Sub,,0,0,0,,{'\\N'.join(wrap(q['text']))}\n")
 for q in subs: print(f"{q['start']:6.2f}-{q['end']:6.2f}  [{q['who']}] {' / '.join(wrap(q['text']))}")
 if '--burn' in sys.argv:
-    src = os.path.join(ROOT, 'jose_la_tortilla_con_audio.mp4'); out = os.path.join(ROOT, 'jose_la_tortilla_subtitulado.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
+    src = os.path.join(ROOT, 'ana_cuentacuentos_con_audio.mp4'); out = os.path.join(ROOT, 'ana_cuentacuentos_subtitulado.mp4'); tmp = out.replace('.mp4', '.partial.mp4')
     vf = f"subtitles=filename={ass}:fontsdir={os.path.join(ROOT, 'fonts')}:original_size=1080x1920"
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-vf', vf, '-c:v', 'libx264', '-crf', '18', '-preset', 'medium', '-pix_fmt', 'yuv420p',
                     '-r', str(FPS), '-c:a', 'copy', '-movflags', '+faststart', tmp], check=True)
