@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* Renderizador determinista: Playwright (Chromium) dibuja cada fotograma a partir de su tiempo
    y se envía por tubería a ffmpeg (sin fotogramas en disco).
+   Vídeo 15 «Se lanza Escaparate de Tudela» (sin audio ni subtítulos).
    Uso:
      node render.js stills 4,7,8      -> PNG a tamaño real en stills/
      node render.js stills all
@@ -47,7 +48,9 @@ async function openPage(browser) {
     ['logoW', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_blanco_t.png')).toString('base64')],
     ['logoR', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'assets', 'logo_rojo_t.png')).toString('base64')],
     // logo.png: solo el icono, sin letras (500x500, transparente)
-    ['logoI', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo.png')).toString('base64')]
+    ['logoI', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'logo.png')).toString('base64')],
+    // cartel.png del repositorio (1414x2000), se usa tal cual
+    ['cartel', 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'cartel.png')).toString('base64'), 1414, 2000]
   ];
   await page.evaluate(([c, f, l, sb]) => window.init(c, f, l, sb), [cfg, fonts, logos, SUBS]);
   return page;
@@ -118,8 +121,14 @@ async function concat() {
   fs.unlinkSync(list);
   if (process.argv[2] === 'subs') { console.log('-> ' + path.relative(ROOT, final)); return; }
   let tl = `${cfg.title} — timeline (${cfg.width}x${cfg.height}, ${FPS} fps)\n`;
-  tl += `escena\tinicio_s\tfin_s\tduracion_s\tfotogramas\tnombre\n`;
-  sc.forEach(s => { tl += `${pad(s.id)}\t${s.start.toFixed(3)}\t${s.end.toFixed(3)}\t${(s.end - s.start).toFixed(3)}\t${s.frames}\t${s.name}\n`; });
+  tl += `escena/plano\tinicio_s\tfin_s\tduracion_s\tfotogramas\tnombre\n`;
+  sc.forEach(s => {
+    tl += `${pad(s.id)}\t${s.start.toFixed(3)}\t${s.end.toFixed(3)}\t${(s.end - s.start).toFixed(3)}\t${s.frames}\t${s.name}\n`;
+    Object.entries(s.shots || {}).forEach(([k, [a, b]]) => {
+      const fa = Math.round(a * FPS), fb = Math.min(s.frames, Math.round(b * FPS));
+      tl += `  ${pad(s.id)}-${k}\t${((s.startFrame + fa) / FPS).toFixed(3)}\t${((s.startFrame + fb) / FPS).toFixed(3)}\t${((fb - fa) / FPS).toFixed(3)}\t${fb - fa}\tplano ${k}\n`;
+    });
+  });
   tl += `TOTAL\t0.000\t${sc[sc.length - 1].end.toFixed(3)}\n`;
   fs.writeFileSync(path.join(ROOT, 'timeline.txt'), tl);
   console.log(tl);
