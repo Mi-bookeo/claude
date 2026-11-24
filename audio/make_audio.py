@@ -299,9 +299,8 @@ ev('whoosh_s', st(8) + 0.05, -8); ev('pop_s', at(8, 't1'), -14); ev('pop_s', at(
 # 9) «pop» al aparecer cada franja y «whoosh» del logo final; calle de tarde con pájaros
 f9 = shot(9, 'FIN')
 ev('calle_' + F2(f9 - st(9)), st(9), -23)
-for k in ('q1', 'q2', 'com', 'url'):
-    if k == 'com' and cfg.get('variant') == 'tiktok': continue
-    ev('pop_s', at(9, k), -12)
+for k in ('q1', 'q2', 'url'): ev('pop_s', at(9, k), -12)
+if cfg.get('variant') != 'tiktok': ev('pop', at(9, 'com'), -5); ev('pop', at(9, 'com') + 0.18, -6)
 ev('pop', at(9, 'strip'), -6)
 ev('whoosh', f9 - 0.2, -4); ev('ding_b', f9 + 0.05, -8)
 

@@ -14,6 +14,13 @@ En la parte final de cada vídeo, siempre dos cosas, en este orden (en voz, en s
 2. **Después, la alternativa por comentario**: «O, si lo prefieres, comenta CANAL para el canal de WhatsApp»
    (clientes) o «O, si lo prefieres, comenta ALTA para el formulario de alta» (negocios).
 
+## «Comenta …» en grande (regla fija desde el vídeo 16, solo versión Instagram)
+En el momento en que la voz dice «comenta ALTA» / «comenta CANAL», todos los textos de arriba (pregunta, franja del
+formulario o del canal, web…) DESAPARECEN y en pantalla queda solo la palabra de comentar en grande: «Comenta» y debajo
+la palabra clave («ALTA» / «CANAL») aún más grande (franja roja con letras amarillas). Se mantiene hasta el corte a la
+tarjeta final. Los demás textos del cierre (incluida la web) tienen que aparecer ANTES de ese momento. En la versión
+TikTok no hay «comenta», así que este momento no existe.
+
 ## Dos archivos por vídeo: Instagram y TikTok (regla fija desde el vídeo 15)
 El usuario da el audio COMPLETO (el de Instagram, con las frases de «comenta»). Se entregan SIEMPRE dos archivos
 con el mismo vídeo; el usuario ya no recorta nada:

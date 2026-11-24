@@ -366,11 +366,17 @@ S[9] = (t, T, sc) => {
   w += placeSara(540, py, SC, Object.assign(sBase(T, SC, 0.9), { expr, talk: wink ? 0 : talking, head: 3 * Math.sin(T * 1.7), armF, armB }));
   w += planter(1392);
   let s = cam(comicZoom(u, 1.12), 540, 900, w);
+  // al decir «comenta alta» (solo Instagram), desaparecen los textos de arriba y queda «Comenta ALTA» en grande
+  if (!TIKTOK() && u >= c.com) {
+    const k = pop(u, c.com, 0.5);
+    s += bigT(TX('s9f', 'Comenta'), 540, 330, 170, k, -4);
+    s += strip15(TX('s9g', 'ALTA'), 540, 560, pop(u, c.com + 0.18, 0.5), 3, { size: 230, h: 260, w: 700, fill: C.yel });
+    return s;
+  }
   s += bigT(TX('s9a', '¿Tienes un comercio'), 540, 250, 104, pop(u, c.q1, 0.5), -3);
   s += bigT(TX('s9b', 'o un servicio?'), 540, 362, 118, pop(u, c.q2, 0.5), 2, { fill: C.yel });
   s += strip15(TX('s9c', 'Formulario en la descripción'), 540, 492, pop(u, c.strip, 0.5), -2, { size: 72, h: 118 });
-  if (!TIKTOK()) s += bigT(TX('s9d', 'Comenta ALTA y te lo enviamos'), 540, 608, 66, pop(u, c.com, 0.5), 1, { sw: SW * 1.7, sd: 6 });
-  s += whoPill(TX('s9e', 'escaparatetudela.es'), 540, TIKTOK() ? 612 : 700, pop(u, c.url, 0.5), { size: 44 });
+  s += whoPill(TX('s9e', 'escaparatetudela.es'), 540, 612, pop(u, c.url, 0.5), { size: 44 });
   return s;
 };
 

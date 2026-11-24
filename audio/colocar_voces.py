@@ -109,7 +109,7 @@ for sc in cfg['scenes']:
         c['arrive'] = round(min(c['arrive'], c['ring'] - 0.05), 2)
     if sid == 9 and 'sara_5' in V:  # franja «Formulario…» con sara_5; «Comenta ALTA» cuando lo dice
         c['strip'] = round(max(1.0, V['sara_5']['start']), 2)
-        if 'sara_6' in V: c['com'] = round(word_t(V['sara_6'], 'Y si tienes un comercio o un servicio, '), 2); c['url'] = round(c['com'] + 0.7, 2)
+        if 'sara_6' in V: c['com'] = round(word_t(V['sara_6'], 'Y si tienes un comercio o un servicio, '), 2); c['url'] = round(c['strip'] + 0.9, 2)
         c['point'] = round(V['sara_5']['start'] + 0.3, 2); c['thumb'] = round(V[list(V)[-1]]['segments'][-1][1] + 0.1, 2)
 # instantes de los PNG de stills/ (la parte más cargada de cada escena)
 for sc in cfg['scenes']:

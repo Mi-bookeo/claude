@@ -18,7 +18,7 @@ escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
   07-A	36.967	41.967	5.000	150	plano A
 08	41.967	46.967	5.000	150	Primer plano: Sara se acerca a cámara hasta cabeza y hombros, ventana con cielo detrás; cómplice; «Las horas vacías, con partido»
   08-A	41.967	46.967	5.000	150	plano A
-09	46.967	58.967	12.000	360	Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «Comenta ALTA y te lo enviamos», «escaparatetudela.es»; tarjeta final roja con el logo
+09	46.967	58.967	12.000	360	Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «escaparatetudela.es»; al decir «comenta alta» desaparecen y queda «Comenta ALTA» en grande; tarjeta final roja con el logo
   09-A	46.967	56.967	10.000	300	plano A
   09-FIN	56.967	58.967	2.000	60	plano FIN
 TOTAL	0.000	58.967

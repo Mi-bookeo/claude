@@ -61,8 +61,9 @@
     "s9a": "¿Tienes un comercio",
     "s9b": "o un servicio?",
     "s9c": "Formulario en la descripción",
-    "s9d": "Comenta ALTA y te lo enviamos",
-    "s9e": "escaparatetudela.es"
+    "s9e": "escaparatetudela.es",
+    "s9f": "Comenta",
+    "s9g": "ALTA"
   },
   "scenes": [
     {
@@ -482,9 +483,9 @@
     },
     {
       "id": 9,
-      "name": "Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «Comenta ALTA y te lo enviamos», «escaparatetudela.es»; tarjeta final roja con el logo",
+      "name": "Cierre: Sara delante de la puerta (exterior, sol, nubes y pájaros); «¿Tienes un comercio o un servicio?», «Formulario en la descripción», «escaparatetudela.es»; al decir «comenta alta» desaparecen y queda «Comenta ALTA» en grande; tarjeta final roja con el logo",
       "duration": 12.0,
-      "still": 6.5,
+      "still": 5.92,
       "shots": {
         "A": [
           0,
@@ -516,7 +517,7 @@
         "q2": 0.55,
         "strip": 1.0,
         "com": 5.12,
-        "url": 5.82,
+        "url": 1.9,
         "wave": 0.2,
         "point": 0.45,
         "thumb": 6.81,
