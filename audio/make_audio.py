@@ -175,7 +175,7 @@ def syn(name):
     elif name == 'tecleo':  # pulgares en la pantalla
         d = 1.2; s = np.zeros(int(d * SR))
         for k in range(10):
-            c = syn('tap'); a_ = int((k * 0.115 + rng.uniform(-0.01, 0.01)) * SR); s[a_:a_ + len(c)] += c[: len(s) - a_] * rng.uniform(0.6, 1)
+            c = syn('tap'); a_ = int((0.01 + k * 0.115 + rng.uniform(-0.01, 0.01)) * SR); s[a_:a_ + len(c)] += c[: len(s) - a_] * rng.uniform(0.6, 1)
     elif name == 'yupi':  # «¡yupi!» de niña, sintetizado muy básico (dos sílabas agudas que suben)
         d = 0.9; t = t_(d); s = np.zeros(len(t))
         for o, f0, f1, ln in ((0.0, 420, 520, 0.22), (0.26, 560, 760, 0.5)):

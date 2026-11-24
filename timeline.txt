@@ -1,13 +1,13 @@
 Ana y el cuentacuentos — timeline (1080x1920, 30 fps)
 escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
-01	0.000	4.000	4.000	120	Exterior de la librería, calle tranquila: Ana coloca un libro en el caballete; «Librería · Tudela»
-02	4.000	9.000	5.000	150	Interior: Ana tras el mostrador con la cartulina en blanco, dudando y rascándose la barbilla; «¿?»; «¿Y si organizo un cuentacuentos?»
-03	9.000	14.000	5.000	150	Nube de pensamiento: «El año pasado», la librería vacía (sillas, telaraña, mosca, reloj); Ana suspira; «El año pasado… nadie»
-04	14.000	20.000	6.000	180	Dos viñetas: puerta vacía / puerta con gente que atrae a más; «La gente atrae a la gente»; sello «Prueba social»
-05	20.000	26.000	6.000	180	Ana chasquea los dedos y saca el móvil; tarjeta de evento, «Publicar» → «Publicada»; «Esta vez, en Escaparate»
-06	26.000	32.000	6.000	180	Calle: a la madre con su hija, al abuelo con su nieto y al joven les vibra el móvil; la niña salta y tira de su madre; «Directo a su móvil»
-07	32.000	39.000	7.000	210	Exterior: entran la madre y la niña, el abuelo y el nieto; el padre y su hijo se paran, la madre les hace señas y entran; se forma una fila; «Los primeros atraen a los demás»
-08	39.000	45.000	6.000	180	Interior lleno: la cuentacuentos en el puf con el dragón en la burbuja, niños en la alfombra, padres detrás, Ana con las manos en las mejillas; «¡Librería llena!»
-09	45.000	49.000	4.000	120	Pantalla partida: arriba la librería vacía («El año pasado»), abajo la llena («Este año»); destello final
-10	49.000	61.000	12.000	360	Ana sale de la librería y se acerca a cámara hasta el primer plano; «¿Tienes un negocio?», «Comenta ALTA»…; tarjeta final
-TOTAL	0.000	61.000
+01	0.000	5.200	5.200	156	Exterior de la librería, calle tranquila: Ana coloca un libro en el caballete; «Librería · Tudela»
+02	5.200	10.200	5.000	150	Interior: Ana tras el mostrador con la cartulina en blanco, dudando y rascándose la barbilla; «¿?»; «¿Y si organizo un cuentacuentos?»
+03	10.200	15.200	5.000	150	Nube de pensamiento: «El año pasado», la librería vacía (sillas, telaraña, mosca, reloj); Ana suspira; «El año pasado… nadie»
+04	15.200	21.200	6.000	180	Dos viñetas: puerta vacía / puerta con gente que atrae a más; «La gente atrae a la gente»; sello «Prueba social»
+05	21.200	27.200	6.000	180	Ana chasquea los dedos y saca el móvil; tarjeta de evento, «Publicar» → «Publicada»; «Esta vez, en Escaparate»
+06	27.200	33.200	6.000	180	Calle: a la madre con su hija, al abuelo con su nieto y al joven les vibra el móvil; la niña salta y tira de su madre; «Directo a su móvil»
+07	33.200	41.433	8.233	247	Exterior: entran la madre y la niña, el abuelo y el nieto; el padre y su hijo se paran, la madre les hace señas y entran; se forma una fila; «Los primeros atraen a los demás»
+08	41.433	47.433	6.000	180	Interior lleno: la cuentacuentos en el puf con el dragón en la burbuja, niños en la alfombra, padres detrás, Ana con las manos en las mejillas; «¡Librería llena!»
+09	47.433	51.433	4.000	120	Pantalla partida: arriba la librería vacía («El año pasado»), abajo la llena («Este año»); destello final
+10	51.433	63.433	12.000	360	Ana sale de la librería y se acerca a cámara hasta el primer plano; «¿Tienes un negocio?», «Comenta ALTA»…; tarjeta final
+TOTAL	0.000	63.433

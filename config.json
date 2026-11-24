@@ -21,14 +21,28 @@
     {
       "id": 1,
       "name": "Exterior de la librería, calle tranquila: Ana coloca un libro en el caballete; «Librería · Tudela»",
-      "duration": 4.0,
+      "duration": 5.2,
       "still": 2.0,
       "cues": {
         "title": 0.2,
         "reach": 0.35,
         "place": 1.45,
         "thumb": 2.5
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_1.wav",
+          "start": 0.15,
+          "duration": 4.7,
+          "text": "Ana tiene una librería en Tudela y quiere organizar un cuentacuentos para niños.",
+          "segments": [
+            [
+              0.19,
+              4.33
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 2,
@@ -40,7 +54,29 @@
         "title2": 0.55,
         "q": 1.0,
         "scratch": 1.2
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/ana_1.wav",
+          "start": 0.15,
+          "duration": 4.05,
+          "text": "Me encantaría organizar un cuentacuentos... pero...",
+          "segments": [
+            [
+              0.19,
+              2.41
+            ],
+            [
+              2.89,
+              3.43
+            ],
+            [
+              3.85,
+              3.89
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 3,
@@ -52,7 +88,21 @@
         "nadie": 1.5,
         "cloud": 0.4,
         "sigh": 1.7
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/ana_2.wav",
+          "start": 0.15,
+          "duration": 2.0,
+          "text": "El año pasado no vino nadie.",
+          "segments": [
+            [
+              0.41,
+              1.85
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 4,
@@ -65,7 +115,25 @@
         "pl": 0.1,
         "pr": 0.35,
         "seal": 3.6
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_2.wav",
+          "start": 0.15,
+          "duration": 5.4,
+          "text": "Pero dicen los expertos que la gente atrae a la gente. Se llama prueba social.",
+          "segments": [
+            [
+              0.35,
+              3.35
+            ],
+            [
+              3.79,
+              5.19
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 5,
@@ -92,7 +160,21 @@
         "finger": 1.2,
         "press": 1.8,
         "release": 2.05
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/ana_3.wav",
+          "start": 0.15,
+          "duration": 3.15,
+          "text": "Pues esta vez lo voy a anunciar en Escaparate de Tudela.",
+          "segments": [
+            [
+              0.37,
+              3.03
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 6,
@@ -107,17 +189,96 @@
         "smile": 1.4,
         "jump": 1.9,
         "tug": 2.6
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/madre_1.wav",
+          "start": 0.15,
+          "duration": 2.78,
+          "text": "¡Mira, cariño! ¡Cuentacuentos en la librería!",
+          "segments": [
+            [
+              0.19,
+              1.01
+            ],
+            [
+              1.33,
+              2.73
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/narradora_3.wav",
+          "start": 3.23,
+          "duration": 1.95,
+          "text": "Y el evento les llega al móvil.",
+          "segments": [
+            [
+              3.43,
+              4.75
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 7,
       "name": "Exterior: entran la madre y la niña, el abuelo y el nieto; el padre y su hijo se paran, la madre les hace señas y entran; se forma una fila; «Los primeros atraen a los demás»",
-      "duration": 7.0,
+      "duration": 8.233,
       "still": 5.7,
       "cues": {
         "title": 0.2,
-        "title2": 0.5
-      }
+        "title2": 0.5,
+        "stop": 3.12,
+        "wave": 3.32,
+        "go": 6.34
+      },
+      "voices": [
+        {
+          "file": "audio/voces/vecino_1.wav",
+          "start": 0.15,
+          "duration": 2.97,
+          "text": "¿Qué pasa en la librería? ¡Cuántos niños!",
+          "segments": [
+            [
+              0.19,
+              1.29
+            ],
+            [
+              1.77,
+              2.73
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/madre_2.wav",
+          "start": 3.42,
+          "duration": 2.417,
+          "text": "Hay un cuentacuentos para niños. ¡Ven!",
+          "segments": [
+            [
+              3.54,
+              5.12
+            ],
+            [
+              5.36,
+              5.74
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/vecino_2.wav",
+          "start": 6.137,
+          "duration": 1.736,
+          "text": "Venga, hijo, vamos a entrar.",
+          "segments": [
+            [
+              6.38,
+              7.76
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 8,
@@ -127,7 +288,21 @@
       "cues": {
         "title": 0.3,
         "bubble": 0.6
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_4.wav",
+          "start": 0.15,
+          "duration": 3.798,
+          "text": "Los primeros atraen a los siguientes, y la librería se llena.",
+          "segments": [
+            [
+              0.31,
+              3.69
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 9,
@@ -140,7 +315,21 @@
         "l1": 0.35,
         "l2": 0.8,
         "flash": 2.9
-      }
+      },
+      "voices": [
+        {
+          "file": "audio/voces/ana_4.wav",
+          "start": 0.15,
+          "duration": 2.5,
+          "text": "¡Este año, la librería llena!",
+          "segments": [
+            [
+              0.33,
+              2.33
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": 10,
@@ -160,14 +349,40 @@
       "cues": {
         "out": 0.2,
         "walk": 0.8,
-        "near": 3.2,
-        "a1": 3.4,
-        "strip": 4.3,
-        "sub": 5.1,
-        "wa": 6.4,
-        "url": 7.1,
-        "thumb": 5.6
-      }
+        "near": 2.4,
+        "a1": 2.45,
+        "strip": 3.87,
+        "sub": 4.6,
+        "wa": 6.38,
+        "url": 7.08,
+        "thumb": 4.87
+      },
+      "voices": [
+        {
+          "file": "audio/voces/ana_5.wav",
+          "start": 0.15,
+          "duration": 2.0,
+          "text": "Los primeros atraen a los demás.",
+          "segments": [
+            [
+              0.33,
+              1.85
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/ana_6.wav",
+          "start": 2.45,
+          "duration": 3.729,
+          "text": "Si tienes un negocio, comenta alta y te enviamos el formulario.",
+          "segments": [
+            [
+              2.63,
+              6.07
+            ]
+          ]
+        }
+      ]
     }
   ]
 }
