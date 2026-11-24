@@ -9,43 +9,7 @@ const st15 = (v = 1) => `stroke="${INK}" stroke-width="${f(SW * v)}" stroke-line
 const CARTEL_BG = '#C71F1E';               // color dominante de cartel.png
 const CARTEL_AR = 1414 / 2000;             // proporción del cartel (ancho / alto)
 
-/* ===================== MARI CARMEN: cara con boca que habla ===================== */
-// Copia exacta de mcFace del vídeo 06; solo se añade o.talk (0..1): boca abierta mientras habla.
-mcFace = function (o, w) {
-  const e = o.expr || 'happy', lx = o.look ? o.look[0] : 0, ly = o.look ? o.look[1] : 0;
-  const L = (d, sw = 1.6, col = INK) => `<path d="${d}" stroke="${col}" stroke-width="${w(sw)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
-  let s = `<circle cx="196" cy="81" r="4" fill="#FFFFFF" fill-opacity="0.5"/><circle cx="204" cy="81" r="4" fill="#FFFFFF" fill-opacity="0.5"/>`;
-  // ojos
-  if (o.blink) s += L('M193.4 81.4 H198.6 M201.4 81.4 H206.6', 1.4);
-  else if (e === 'proud') s += `<circle cx="${f(196 + lx)}" cy="${f(81 + ly)}" r="2.3" fill="${INK}"/><circle cx="${f(204 + lx)}" cy="${f(81 + ly)}" r="2.3" fill="${INK}"/>
-      <circle cx="${f(196.9 + lx)}" cy="${f(80.1 + ly)}" r="0.9" fill="#FFFFFF"/><circle cx="${f(204.9 + lx)}" cy="${f(80.1 + ly)}" r="0.9" fill="#FFFFFF"/>`;
-  else if (e === 'expect') s += `<circle cx="${f(196 + lx)}" cy="${f(81 + ly)}" r="1.8" fill="${INK}"/><circle cx="${f(204 + lx)}" cy="${f(81 + ly)}" r="1.8" fill="${INK}"/>`;
-  else s += `<circle cx="${f(196 + lx)}" cy="${f(81 + ly)}" r="1.5" fill="${INK}"/><circle cx="${f(204 + lx)}" cy="${f(81 + ly)}" r="1.5" fill="${INK}"/>`;
-  // montura roja (referencia)
-  s += `<circle cx="196" cy="81" r="4" fill="none" stroke="${MC.frame}" stroke-width="${w(2)}"/><circle cx="204" cy="81" r="4" fill="none" stroke="${MC.frame}" stroke-width="${w(2)}"/>`;
-  s += `<line x1="192" y1="81" x2="179" y2="80" stroke="${MC.frame}" stroke-width="${w(2)}"/>`;
-  if (e === 'proud') s += L('M193.6 78.6 Q194.4 77.5 195.6 77.2 M201.6 78.6 Q202.4 77.5 203.6 77.2', 0.9, '#FFFFFF');
-  // cejas
-  if (e === 'expect') s += L('M192.6 73.2 Q195.6 70.6 198.6 72.6 M201.4 72.6 Q204.4 70.6 207.4 73.2', 1.5);
-  else if (e === 'focus') s += L('M193 75.2 L198.4 76.2 M201.6 76.2 L207 75.2', 1.5);
-  else if (e === 'proud' || e === 'smile') s += L('M193 74.4 Q195.8 72.6 198.6 74 M201.4 74 Q204.2 72.6 207 74.4', 1.4);
-  // mejillas
-  s += `<circle cx="200" cy="89" r="3" fill="${C.pink}" opacity="${e === 'proud' ? 0.85 : 0.6}"/>`;
-  if (e === 'proud') s += `<circle cx="207.6" cy="87.6" r="2.2" fill="${C.pink}" opacity="0.7"/>`;
-  // boca (o.talk > 0: abierta mientras habla; si no, la de cada expresión)
-  const m = clamp(o.talk || 0);
-  if (m > 0.05) {
-    const op = 1.6 + 4.4 * m;
-    s += `<path d="M195.8 87.8 Q200.4 ${f(88.2 + op)} 205.2 87.6 Q200.4 88.9 195.8 87.8Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.6)}" stroke-linejoin="round"/>`;
-    if (m > 0.45) s += `<ellipse cx="200.6" cy="${f(88.4 + op * 0.6)}" rx="1.9" ry="${f(op * 0.17)}" fill="${C.pink}"/>`;
-  } else if (e === 'expect') s += L('M197.4 90.2 Q200.6 91.8 203.8 90', 2);
-  else if (e === 'focus') s += L('M196.6 89.8 Q200.4 90.8 204.2 89.6', 2) +
-    `<path d="M201.4 90.3 Q201.8 94 204 93.4 Q205.6 92.6 204.4 89.8Z" fill="${C.pink}" stroke="${INK}" stroke-width="${w(1.3)}" stroke-linejoin="round"/>`;
-  else if (e === 'proud') s += `<path d="M195 87.4 Q200.4 97 206 87.2 Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.7)}" stroke-linejoin="round"/><path d="M196.2 88 H204.8 L204 89.4 H197Z" fill="#FFFFFF"/>`;
-  else if (e === 'smile') s += `<path d="M195.8 87.8 Q200.4 94.6 205.2 87.6 Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.6)}" stroke-linejoin="round"/>`;
-  else s += L('M196 89 Q200 93 205 89', 2); // referencia
-  return s;
-};
+/* Mari Carmen (de frente, con boca que habla): ver maricarmen.js */
 const talk15 = (t, ranges, rate = 10) => talkA(t, ranges || [], rate);
 
 /* ===================== MARÍA: brazos y colocación ===================== */

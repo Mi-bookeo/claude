@@ -399,8 +399,8 @@ S[6] = (t, T, sc) => {
   w += placeMaria(350, pyM, sM, Object.assign({}, baseM, { expr: u < 0.5 ? 'sparkle' : 'joy', talk: talk15(t, trM), head: -3 + 2 * Math.sin(T * 2),
     armB: mArm(false, [161 - 2 * wave, 90], 'open', { hs: 1.45, hrot: -18 * wave }), armF: M_REST_F() }));
   const pyC = HT + 151 * sC;
-  w += placeMC(770, pyC, sC, Object.assign(mcBase(T, sC), { flip: true, expr: 'proud', talk: talk15(t, trC, 11), head: -3,
-    armB: 166 + 9 * Math.sin(u * 9 + 1), handB: w2 => hand11('open', [175.5, 143], w2, { fill: C.skinS, hs: 0.95 }), armF: -6 }));
+  w += placeMC(770, pyC, sC, Object.assign(mcBase(T, sC), { expr: 'proud', talk: talk15(t, trC, 11), head: 3,
+    armF: -166 - 9 * Math.sin(u * 9 + 1), handF: openHandF, armB: 6 }));
   s = cam(comicZoom(u), 540, 900, w);
   s += bigT('Entra en', 540, 256, 116, pop(u, c.C_t1, 0.5), -3);
   s += bigT('escaparatetudela.es', 540, 380, 124, pop(u, c.C_t2, 0.5), 2, { fill: C.yel, maxW: 1000 });

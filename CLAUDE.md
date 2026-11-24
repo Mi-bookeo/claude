@@ -17,3 +17,9 @@ En la parte final de cada vídeo, siempre dos cosas, en este orden (en voz, en s
 Motivo: el mismo vídeo se usa en TikTok y en Instagram; para una de las dos plataformas el usuario recorta él mismo
 la parte del comentario. No hace falta preparar tramos aparte: el vídeo se hace normal, con el audio completo que da
 el usuario, y la tarjeta final con el logo sigue al final, como siempre.
+
+## Personajes
+- **Todos los personajes se dibujan DE FRENTE**, mirando a cámara (nada de perfil ni 3/4), con cuello visible.
+- María: `src/maria.js` (diadema negra y rizos; referencia en la rama `video-11-marta-cuatro-motivos`).
+- Mari Carmen: `src/maricarmen.js` (de frente y con cuello desde el vídeo 15; mismos rizos castaños, gafas rojas,
+  delantal rojo, pantalón azul marino). Sustituye a la versión de perfil del vídeo 06; misma interfaz `placeMC()`.
