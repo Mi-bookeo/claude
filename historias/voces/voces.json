@@ -1,0 +1,30 @@
+{
+  "_nota": "Clips de voz de cada personaje (WAV mono, -16 LUFS). 'grupos' dice qué frases valen para cada momento; se usan en rotación. El bocadillo muestra el texto de la frase que suena.",
+  "maria": {
+    "origen": "ElevenLabs · Sofia - Natural Conversations (2026-11-25)",
+    "frases": {
+      "01": "¡Hola! ¡Mira lo que hay hoy en el escaparate!",
+      "02": "¡Ven, ven, que esto te va a gustar!",
+      "03": "¡Mira qué oferta!",
+      "04": "¡Vaya descuentazo!",
+      "05": "¡Esto es nuevo!",
+      "06": "¡Este evento no te lo puedes perder!",
+      "07": "¡Tienes todas en tu móvil!",
+      "08": "¡Vamos a ver si aciertas!",
+      "09": "A ver, a ver… ¿tú qué dirías?",
+      "10": "¡Te reto! ¿Lo adivinas?",
+      "11": "¡Era esta!",
+      "12": "¿Has acertado?"
+    },
+    "grupos": {
+      "entrada": ["01", "02"],
+      "oferta": ["03"],
+      "descuento": ["04", "03"],
+      "novedad": ["05"],
+      "evento": ["06"],
+      "ultima": ["07"],
+      "encuesta_inicio": ["08", "09", "10"],
+      "encuesta_respuesta": ["11", "12"]
+    }
+  }
+}

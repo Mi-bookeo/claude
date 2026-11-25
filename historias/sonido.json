@@ -11,6 +11,11 @@
     "semilla": 7,
     "continua_en_la_tanda": true
   },
+  "voces": {
+    "activadas": true,
+    "volumen_db": -1,
+    "baja_musica_db": -9
+  },
   "efectos": {
     "activados": true,
     "volumen_db": -4,

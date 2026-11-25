@@ -22,6 +22,8 @@ const MAX_TANDA = 4;
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const TIPOS = { oferta: 'OFERTA', novedad: 'NOVEDAD', evento: 'EVENTO' };
+const VOCES_F = path.join(HIST, 'voces', 'voces.json');
+const VOCES = fs.existsSync(VOCES_F) ? JSON.parse(fs.readFileSync(VOCES_F, 'utf8')) : {};
 const FRASES_ENC = { uno: '¡A ver si aciertas!', precio: '¡Ese es el precio!', descuento: '¡Menudo descuento!', mas_vista: '¡Esta es la más vista!' };
 const FRASES = { oferta: '¡Mira esta oferta!', novedad: '¡Mira esta novedad!', evento: '¡No te pierdas este evento!', hoy: '¡Solo hasta hoy!' };
 
@@ -345,10 +347,15 @@ function construir(datos, carpeta, entradaForzada, solo) {
   const fl = fechaLarga(hoy);
   const hist = [];
   const tanda = (pubs, modo, pj, ent, cartelTxt) => pubs.forEach((p, i) => {
-    const frase = (p2) => (p2._hoy ? FRASES.hoy : FRASES[p2.tipo] || FRASES.oferta);
+    const clip = (p2, j) => {
+      const v = VOCES[pj]; if (!v) return null;
+      const g = p2._hoy ? 'hoy' : (p2.tipo === 'oferta' && p2.descuento ? 'descuento' : p2.tipo);
+      const l = v.grupos[g]; return l && l.length ? l[j % l.length] : null;
+    };
+    const frase = (p2, j = i) => { const c = clip(p2, j); return c ? VOCES[pj].frases[c] : (p2._hoy ? FRASES.hoy : FRASES[p2.tipo] || FRASES.oferta); };
     hist.push({
       modo, pj, pub: p, entrada: i === 0 ? ent : null, cartel: i === 0 ? cartelTxt : null,
-      frase: frase(p), frasePrev: i > 0 ? frase(pubs[i - 1]) : null,
+      frase: frase(p, i), frasePrev: i > 0 ? frase(pubs[i - 1], i - 1) : null, vozTarjeta: clip(p, i),
       retirar: i < pubs.length - 1, ultima: i === pubs.length - 1, tanda: modo === 'hoy' ? 'Terminan hoy' : 'normal', n: i + 1, de: pubs.length,
     });
   });
@@ -465,7 +472,13 @@ async function main() {
     p.stdin.end();
     await fin;
     if (!sinSonido) {
-      const eventos = await page.evaluate(() => window.SONIDOS);
+      const pjv = h.pj || (h.modo && h.modo.startsWith('encuesta') ? 'maria' : null);
+      const eventos = (await page.evaluate(() => window.SONIDOS)).map((e) => {
+        if (e.tipo !== 'voz') return e;
+        const v = VOCES[pjv]; if (!v) return null;
+        const id = e.clip || (v.grupos[e.grupo] || [])[(h.n - 1) % Math.max(1, (v.grupos[e.grupo] || []).length)];
+        return id ? { ...e, archivo: path.join(HIST, 'voces', pjv, id + '.wav') } : null;
+      }).filter(Boolean);
       const cfgF = path.join(salida, '.' + nombre + '_audio.json'), wav = path.join(salida, '.' + nombre + '.wav');
       fs.writeFileSync(cfgF, JSON.stringify({ dur: frames / FPS, offset: offsetMusica, eventos, ajustes: SONIDO }));
       execFileSync('python3', [path.join(HIST, 'herramientas', 'audio.py'), cfgF, wav], { stdio: 'inherit' });

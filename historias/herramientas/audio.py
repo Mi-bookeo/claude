@@ -150,15 +150,31 @@ def main():
     dur, off, aj = cfg['dur'], cfg.get('offset', 0), cfg['ajustes']
     n = int(dur * SR); L = np.zeros(n); R = np.zeros(n)
     if aj.get('activado', True):
+        # voces: se cargan primero para bajar la música mientras hablan
+        vz = aj.get('voces', {}); voces = []
+        if vz.get('activadas', True):
+            for e in cfg['eventos']:
+                if e['tipo'] != 'voz': continue
+                with wave.open(e['archivo']) as w:
+                    x = np.frombuffer(w.readframes(w.getnframes()), '<i2').astype(float) / 32767
+                    if w.getnchannels() == 2: x = x.reshape(-1, 2).mean(1)
+                voces.append((int(e['t'] * SR), x * db(vz.get('volumen_db', 0))))
         mu = aj.get('musica', {})
         if mu.get('activada', True):
             ml, mr = musica(dur, off if mu.get('continua_en_la_tanda', True) else 0, mu)
             v = db(mu.get('volumen_db', -15))
-            L += ml * v; R += mr * v
+            duck = np.ones(n)
+            for i, x in voces: duck[max(0, i - int(0.1 * SR)):min(n, i + len(x) + int(0.15 * SR))] = db(vz.get('baja_musica_db', -8))
+            duck = paso_bajo(duck, int(0.12 * SR))
+            L += ml * v * duck; R += mr * v * duck
+        for i, x in voces:
+            if i >= n: continue
+            x = x[:n - i]; L[i:i + len(x)] += x; R[i:i + len(x)] += x
         ef = aj.get('efectos', {})
         if ef.get('activados', True):
             rng = np.random.default_rng(3)
             for e in cfg['eventos']:
+                if e['tipo'] == 'voz': continue
                 x = efecto(e, rng) * db(ef.get('volumen_db', 0) + ef.get(GRUPO[e['tipo']], 0)) * 0.5
                 i = int(e['t'] * SR)
                 if i >= n: continue

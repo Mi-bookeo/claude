@@ -55,7 +55,10 @@
 
   // ---------- efectos de sonido: en qué instante suena cada uno (lo usa herramientas/audio.py)
   const SON = [];
-  const son = (t, tipo, dur) => { if (t != null && t < P.fin) SON.push({ t: Math.max(0, t), tipo, dur }); };
+  const son = (t, tipo, dur, extra) => { if (t != null && t < P.fin) SON.push({ t: Math.max(0, t), tipo, dur, ...extra }); };
+  // voces: el generador elige el clip del grupo (historias/voces/voces.json)
+  if (P.senala) son(P.senala - 0.05, 'voz', 0, { grupo: 'entrada' });
+  if (P.pop && H.vozTarjeta) son(P.pop[0] + 0.05, 'voz', 0, { clip: H.vozTarjeta });
   if (P.maria) { son(P.maria[0], 'pop'); son(P.senala, 'campanita'); }
   if (P.anda) { const [a, b, n] = P.anda; for (let k = 0; k < n; k++) son(a + (k + 0.85) * (b - a) / n, 'paso'); }
   if (H.entrada === 'hoy') { son(0, 'persiana_baja', P.coge); son(P.empuja[0], 'persiana_sube', P.sube[1] - P.empuja[0]); }
