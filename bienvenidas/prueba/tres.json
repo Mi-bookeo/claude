@@ -1,0 +1,9 @@
+{
+  "hoy": "2026-11-30",
+  "animacion": "auto",
+  "comercios": [
+    { "prueba": true, "nombre": "Floristería Prueba", "calle": "Calle Prueba, 1", "ofrece": "ramos, plantas y centros de flores para cualquier ocasión", "instagram": "cuenta_prueba_1" },
+    { "prueba": true, "nombre": "Mercería y Arreglos de Costura La Aguja Dorada de Prueba", "calle": "Avenida de la Prueba Larga, 125", "ofrece": "lanas, botones, cremalleras y arreglos de ropa en el día", "instagram": "cuenta_prueba_2" },
+    { "prueba": true, "nombre": "Panadería Prueba", "ofrece": "pan de leña, bollería y tortas de txantxigorri", "instagram": "cuenta_prueba_3" }
+  ]
+}

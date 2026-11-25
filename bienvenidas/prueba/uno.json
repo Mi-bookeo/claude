@@ -1,0 +1,7 @@
+{
+  "hoy": "2026-11-30",
+  "animacion": "auto",
+  "comercios": [
+    { "prueba": true, "nombre": "Zapatería Prueba", "calle": "Calle Prueba, 7", "ofrece": "calzado para toda la familia y arreglos de zapatos", "instagram": "cuenta_prueba_4" }
+  ]
+}
