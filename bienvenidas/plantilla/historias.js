@@ -1,7 +1,8 @@
 // Historias animadas de bienvenida · Escaparate de Tudela
-// 1080x1920, 30 fps, MP4 H.264 yuv420p, sin audio. Un MP4 por comercio.
+// 1080x1920, 30 fps, MP4 H.264 yuv420p con música y efectos (AAC). Un MP4 por comercio.
 // Uso (desde la raíz del repo):
 //   node bienvenidas/plantilla/historias.js <datos.json> [--png] [--animacion A|B] [--salida carpeta]
+//     --sin-sonido MP4 sin audio
 //     --png        solo capturas PNG de los momentos clave (para revisar antes de los vídeos)
 //     --animacion  fuerza A (gran inauguración) o B (el nuevo rótulo); si no, alterna según bienvenidas/estado.json
 // No toca estado.json: eso lo hace aprobar.js cuando se aprueban los vídeos.
@@ -16,6 +17,8 @@ const TAR = { x: 60, y: 250, w: 960, h: 1040 };   // tarjeta en pantalla (cámar
 const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };
 const soloPng = args.includes('--png');
+const sinSonido = args.includes('--sin-sonido');
+const { execFileSync } = require('child_process');
 const T = C.TINTA;
 
 // ---------- piezas de la escena (coordenadas del mundo, 1080x1920)
@@ -59,7 +62,6 @@ function cuerda() {
     <path fill="none" stroke="#D9B77A" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
     <path id="cuerdaMarcas" fill="none" stroke="#A07C45" stroke-width="9" stroke-dasharray="5 16" stroke-linejoin="round"/></svg>`;
 }
-const poof = () => `<svg id="poof" class="cap" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:none">${'<circle fill="#fff" stroke="' + T + '" stroke-width="6"/>'.repeat(5)}</svg>`;
 const confeti = () => `<svg id="confeti" class="cap" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:none"></svg>`;
 function piezasHtml(R, quien) {
   const J = R[quien];
@@ -80,12 +82,12 @@ function escena(h, carpeta, ESCENA) {
   if (anim === 'B') mundo += rotuloNuevo(h.primero.nombre);
   mundo += C.toldo();
   if (anim === 'B') mundo += rollo();
-  if (h.modo === 'A') mundo += piezasHtml(R, 'maria') + cordon() + confeti();
+  if (h.modo === 'A') mundo += piezasHtml(R, 'maria') + cordon();
   if (h.modo === 'B') mundo += piezasHtml(R, 'pedro');
   if (anim === 'B') mundo += cuerda();
-  mundo += poof();
   let s = `<div id="mundo" style="position:absolute;left:0;top:0;width:${W}px;height:${H}px;transform-origin:0 0">${mundo}</div>`;
   s += `<div id="tarjeta" style="position:absolute;left:${TAR.x}px;top:${TAR.y}px;width:${TAR.w}px;height:${TAR.h}px;transform-origin:50% 50%">${C.tarjeta(h.c, TAR.w, TAR.h, carpeta)}</div>`;
+  s += confeti();
   if (h.ultima) s += `<div id="conocelo" style="position:absolute;inset:0;opacity:0">${C.caja(40, 1291, 1000, 86,
     `<b style="font-size:58px;color:#fff;white-space:nowrap;text-shadow:0 5px 0 ${C.DARK},0 -2px 0 ${C.DARK},3px 0 0 ${C.DARK},-3px 0 0 ${C.DARK}">${h.plural ? 'Conócelos' : 'Conócelo'} en Escaparate de Tudela</b>`)}</div>`;
   s += C.mano();
@@ -103,17 +105,16 @@ function ffmpeg(salida) {
 function momentos(h, P, dur) {
   const m = [], fin = dur - 1 / FPS;
   if (h.modo === 'A') {
-    m.push(['A1_inicio', 0], ['A2_tira_del_cordon', P.tirones[1][0] + 0.2], ['A3_la_chica_desaparece', P.sale[0] + 0.14],
-      ['A4_se_abre_el_telon', (P.telon[0] + P.telon[1]) / 2], ['A5_confeti', P.telon[1] + 0.05], ['A6_zoom', (P.zoom[0] + P.zoom[1]) / 2],
-      ['A7_sale_el_comercio', P.pop[0] + 0.15]);
+    m.push(['A1_inicio', 0], ['A2_tira_del_cordon', P.tirones[1][0] + 0.2], ['A4_se_abre_el_telon', (P.telon[0] + P.telon[1]) / 2], ['A6_zoom', (P.zoom[0] + P.zoom[1]) / 2],
+      ['A7_sale_el_comercio_con_confeti', P.pop[0] + 0.35]);
   }
   if (h.modo === 'B') {
     const a = P.t0 + P.dt;   // segundo tirón
     m.push(['B1_inicio', 0], ['B2_agarra_la_cuerda', P.agarra[1] + 0.02], ['B3_tiron_brazo_arriba', a + 0.02], ['B4_tiron_brazo_abajo', a + P.tira],
-      ['B5_rotulo_bajado', P.suelta[1] + 0.1], ['B6_pedro_desaparece', P.sale[0] + 0.14], ['B7_zoom', (P.zoom[0] + P.zoom[1]) / 2],
-      ['B8_se_enrolla_y_sale_el_comercio', P.pop[0] + 0.12]);
+      ['B5_rotulo_bajado', P.suelta[1] + 0.1], ['B7_zoom', (P.zoom[0] + P.zoom[1]) / 2],
+      ['B8_sale_el_comercio_con_confeti', P.pop[0] + 0.35]);
   }
-  if (h.modo === 'siguiente') m.push(['primer_fotograma', 0], ['mano_pone_cartel', P.pon[0] + 0.3]);
+  if (h.modo === 'siguiente') m.push(['primer_fotograma', 0], ['mano_pone_cartel', P.pon[0] + 0.3], ['confeti', P.confeti[0] + 0.35]);
   m.push(['presentacion_quieta', P.quieta[0] + 1]);
   if (P.quita) m.push(['mano_quita_cartel', P.quita[0] + 0.5]);
   m.push(['ultimo_fotograma', fin]);
@@ -139,7 +140,8 @@ async function main() {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   const resumen = [];
-  let ultimoBuf = null;
+  let ultimoBuf = null, offsetMusica = 0;
+  const SONIDO = JSON.parse(fs.readFileSync(path.join(C.BIEN, 'sonido.json'), 'utf8'));
   for (let k = 0; k < hist.length; k++) {
     const h = hist[k], num = String(k + 1).padStart(2, '0');
     const slug = h.c.nombre.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
@@ -156,8 +158,8 @@ async function main() {
       }
       continue;
     }
-    const out = path.join(salida, nombre + '.mp4');
-    const { p, fin } = ffmpeg(out);
+    const out = path.join(salida, nombre + '.mp4'), soloVideo = path.join(salida, '.' + nombre + '_video.mp4');
+    const { p, fin } = ffmpeg(sinSonido ? out : soloVideo);
     for (let fr = 0; fr < frames; fr++) {
       await page.evaluate((tt) => window.pintar(tt), fr / FPS);
       let buf = await page.screenshot({ type: 'png' });
@@ -167,6 +169,15 @@ async function main() {
     }
     p.stdin.end();
     await fin;
+    if (!sinSonido) {   // música (sigue de una historia a la siguiente) + efectos: cuerda, telón, zoom, mano, confeti
+      const cfg = path.join(salida, '.' + nombre + '_audio.json'), wav = path.join(salida, '.' + nombre + '.wav');
+      fs.writeFileSync(cfg, JSON.stringify({ dur: frames / FPS, offset: offsetMusica, eventos: await page.evaluate(() => window.SONIDOS), ajustes: SONIDO }));
+      execFileSync('python3', [path.join(C.BIEN, 'herramientas', 'sonido.py'), cfg, wav], { stdio: 'inherit' });
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', soloVideo, '-i', wav, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+        '-c:a', 'aac', '-b:a', '160k', '-ar', '44100', '-shortest', '-movflags', '+faststart', out]);
+      for (const x of [cfg, wav, soloVideo]) fs.unlinkSync(x);
+    }
+    offsetMusica += frames / FPS;
     console.log('Hecho', nombre);
   }
   await browser.close();

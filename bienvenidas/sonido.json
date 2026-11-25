@@ -1,0 +1,8 @@
+{
+  "_nota": "Sonido de las historias de bienvenida. Volúmenes en dB. Música y efectos sintetizados (historias/herramientas/audio.py + bienvenidas/herramientas/sonido.py): sin audio de terceros.",
+  "activado": true,
+  "volumen_general_db": 9,
+  "musica": { "activada": true, "volumen_db": -15, "bpm": 118, "tonalidad": "C", "acordes": ["I", "V", "vi", "IV"], "semilla": 7, "continua_en_la_tanda": true },
+  "voces": { "activadas": false },
+  "efectos": { "activados": true, "volumen_db": -4, "cuerda": -3, "tela": -5, "zoom": -8, "mano": -5, "confeti": -4 }
+}

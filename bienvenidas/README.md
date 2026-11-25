@@ -1,6 +1,6 @@
 # Bienvenidas de comercios nuevos · Escaparate de Tudela
 
-Post o carrusel (1080×1350 JPG) e historias animadas (1080×1920, 30 fps, MP4 H.264 yuv420p, sin audio) para dar la bienvenida a los comercios nuevos. Plantillas fijas con Node + Chromium (Playwright) + ffmpeg. Sin IA y sin servicios externos.
+Post o carrusel (1080×1350 JPG) e historias animadas (1080×1920, 30 fps, MP4 H.264 yuv420p, con música y efectos AAC) para dar la bienvenida a los comercios nuevos. Plantillas fijas con Node + Chromium (Playwright) + ffmpeg. Sin IA y sin servicios externos.
 
 Reutiliza la fachada, el toldo, el rótulo y la mano de `historias/` (rama `historias-instagram`), los personajes de `carrusel/personajes/` y las piezas de Pedro de `historias/personajes/pedro/`, sin cambiar su aspecto. Fuente Poppins de `carrusel/fuentes/`.
 
@@ -44,8 +44,12 @@ node bienvenidas/plantilla/aprobar.js   <carpeta de las historias>
 
 ## Historias
 
-- **A · Gran inauguración**: el escaparate tiene un telón rojo; la chica, al lado, tira dos veces del cordón bajando el brazo (piezas de `personajes/maria/`, cortadas de `maria_senalando.png` con `herramientas/piezas_maria.py`; en reposo es igual al PNG); desaparece (salida rápida con nubecilla); se abre el telón con confeti; zoom al escaparate y sale la tarjeta del comercio.
-- **B · El nuevo rótulo**: Pedro ya está quieto junto a la tienda (no entra andando). Tira de la cuerda en 4 tirones moviendo los brazos (piezas articuladas) y en cada tirón baja un tramo del rótulo con el nombre. Pedro desaparece, zoom, el rótulo se enrolla y sale la tarjeta con la foto.
+- **A · Gran inauguración**: el escaparate tiene un telón rojo; la chica, al lado (a la izquierda), tira dos veces del cordón bajando el brazo (piezas de `personajes/maria/`, cortadas de `maria_senalando.png` con `herramientas/piezas_maria.py`; en reposo es igual al PNG); se abre el telón; zoom al escaparate (la chica se queda quieta y el zoom la deja fuera de plano) y sale la tarjeta del comercio con confeti rojo y blanco.
+- **B · El nuevo rótulo**: Pedro ya está quieto junto a la tienda (no entra andando). Tira de la cuerda en 4 tirones moviendo los brazos (piezas articuladas) y en cada tirón baja un tramo del rótulo con el nombre. Pedro se queda quieto y el zoom lo deja fuera de plano; el rótulo se enrolla y sale la tarjeta con la foto y confeti rojo y blanco.
 - Tras aparecer el comercio no vuelve ningún personaje. La tarjeta queda grande y quieta 4,5 s (5 s en la última).
-- **Varios comercios**: la animación completa solo en la primera historia. Al final de cada una, la mano quita el cartel y quedan 0,2 s de escaparate vacío. La siguiente empieza con ese mismo fotograma (copiado tal cual) y la mano trae el cartel nuevo. El último cartel no se quita.
-- Última historia: "Conócelo en Escaparate de Tudela" ("Conócelos" si hay varios) en y≈1291–1377, con el hueco del sticker de enlace libre (y=1380–1560). Los textos importantes van entre y=250 e y=1580.
+- **Varios comercios**: la animación completa solo en la primera historia. Al final de cada una, la mano quita el cartel y quedan 0,2 s de escaparate vacío. La siguiente empieza con ese mismo fotograma (copiado tal cual) y la mano trae el cartel nuevo, con confeti rojo y blanco. El último cartel no se quita.
+- Última historia: "Conócelo en Escaparate de Tudela" ("Conócelos" si hay varios) en y≈1291–1377, con el hueco del sticker de enlace libre (y=1380–1560). Los textos importantes van entre y=250 e y=1580. Sticker de mención al comercio: y=1590–1700, centrado.
+
+## Sonido (`sonido.json`)
+
+Música y efectos de `historias/herramientas/audio.py` (sintetizados, sin audio de terceros) más la cuerda y el confeti de `herramientas/sonido.py`. La música sigue de una historia a la siguiente en la tanda. `--sin-sonido` para MP4 sin audio.
