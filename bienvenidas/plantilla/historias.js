@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
 const C = require('./comun');
 
 const W = 1080, H = 1920, FPS = 30;
-const TAR = { x: 60, y: 250, w: 960, h: 990 };   // tarjeta en pantalla (cámara en el escaparate)
+const TAR = { x: 60, y: 250, w: 960, h: 1040 };   // tarjeta en pantalla (cámara en el escaparate)
 const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };
 const soloPng = args.includes('--png');
@@ -61,11 +61,12 @@ function cuerda() {
 }
 const poof = () => `<svg id="poof" class="cap" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:none">${'<circle fill="#fff" stroke="' + T + '" stroke-width="6"/>'.repeat(5)}</svg>`;
 const confeti = () => `<svg id="confeti" class="cap" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:none"></svg>`;
-function pedroHtml(R) {
-  let s = `<div id="pedro" class="pj" style="width:1500px;height:1875px;transform-origin:0 0">`;
-  for (const n of R.pedro.orden) {
-    const p = R.pedro.piezas[n], o = p.pivote ? `${p.pivote[0] - p.x}px ${p.pivote[1] - p.y}px` : '0 0';
-    s += `<img data-p="${n}" src="${R.img['pedro_' + n]}" style="position:absolute;left:${p.x}px;top:${p.y}px;width:${p.w}px;height:${p.h}px;transform-origin:${o}">`;
+function piezasHtml(R, quien) {
+  const J = R[quien];
+  let s = `<div id="${quien}" class="pj" style="width:1500px;height:1875px;transform-origin:0 0">`;
+  for (const n of J.orden) {
+    const p = J.piezas[n], o = p.pivote ? `${p.pivote[0] - p.x}px ${p.pivote[1] - p.y}px` : '0 0';
+    s += `<img data-p="${n}" src="${R.img[quien + '_' + n]}" style="position:absolute;left:${p.x}px;top:${p.y}px;width:${p.w}px;height:${p.h}px;transform-origin:${o}">`;
   }
   return s + '</div>';
 }
@@ -79,16 +80,16 @@ function escena(h, carpeta, ESCENA) {
   if (anim === 'B') mundo += rotuloNuevo(h.primero.nombre);
   mundo += C.toldo();
   if (anim === 'B') mundo += rollo();
-  if (h.modo === 'A') mundo += `<img id="maria" src="${R.img.maria_senalando}" class="pj" style="width:1500px;height:1875px;transform-origin:0 0">` + cordon() + confeti();
-  if (h.modo === 'B') mundo += pedroHtml(R);
+  if (h.modo === 'A') mundo += piezasHtml(R, 'maria') + cordon() + confeti();
+  if (h.modo === 'B') mundo += piezasHtml(R, 'pedro');
   if (anim === 'B') mundo += cuerda();
   mundo += poof();
   let s = `<div id="mundo" style="position:absolute;left:0;top:0;width:${W}px;height:${H}px;transform-origin:0 0">${mundo}</div>`;
   s += `<div id="tarjeta" style="position:absolute;left:${TAR.x}px;top:${TAR.y}px;width:${TAR.w}px;height:${TAR.h}px;transform-origin:50% 50%">${C.tarjeta(h.c, TAR.w, TAR.h, carpeta)}</div>`;
-  if (h.ultima) s += `<div id="conocelo" style="position:absolute;inset:0;opacity:0">${C.caja(40, 1262, 1000, 106,
-    `<b style="font-size:62px;color:#fff;white-space:nowrap;text-shadow:0 5px 0 ${C.DARK},0 -2px 0 ${C.DARK},3px 0 0 ${C.DARK},-3px 0 0 ${C.DARK}">${h.plural ? 'Conócelos' : 'Conócelo'} en Escaparate de Tudela</b>`)}</div>`;
+  if (h.ultima) s += `<div id="conocelo" style="position:absolute;inset:0;opacity:0">${C.caja(40, 1291, 1000, 86,
+    `<b style="font-size:58px;color:#fff;white-space:nowrap;text-shadow:0 5px 0 ${C.DARK},0 -2px 0 ${C.DARK},3px 0 0 ${C.DARK},-3px 0 0 ${C.DARK}">${h.plural ? 'Conócelos' : 'Conócelo'} en Escaparate de Tudela</b>`)}</div>`;
   s += C.mano();
-  const datosJs = `<script>window.H=${JSON.stringify({ ...h, TAR })};window.A=${JSON.stringify({ pedro: R.pedro, bb: R.bb })};</script><script>${ESCENA}</script>`;
+  const datosJs = `<script>window.H=${JSON.stringify({ ...h, TAR })};window.A=${JSON.stringify({ pedro: R.pedro, maria: R.maria, bb: R.bb })};</script><script>${ESCENA}</script>`;
   return C.pagina(W, H, s, datosJs);
 }
 

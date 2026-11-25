@@ -190,15 +190,18 @@
     confeti(t);
 
     if (H.modo === 'A') {
-      // la chica tira dos veces del cordón (baja el cuerpo y el cordón con la mano)
+      // la chica tira dos veces del cordón: baja el brazo desde el hombro (pieza) y el cuerpo acompaña un poco
       let dip = 0;
       for (const [a, b] of P.tirones) { const m = a + (b - a) * 0.4; if (t >= a && t <= b) dip = t < m ? eout(lin(t, a, m)) : 1 - io(lin(t, m, b)); }
       const s = 0.47, cx = 395, el = $('maria');
       const o = salida(el, t);
       const bb = A.bb.maria_senalando, cb = (bb[0] + bb[2]) / 2;
-      const pies = SUELO + dip * 28 + o.dy, ss = s * o.k;
+      const pies = SUELO + dip * 10 + o.dy, ss = s * o.k;
+      const ang = 34 * dip, MJ = A.maria, [px, py] = MJ.piezas.brazo.pivote, [hx, hy] = MJ.mano;
+      for (const img of el.children) img.style.transform = img.dataset.p === 'brazo' ? `rotate(${ang}deg)` : 'none';
       el.style.transform = `translate(${cx - cb * ss}px, ${pies - bb[3] * ss}px) scale(${ss})`;
-      const mano = { x: cx + (1385 - cb) * s, y: SUELO + dip * 28 - (1806 - 685) * s };
+      const r = ang * Math.PI / 180, lx = px + (hx - px) * Math.cos(r) - (hy - py) * Math.sin(r), ly = py + (hx - px) * Math.sin(r) + (hy - py) * Math.cos(r);
+      const mano = { x: cx - cb * ss + lx * ss, y: pies - bb[3] * ss + ly * ss };
       nubecilla(t, cx, SUELO - 420);
       // tras la salida, el cordón suelto sube y se recoge en la cenefa
       if (t < P.sale[0]) cordon(mano.x, mano.y, true);

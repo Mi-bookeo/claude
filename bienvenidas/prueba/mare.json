@@ -1,0 +1,7 @@
+{
+  "hoy": "2026-11-30",
+  "animacion": "auto",
+  "comercios": [
+    { "prueba": true, "nombre": "MARE COMPLEMENTOS", "descripcion": "Moda y complementos", "foto": "../entrada/prueba/mare_complementos.jpg" }
+  ]
+}

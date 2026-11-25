@@ -29,11 +29,14 @@ function recursos() {
   const PEDRO_DIR = path.join(RAIZ, 'historias', 'personajes', 'pedro');
   const pedro = JSON.parse(fs.readFileSync(path.join(PEDRO_DIR, 'piezas.json'), 'utf8'));
   for (const n of pedro.orden) img['pedro_' + n] = datauri(path.join(PEDRO_DIR, n + '.png'), 'image/png');
+  const MARIA_DIR = path.join(BIEN, 'personajes', 'maria');   // maria_senalando por piezas (herramientas/piezas_maria.py)
+  const maria = JSON.parse(fs.readFileSync(path.join(MARIA_DIR, 'piezas.json'), 'utf8'));
+  for (const n of maria.orden) img['maria_' + n] = datauri(path.join(MARIA_DIR, n + '.png'), 'image/png');
   const fuentes = {
     bold: datauri(path.join(RAIZ, 'carrusel', 'fuentes', 'Poppins-Bold.ttf'), 'font/ttf'),
     light: datauri(path.join(RAIZ, 'carrusel', 'fuentes', 'Poppins-Light.ttf'), 'font/ttf'),
   };
-  return (_rec = { img, pedro, bb: BB, fuentes });
+  return (_rec = { img, pedro, maria, bb: BB, fuentes });
 }
 
 function logo(x, y, h) {
@@ -127,48 +130,40 @@ function fotoPrueba(x, y, w, h) {
 const mayus = (t) => String(t).charAt(0).toUpperCase() + String(t).slice(1);
 const PIN = (sz, color) => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" style="flex:none"><path d="M12 2C8 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3-7-7-7z" fill="${color}"/><circle cx="12" cy="9" r="2.8" fill="#fff"/></svg>`;
 
-// ---------- tarjeta de bienvenida (w x h). Si falta un dato, ese elemento no sale y el resto se recoloca.
-//   c: { nombre, calle, ofrece, foto, prueba }   carpeta: donde buscar la foto
+// ---------- tarjeta de bienvenida (w x h): cabecera, foto grande, nombre y, si la hay, una descripción corta.
+//   c: { nombre, descripcion, foto, prueba }   carpeta: donde buscar la foto. Si falta un dato, no sale y el resto se recoloca.
 function tarjeta(c, w, h, carpeta) {
   const k = w / 960, P = Math.round(32 * k);
   let s = `<div style="position:absolute;inset:0;border-radius:${36 * k}px;background:#fff;border:${7 * k}px solid ${DARK}"></div>`;
-  // cabecera
-  const hh = Math.round(112 * k);
+  const hh = Math.round(100 * k);
   s += `<div style="position:absolute;left:${P}px;top:${P}px;width:${w - 2 * P}px;height:${hh}px;border-radius:${hh / 2}px;background:${RED}"></div>`;
-  s += caja(P + 30 * k, P, w - 2 * P - 60 * k, hh, `<b style="font-size:${62 * k}px;color:#fff;white-space:nowrap;letter-spacing:${1 * k}px">¡NUEVO EN EL ESCAPARATE!</b>`);
-  // bloques de texto
+  s += caja(P + 30 * k, P, w - 2 * P - 60 * k, hh, `<b style="font-size:${58 * k}px;color:#fff;white-space:nowrap;letter-spacing:${1 * k}px">¡NUEVO EN EL ESCAPARATE!</b>`);
   const foto = c.foto && path.resolve(carpeta, c.foto);
   if (foto && !fs.existsSync(foto)) throw new Error(`No encuentro la foto ${c.foto}`);
   const hayFoto = !!foto || !!c.prueba;
-  let sello = h * 0.42;   // centro del sello PRUEBA (sobre la foto)
-  const g = Math.round(18 * k);
+  const g = Math.round(14 * k), bw = w - 2 * P;
   const bloques = [];
-  if (c.nombre) bloques.push({ t: 'nombre', h: Math.round((hayFoto ? 170 : 250) * k) });
-  if (c.calle) bloques.push({ t: 'calle', h: Math.round(62 * k) });
-  if (c.ofrece) bloques.push({ t: 'ofrece', h: Math.round((hayFoto ? 150 : 230) * k) });
-  const top0 = P + hh + g;
-  const libre = h - top0 - P;
+  if (c.nombre) bloques.push({ t: 'nombre', h: Math.round((hayFoto ? 124 : 300) * k) });
+  if (c.descripcion) bloques.push({ t: 'desc', h: Math.round((hayFoto ? 56 : 90) * k) });
+  const top0 = P + hh + g, libre = h - top0 - P;
   const alto = bloques.reduce((a, b) => a + b.h, 0) + g * Math.max(0, bloques.length - 1);
-  let y = top0;
+  let y = top0, fy = 0, fh = 0;
   if (hayFoto) {
-    const fh = Math.max(Math.round(200 * k), libre - alto - (bloques.length ? g : 0));
-    const fw = w - 2 * P;
+    fh = Math.max(Math.round(300 * k), libre - alto - (bloques.length ? g : 0)); fy = y;
     if (foto) {
       const mime = /\.png$/i.test(foto) ? 'image/png' : 'image/jpeg';
-      s += `<img src="${datauri(foto, mime)}" style="position:absolute;left:${P}px;top:${y}px;width:${fw}px;height:${fh}px;border-radius:${22 * k}px;object-fit:cover;background:#fff;border:${3 * k}px solid ${DARK}">`;
-    } else s += fotoPrueba(P, y, fw, fh);
-    sello = y + fh / 2;
+      s += `<img src="${datauri(foto, mime)}" style="position:absolute;left:${P}px;top:${y}px;width:${bw}px;height:${fh}px;border-radius:${22 * k}px;object-fit:cover;object-position:${c.encuadre || '50% 50%'};background:#fff;border:${3 * k}px solid ${DARK}">`;
+    } else s += fotoPrueba(P, y, bw, fh);
     y += fh + g;
   } else y += Math.max(0, (libre - alto) / 2);
   for (const b of bloques) {
-    const bw = w - 2 * P;
-    if (b.t === 'nombre') s += caja(P, y, bw, b.h, `<b style="font-size:${(hayFoto ? 72 : 96) * k}px;color:${DARK};line-height:1.08">${esc(c.nombre)}</b>`);
-    if (b.t === 'calle') s += `<div style="position:absolute;left:${P}px;top:${y}px;width:${bw}px;height:${b.h}px;display:flex;align-items:center;justify-content:center;gap:${10 * k}px">${PIN(46 * k, RED)}<div class="fit" style="position:relative;height:${b.h}px;max-width:${bw - 60 * k}px;align-items:flex-start"><b style="font-size:${42 * k}px;color:${RED};white-space:nowrap">${esc(c.calle)}</b></div></div>`;
-    if (b.t === 'ofrece') s += `<div style="position:absolute;left:${P}px;top:${y}px;width:${bw}px;height:${b.h}px;border-radius:${26 * k}px;background:${PINK}"></div>`
-      + caja(P + 26 * k, y + 10 * k, bw - 52 * k, b.h - 20 * k, `<b style="font-size:${(hayFoto ? 40 : 50) * k}px;color:${DARK};line-height:1.2">${esc(mayus(c.ofrece))}</b>`);
+    if (b.t === 'nombre') s += caja(P, y, bw, b.h, `<b style="font-size:${(hayFoto ? 76 : 110) * k}px;color:${DARK};line-height:1.05">${esc(c.nombre)}</b>`);
+    if (b.t === 'desc') s += caja(P, y, bw, b.h, `<b style="font-size:${(hayFoto ? 42 : 56) * k}px;color:${RED};white-space:nowrap">${esc(mayus(c.descripcion))}</b>`);
     y += b.h + g;
   }
-  if (c.prueba) s += `<div style="position:absolute;left:0;top:${sello - 100 * k}px;width:${w}px;text-align:center;transform:rotate(-10deg);font-weight:700;font-size:${190 * k}px;line-height:1;color:rgba(200,30,30,.88);-webkit-text-stroke:${8 * k}px #fff;paint-order:stroke fill;letter-spacing:${6 * k}px">PRUEBA</div>`;
+  // PRUEBA: sello grande sobre la foto de rayas; con foto real, una etiqueta en la esquina para no taparla
+  if (c.prueba && !foto) s += `<div style="position:absolute;left:0;top:${fy + fh / 2 - 100 * k}px;width:${w}px;text-align:center;transform:rotate(-10deg);font-weight:700;font-size:${190 * k}px;line-height:1;color:rgba(200,30,30,.88);-webkit-text-stroke:${8 * k}px #fff;paint-order:stroke fill;letter-spacing:${6 * k}px">PRUEBA</div>`;
+  if (c.prueba && foto) s += `<div style="position:absolute;right:${P + 18 * k}px;top:${fy + 18 * k}px;padding:${6 * k}px ${22 * k}px;border-radius:${14 * k}px;background:${RED};border:${5 * k}px solid #fff;box-shadow:0 0 0 ${4 * k}px ${DARK};color:#fff;font-weight:700;font-size:${44 * k}px;line-height:1.2;transform:rotate(6deg)">PRUEBA</div>`;
   return `<div style="position:absolute;left:0;top:0;width:${w}px;height:${h}px">${s}</div>`;
 }
 

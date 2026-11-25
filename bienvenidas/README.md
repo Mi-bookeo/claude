@@ -19,15 +19,17 @@ Reutiliza la fachada, el toldo, el rótulo y la mano de `historias/` (rama `hist
   "hoy": "2026-11-30",
   "animacion": "auto",
   "comercios": [
-    { "nombre": "…", "calle": "…", "ofrece": "…", "foto": "fotos/x.jpg", "instagram": "cuenta" }
+    { "nombre": "…", "descripcion": "Moda y complementos", "foto": "fotos/x.jpg", "calle": "…", "ofrece": "…", "instagram": "cuenta" }
   ]
 }
 ```
 
-- Solo `nombre` es obligatorio. Si falta `calle`, `ofrece` o `foto`, ese elemento no sale y la tarjeta se recoloca.
+- La tarjeta (imágenes e historias) lleva solo: "¡NUEVO EN EL ESCAPARATE!", la foto grande, el `nombre` y, si la hay, una `descripcion` corta ("Moda y complementos", "Centro de estética"…). Solo `nombre` es obligatorio; lo que falte no sale y la foto ocupa el sitio.
+- `calle` y `ofrece` solo se usan en el texto del pie de foto. `encuadre` (opcional, CSS object-position, p. ej. `"50% 30%"`) mueve el recorte de la foto.
+- Las fotos van en `bienvenidas/entrada/` (no se sube al repo).
 - `foto` es relativa a la carpeta del JSON. `prueba: true` pone el sello "PRUEBA" (y una foto de rayas si no hay foto).
 - `animacion`: `auto` (alterna según `estado.json`), `A` o `B`.
-- Pruebas: `prueba/tres.json` (nombre largo y comercio sin calle) y `prueba/uno.json`.
+- Pruebas: `prueba/tres.json` (nombre largo y comercio sin calle), `prueba/uno.json` y `prueba/mare.json` (foto real en `entrada/prueba/`). Con foto real, "PRUEBA" sale como etiqueta en la esquina.
 
 ## Comandos (desde la raíz del repo)
 
@@ -42,8 +44,8 @@ node bienvenidas/plantilla/aprobar.js   <carpeta de las historias>
 
 ## Historias
 
-- **A · Gran inauguración**: el escaparate tiene un telón rojo; la chica, al lado, tira dos veces del cordón; desaparece (salida rápida con nubecilla); se abre el telón con confeti; zoom al escaparate y sale la tarjeta del comercio.
+- **A · Gran inauguración**: el escaparate tiene un telón rojo; la chica, al lado, tira dos veces del cordón bajando el brazo (piezas de `personajes/maria/`, cortadas de `maria_senalando.png` con `herramientas/piezas_maria.py`; en reposo es igual al PNG); desaparece (salida rápida con nubecilla); se abre el telón con confeti; zoom al escaparate y sale la tarjeta del comercio.
 - **B · El nuevo rótulo**: Pedro ya está quieto junto a la tienda (no entra andando). Tira de la cuerda en 4 tirones moviendo los brazos (piezas articuladas) y en cada tirón baja un tramo del rótulo con el nombre. Pedro desaparece, zoom, el rótulo se enrolla y sale la tarjeta con la foto.
 - Tras aparecer el comercio no vuelve ningún personaje. La tarjeta queda grande y quieta 4,5 s (5 s en la última).
 - **Varios comercios**: la animación completa solo en la primera historia. Al final de cada una, la mano quita el cartel y quedan 0,2 s de escaparate vacío. La siguiente empieza con ese mismo fotograma (copiado tal cual) y la mano trae el cartel nuevo. El último cartel no se quita.
-- Última historia: "Conócelo en Escaparate de Tudela" ("Conócelos" si hay varios) en y≈1262–1368, con el hueco del sticker de enlace libre (y=1380–1560). Los textos importantes van entre y=250 e y=1580.
+- Última historia: "Conócelo en Escaparate de Tudela" ("Conócelos" si hay varios) en y≈1291–1377, con el hueco del sticker de enlace libre (y=1380–1560). Los textos importantes van entre y=250 e y=1580.

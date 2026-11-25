@@ -1,0 +1,42 @@
+{
+ "fuente": "carrusel/personajes/maria_senalando.png",
+ "lienzo": [
+  1500,
+  1875
+ ],
+ "orden": [
+  "cuerpo",
+  "brazo",
+  "manga"
+ ],
+ "piezas": {
+  "brazo": {
+   "x": 953,
+   "y": 650,
+   "w": 458,
+   "h": 219,
+   "pivote": [
+    905,
+    832
+   ]
+  },
+  "manga": {
+   "x": 829,
+   "y": 754,
+   "w": 144,
+   "h": 145,
+   "pivote": null
+  },
+  "cuerpo": {
+   "x": 438,
+   "y": 132,
+   "w": 624,
+   "h": 1674,
+   "pivote": null
+  }
+ },
+ "mano": [
+  1258,
+  742
+ ]
+}
