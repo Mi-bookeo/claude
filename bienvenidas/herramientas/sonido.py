@@ -2,6 +2,7 @@
 # más dos efectos nuevos: «cuerda» (tirón: roce de la cuerda y chirrido de la polea) y «confeti» (petardo de fiesta y destellos).
 # Uso: python3 bienvenidas/herramientas/sonido.py <entrada.json> <salida.wav>   (mismo formato que audio.py)
 import importlib.util, os, sys
+sys.dont_write_bytecode = True   # no dejar __pycache__ en historias/ al importar audio.py
 import numpy as np
 
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
