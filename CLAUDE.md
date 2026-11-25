@@ -15,6 +15,9 @@ En la parte final de cada vídeo, siempre dos cosas, en este orden (en voz, en s
    (clientes) o «O, si lo prefieres, comenta ALTA para el formulario de alta» (negocios).
 
 ## «Comenta …» en grande (regla fija desde el vídeo 16, solo versión Instagram)
+**TODOS los vídeos de Instagram llevan SIEMPRE este momento** (aprobado por el usuario en el vídeo 16; referencia:
+escena 9 de la rama `video-16-sara-peluqueria-hueco`, función `S[9]` de `src/scenes.js`). En ese momento en pantalla
+va SOLO la palabra de comentar en grande, nada más.
 En el momento en que la voz dice «comenta ALTA» / «comenta CANAL», todos los textos de arriba (pregunta, franja del
 formulario o del canal, web…) DESAPARECEN y en pantalla queda solo la palabra de comentar en grande: «Comenta» y debajo
 la palabra clave («ALTA» / «CANAL») aún más grande (franja roja con letras amarillas). Se mantiene hasta el corte a la
