@@ -22,6 +22,7 @@ const MAX_TANDA = 4;
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const TIPOS = { oferta: 'OFERTA', novedad: 'NOVEDAD', evento: 'EVENTO' };
+const FRASES_ENC = { uno: '¡A ver si aciertas!', precio: '¡Ese es el precio!', descuento: '¡Menudo descuento!', mas_vista: '¡Esta es la más vista!' };
 const FRASES = { oferta: '¡Mira esta oferta!', novedad: '¡Mira esta novedad!', evento: '¡No te pierdas este evento!', hoy: '¡Solo hasta hoy!' };
 
 // ---------- argumentos
@@ -220,8 +221,8 @@ function pjSuelto(n, id, cx, pies, s, extra = '') {
 
 // Personaje grande a medio cuerpo abajo a la izquierda (tras el zoom): la cabeza casi toca el escaparate.
 const MEDIO = { s: 0.62, cabeza: 1048, cuerpoX: 225 };
-function pjMedio(pj) {
-  const n = pj === 'pedro' ? 'pedro_sonriendo' : 'maria_senalando', [x0, y0, x1] = BB[n], k = MEDIO.s; // el brazo de Pedro señalando taparía el bocadillo
+function pjMedio(pj, sinBrazo = false) {   // sinBrazo: en la encuesta el brazo invadiría el hueco del sticker
+  const n = pj === 'pedro' || sinBrazo ? pj + '_sonriendo' : 'maria_senalando', [x0, y0, x1] = BB[n], k = MEDIO.s; // el brazo de Pedro señalando taparía el bocadillo
   const cx = MEDIO.cuerpoX + ((x0 + x1) / 2 - 750) * k;      // 750 = centro del cuerpo en el PNG
   return pjSuelto(n, 'pjPeqImg', cx, MEDIO.cabeza + (BB[n][3] - y0) * k, k);
 }
@@ -259,6 +260,39 @@ window.fit = () => {
 const S = 1.75, ZX = 15, ZY = 205, VX = 440, VY = 860;
 const VITRINA = `transform:translate(${VX - ZX / S}px,${VY - ZY / S}px) scale(${1 / S})`;
 
+// ---------- encuesta: tres modelos
+// precio: se ve el producto, se tapan precio y descuento. descuento: se ve el precio de antes, se tapan descuento y precio.
+// mas_vista: dos tarjetas A y B; en la 2 se va la que no ganó y la ganadora crece con el sello "LA MÁS VISTA".
+const ENC = { k: 0.8, x: 156, y: 445 };
+function tapa(id, x, y, w, h, redonda) {
+  return `<div id="${id}" style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform-origin:50% 50%">
+    <div style="position:absolute;inset:0;border-radius:${redonda ? '50%' : '26px'};background:#FFC93C;border:7px solid ${DARK};transform:rotate(-6deg)"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${Math.min(w, h) * 0.75}px;line-height:1;color:${RED};-webkit-text-stroke:5px #fff;paint-order:stroke fill;transform:rotate(-6deg)">?</div></div>`;
+}
+function encuestaVitrina(h, d) {
+  const p = h.pub;
+  if (h.tipoEnc !== 'mas_vista') {
+    const tapas = [];
+    if (p.descuento) tapas.push([744, 268, 178, 178, true]);
+    if (h.tipoEnc === 'precio' && (p.precio || p.precio_antes)) tapas.push([672, 560, 270, 156, false]);
+    if (h.tipoEnc === 'descuento' && p.precio) tapas.push([684, 646, 258, 76, false]);
+    h.tapas = tapas.map(([x, y, w]) => ({ x: ENC.x + (x + w - 24) * ENC.k, y: ENC.y + (y + 26) * ENC.k }));
+    h.k = ENC.k;
+    return `<div id="encC" style="position:absolute;left:0;top:0;width:960px;height:740px;transform-origin:0 0;transform:translate(${ENC.x}px,${ENC.y}px) scale(${ENC.k})">${tarjeta(p, d.hoy, d.carpeta)}${tapas.map((t, i) => tapa('tapa' + i, ...t)).join('')}</div>`;
+  }
+  // más vista
+  const k = 0.5, pos = [[48, 490], [552, 490]];
+  h.cartas = pos.map(([x, y]) => ({ x, y, k }));
+  h.grande = ENC;
+  return h.pubs.map((q, i) => `<div id="enc${'AB'[i]}" style="position:absolute;left:0;top:0;width:960px;height:740px;transform-origin:0 0;transform:translate(${pos[i][0]}px,${pos[i][1]}px) scale(${k})">
+      ${tarjeta(q, d.hoy, d.carpeta)}
+      <div style="position:absolute;left:-30px;top:-60px;width:150px;height:150px;border-radius:50%;background:${RED};border:9px solid #fff;box-shadow:0 0 0 8px ${DARK};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:96px;line-height:1">${'AB'[i]}</div>
+      ${i === h.ganadora ? `<div id="sello" style="position:absolute;left:470px;top:-40px;width:470px;height:96px;opacity:0;transform-origin:50% 50%">
+        <div style="position:absolute;inset:0;border-radius:20px;background:${RED};border:7px solid #fff;box-shadow:0 0 0 7px ${DARK};transform:rotate(6deg)"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:50px;white-space:nowrap;transform:rotate(6deg)">LA MÁS VISTA</div></div>` : ''}
+    </div>`).join('');
+}
+
 function escena(h, d) {
   const enc = h.modo.startsWith('encuesta');
   let mundo = fachada() + rotulo();
@@ -266,21 +300,7 @@ function escena(h, d) {
   if (!enc) {
     if (h.cartel) vit += `<div id="cartel" style="position:absolute;left:60px;top:250px;width:960px;height:740px;transform-origin:50% 50%">${cartel(h.cartel[0], h.cartel[1], d.fechaHoy)}</div>`;
     vit += `<div id="tarjeta" style="position:absolute;left:60px;top:250px;width:960px;height:740px;transform-origin:50% 50%">${tarjeta(h.pub, d.hoy, d.carpeta)}</div>`;
-  } else {
-    // encuesta: tarjeta más pequeña a la derecha, tapada con una tela en la historia 1
-    const k = 0.66, tx = 410, ty = 520;
-    if (h.modo === 'encuesta2') vit += `<div style="position:absolute;left:${tx}px;top:${ty}px;width:960px;height:740px;transform-origin:0 0;transform:scale(${k})">${tarjeta(h.pub, d.hoy, d.carpeta)}</div>`;
-    else vit += `<div style="position:absolute;left:${tx}px;top:${ty}px;width:${960 * k}px;height:${740 * k}px;border-radius:24px;background:#fff;border:5px solid ${DARK}"></div>`;
-    const x0 = tx - 22, y0 = ty - 30, x1 = tx + 960 * k + 22, y1 = ty + 740 * k + 40;
-    h.telaAgarre = { x: x1 - 40, y: y0 + 40 };
-    const borde = `M${x0 + 20} ${y0} Q${(x0 + x1) / 2} ${y0 - 26} ${x1 - 20} ${y0} Q${x1 + 6} ${y0 + 6} ${x1} ${y0 + 40} L${x1 + 14} ${y1 - 30}
-      Q${x1 - 60} ${y1 + 22} ${x1 - 140} ${y1 - 4} Q${x1 - 230} ${y1 + 26} ${(x0 + x1) / 2} ${y1 - 2} Q${x0 + 190} ${y1 + 26} ${x0 + 110} ${y1 - 4} Q${x0 + 40} ${y1 + 20} ${x0 - 14} ${y1 - 30}
-      L${x0} ${y0 + 40} Q${x0 - 6} ${y0 + 6} ${x0 + 20} ${y0} Z`;
-    const pl = [0.22, 0.4, 0.6, 0.78].map((f) => `<path d="M${x0 + (x1 - x0) * f} ${y0 + 10} Q${x0 + (x1 - x0) * f + 18} ${(y0 + y1) / 2} ${x0 + (x1 - x0) * f - 6} ${y1 - 14}" fill="none" stroke="#C99B4E" stroke-width="7" stroke-linecap="round"/>`).join('');
-    vit += `<div id="tela" style="position:absolute;left:0;top:0;width:${W}px;height:${H}px;${h.modo === 'encuesta2' ? '' : ''}"><svg class="cap" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
-      <path d="${borde}" fill="#F2D38A" stroke="${TINTA}" stroke-width="8" stroke-linejoin="round"/>${pl}
-      <text x="${(x0 + x1) / 2}" y="${(y0 + y1) / 2 + 95}" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="270" fill="${RED}" stroke="#fff" stroke-width="10" paint-order="stroke">?</text></svg></div>`;
-  }
+  } else vit += encuestaVitrina(h, d);
   mundo += `<div id="vitrina" style="${VITRINA}">${vit}</div>`;
   mundo += persiana() + toldo();
   if (h.entrada === 'A') mundo += pjSuelto('maria_sonriendo', 'mariaG1', 0, 0, 1) + pjSuelto('maria_senalando', 'mariaG2', 0, 0, 1, 'display:none');
@@ -291,11 +311,12 @@ function escena(h, d) {
     s += bocadillo();
     if (h.ultima) s += `<div id="todas" style="position:absolute;inset:0;opacity:0">${caja(610, 1282, 440, 84, `<b style="font-size:56px;color:#fff;white-space:nowrap">Todas en tu móvil</b>`)}</div>`;
   } else {
-    s += pjSuelto('maria_senalando', 'mariaE', 230, 1225, 0.43);
+    s += `<div id="pjPeq" style="position:absolute;inset:0;transform-origin:0 0">${pjMedio('maria', true)}</div>`;
+    s += bocadillo();
     s += `<div id="preg" style="position:absolute;inset:0;transform-origin:0 0">
-      <div style="position:absolute;left:40px;top:250px;width:1000px;height:200px;border-radius:32px;background:#fff;border:7px solid ${DARK}"></div>
-      <div id="pregTxt" class="fit" style="left:70px;top:262px;width:940px;height:176px"><b style="font-size:62px;color:${DARK}">${esc(h.pregunta)}</b></div>
-      <div id="respTxt" class="fit" style="left:70px;top:262px;width:940px;height:176px;display:none"><i style="font-size:44px;font-weight:700;color:${DARK}">Respuesta</i><b style="font-size:96px;color:${RED}">${esc(h.respuesta || '')}</b></div>
+      <div style="position:absolute;left:40px;top:250px;width:1000px;height:170px;border-radius:32px;background:#fff;border:7px solid ${DARK}"></div>
+      <div id="pregTxt" class="fit" style="left:70px;top:260px;width:940px;height:150px"><b style="font-size:60px;color:${DARK}">${esc(h.pregunta)}</b></div>
+      <div id="respTxt" class="fit" style="left:70px;top:260px;width:940px;height:150px;display:none"><i style="font-size:40px;font-weight:700;color:${DARK}">Respuesta</i><b style="font-size:84px;color:${RED};white-space:nowrap">${esc(h.respuesta || '')}</b></div>
     </div>`;
   }
   s += mano();
@@ -335,10 +356,25 @@ function construir(datos, carpeta, entradaForzada, solo) {
   if (quiere('hoy') && tHoy.length) tanda(tHoy, 'hoy', 'pedro', 'hoy', ['TERMINAN', 'HOY']);
   if (quiere('normal') && tNormal.length) tanda(tNormal, 'normal', entrada === 'A' ? 'maria' : 'pedro', entrada, ['HOY EN EL', 'ESCAPARATE']);
   if (quiere('encuesta') && datos.encuesta) {
-    const e = datos.encuesta;
-    for (const k of ['pregunta', 'opciones', 'respuesta', 'publicacion']) if (!e[k]) throw new Error(`Falta "${k}" en la encuesta`);
-    hist.push({ modo: 'encuesta1', pregunta: e.pregunta, pub: e.publicacion, tanda: 'encuesta', n: 1, de: 2 });
-    hist.push({ modo: 'encuesta2', pregunta: e.pregunta, respuesta: e.respuesta, pub: e.publicacion, tanda: 'encuesta', n: 2, de: 2 });
+    const e = datos.encuesta, tipo = e.tipo || 'precio';
+    if (!['precio', 'descuento', 'mas_vista'].includes(tipo)) throw new Error(`Tipo de encuesta desconocido: ${tipo}`);
+    for (const k of ['pregunta', 'respuesta']) if (!e[k]) throw new Error(`Falta "${k}" en la encuesta`);
+    const base = { tipoEnc: tipo, pregunta: e.pregunta, tanda: 'encuesta', de: 2 };
+    if (tipo === 'mas_vista') {
+      if (!e.publicaciones || e.publicaciones.length !== 2) throw new Error('La encuesta "mas_vista" necesita 2 publicaciones (A y B)');
+      base.pubs = e.publicaciones; base.ganadora = 'AB'.indexOf(String(e.ganadora || '').toUpperCase());
+      if (base.ganadora < 0) throw new Error('Falta "ganadora": "A" o "B"');
+    } else {
+      if (!e.publicacion) throw new Error('Falta "publicacion" en la encuesta');
+      base.pub = e.publicacion;
+      if (tipo === 'precio' && !e.publicacion.precio) throw new Error('La encuesta de precio necesita "precio"');
+      if (tipo === 'descuento' && !e.publicacion.descuento) throw new Error('La encuesta de descuento necesita "descuento"');
+      const num = String(e.respuesta).replace(/[^0-9]/g, '');
+      if (num && String(e.publicacion.titulo || '').includes(num)) avisos.push(`El título "${e.publicacion.titulo}" deja ver la respuesta (${e.respuesta}).`);
+    }
+    const b1 = e.bocadillo1 || FRASES_ENC.uno, b2 = e.bocadillo2 || FRASES_ENC[tipo];
+    hist.push({ ...base, modo: 'encuesta1', n: 1, frase: b1, frasePrev: null });
+    hist.push({ ...base, modo: 'encuesta2', n: 2, respuesta: e.respuesta, frase: b2, frasePrev: b1 });
   }
   return { hist, avisos, entrada, usaNormal: quiere('normal') && tNormal.length > 0, d: { hoy, fechaHoy: fl, carpeta } };
 }
@@ -364,7 +400,7 @@ function momentos(h, P) {
   if (P.pon) { m.push(['mano_pone_tarjeta', P.pon[0] + 0.3]); m.push(['tarjeta', P.quieta[0] + 1]); }
   if (P.quita) m.push(['mano_quita_tarjeta', P.quita[0] + 0.5]);
   if (h.modo === 'encuesta1') m.push(['encuesta_1', 5.9]);
-  if (h.modo === 'encuesta2') { m.push(['encuesta_2_mano_tela', 0.55]); m.push(['encuesta_2', 5.9]); }
+  if (h.modo === 'encuesta2') { m.push(['encuesta_2_mano', 0.55]); m.push(['encuesta_2', 5.9]); }
   return m;
 }
 
@@ -404,7 +440,7 @@ async function main() {
     const dur = await page.evaluate(() => window.DURACION);
     const P = await page.evaluate(() => window.PLAN);
     const frames = Math.round(dur * FPS);
-    resumen.push(`${nombre}.mp4  ${dur.toFixed(2)} s  ${h.tanda} ${h.n}/${h.de}${h.entrada ? ' · entrada ' + h.entrada : ''}${h.pub ? ' · ' + (h.pub.titulo || '') : ''}`);
+    resumen.push(`${nombre}.mp4  ${dur.toFixed(2)} s  ${h.tanda} ${h.n}/${h.de}${h.entrada ? ' · entrada ' + h.entrada : ''}${h.tipoEnc ? ' · ' + h.tipoEnc : ''}${h.pub ? ' · ' + (h.pub.titulo || '') : ''}`);
     if (soloPng) {
       for (const [m, t] of momentos(h, P)) {
         await page.evaluate((tt) => window.pintar(tt), Math.min(t, dur - 1 / FPS));

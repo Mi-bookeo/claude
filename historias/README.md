@@ -14,7 +14,7 @@ En el repo solo van el código (`plantilla/`, `herramientas/`), las piezas de Pe
 
 Variantes que puede añadir en la misma frase:
 - `con entrada A` / `con entrada B` → fuerza la entrada de la tanda normal (si no, alterna).
-- `con encuesta: pregunta …; opciones … / …; respuesta …` + la captura de esa publicación.
+- `con encuesta de precio` / `de descuento` / `de la más vista`: `pregunta …; opciones … / …; respuesta …` + la captura (en la de la más vista, las 2 capturas y cuál ganó).
 - `sin música` / `sin sonido` → cambia `sonido.json` solo para esa vez (o `--sin-sonido`).
 - `hoy es …` o fechas → se usa como `hoy` en lugar de la fecha de Madrid.
 
@@ -44,6 +44,7 @@ Variantes que puede añadir en la misma frase:
     { "tipo": "novedad", "titulo": "Las gafas de moda", "comercio": "Óptica García", "precio": "65 €", "foto": "entrada/2026-11-25/gafas_moda.jpg" }
   ],
   "encuesta": {
+    "tipo": "precio",
     "pregunta": "¿Cuánto crees que cuestan estas gafas?",
     "opciones": ["35 €", "50 €"],
     "respuesta": "35 €",
@@ -51,6 +52,8 @@ Variantes que puede añadir en la misma frase:
   }
 }
 ```
+
+Encuesta: `tipo` = `precio` (se tapan precio y descuento), `descuento` (se tapan descuento y precio final; el de antes se ve) o `mas_vista` (en vez de `publicacion`, `"publicaciones": [A, B]` y `"ganadora": "A"|"B"`; la más vista la dice el usuario, no se saca de la base de datos). Opcionales: `bocadillo1`, `bocadillo2`. Las opciones no se dibujan: las pone el usuario con el sticker. Avisa si el título deja ver la respuesta.
 
 Campos opcionales de cada publicación: `precio`, `precio_antes`, `descuento`, `fin`, `texto_fecha` (sustituye la píldora de fecha), `termina_hoy`, `prueba` (marca grande "PRUEBA" y foto de prueba). `encuesta` solo cuando el usuario la pida.
 
@@ -64,7 +67,7 @@ node historias/plantilla/generar.js [--png] [--entrada A|B] [--solo hoy,normal,e
 
 - **Tanda normal**: historia 1 = entrada (A: la chica junto a la tienda señala el escaparate; B: Pedro entra andando, da 2 pasos y se para) + zoom + cartel "HOY EN EL ESCAPARATE" con la fecha (1,5 s) + la mano lo cambia por la primera tarjeta. Cada publicación es una historia y su tarjeta se queda quieta al menos 4 s. Si hay otra después, la mano se lleva la tarjeta y el último fotograma es el escaparate vacío; la siguiente empieza con ese mismo fotograma (se copia tal cual) y la mano trae la nueva. La última no se retira y lleva "Todas en tu móvil".
 - **Terminan hoy** (siempre Pedro, va primero): la persiana baja, Pedro llega deprisa, la frena con la mano y la levanta; zoom y cartel "TERMINAN HOY" (1,5 s); tarjetas con "SOLO HASTA HOY" y bocadillo "¡Solo hasta hoy!".
-- **Encuesta** (siempre la chica): historia 1 (6 s) con la tarjeta tapada por una tela y la pregunta, hueco limpio de y=1250 a y=1500 para el sticker de encuesta; historia 2 (6 s) la mano quita la tela y aparece la tarjeta, con "Respuesta …".
+- **Encuesta** (siempre la chica, sonriendo para no invadir el hueco del sticker): historia 1 (6 s) con el producto a la vista, la respuesta tapada con etiquetas "?" (o las tarjetas A y B en la más vista), la pregunta arriba, tic-tac y hueco a la derecha de y=1250 a y=1500 para el sticker; historia 2 (6 s) la mano arranca las etiquetas (o se lleva la que no ganó y la ganadora crece con "LA MÁS VISTA") y arriba sale "Respuesta …".
 - Tras el zoom, el personaje de la tanda sale **a medio cuerpo** abajo a la izquierda (la cabeza casi toca el escaparate, cortado por abajo) con el bocadillo junto a la cara. Pedro sale sonriendo (su brazo señalando taparía el bocadillo); la chica, señalando. El sticker de enlace va a la derecha, debajo de "Todas en tu móvil" (y=1380–1560).
 
 ## Sonido (`sonido.json`)

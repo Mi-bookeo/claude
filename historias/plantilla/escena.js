@@ -30,8 +30,13 @@
   (function plan() {
     let t = 0;
     const tiene = (k) => H[k];
-    if (H.modo === 'encuesta1') { P.preg = [0, 0.35]; P.fin = 6; return; }
-    if (H.modo === 'encuesta2') { P.tela = [0, 0.85]; P.resp = [0.9, 1.25]; P.fin = 6; return; }
+    if (H.modo === 'encuesta1') { P.preg = [0, 0.35]; P.pjPeq = [0.15, 0.55]; P.aterriza = 0.6; P.pop = [0.6, 0.95]; P.fin = 6; return; }
+    if (H.modo === 'encuesta2') {
+      let r = 0.2;
+      if (H.tipoEnc === 'mas_vista') { P.quitaB = [0.2, 0.95]; P.crece = [1.0, 1.5]; r = 1.5; }
+      else { P.tapas = (H.tapas || []).map((_, i) => [0.2 + i * 0.72, 0.2 + i * 0.72 + 0.72]); r = 0.2 + P.tapas.length * 0.72; }
+      P.resp = [r, r + 0.35]; P.aterriza = r + 0.1; P.pop = [r + 0.1, r + 0.45]; P.fin = 6; return;
+    }
     if (H.entrada === 'A') { P.maria = [0.15, 0.5]; P.senala = 0.9; P.zoom = [2.4, 3.6]; t = 4.0; }
     else if (H.entrada === 'B') { P.anda = [0.15, 1.95, 2]; P.zoom = [2.5, 3.65]; t = 4.0; }
     else if (H.entrada === 'hoy') {
@@ -63,7 +68,9 @@
   if (H.ultima && P.pop) son(P.pop[0] + 0.25, 'campanita');
   if (P.quita) son(P.quita[0] + 0.25, 'mano', 0.5);
   if (P.preg) { son(P.preg[0], 'pop'); son(P.preg[1] + 0.15, 'tictac', P.fin - P.preg[1] - 0.25); }   // tic-tac mientras se piensa
-  if (P.tela) son(P.tela[0] + 0.35, 'tela', 0.55);
+  if (P.tapas) P.tapas.forEach(([a]) => son(a + 0.25, 'tela', 0.45));
+  if (P.quitaB) son(P.quitaB[0] + 0.25, 'mano', 0.5);
+  if (P.crece) son(P.crece[0], 'zoom', 0.5);
   if (P.resp) son(P.resp[0], 'respuesta');
   window.SONIDOS = SON;
   window.PLAN = P;
@@ -203,25 +210,49 @@
       const kq = H.modo === 'encuesta1' ? back(lin(t, P.preg[0], P.preg[1])) : 1;
       $('preg').style.opacity = cl(kq * 3);
       $('preg').style.transform = `translate(540px, 340px) scale(${mix(0.5, 1, kq)}) translate(-540px, -340px)`;
-      if (H.modo === 'encuesta2') {
+      const dos = H.modo === 'encuesta2';
+      if (dos) {
         const resp = t >= P.resp[0];
         $('pregTxt').style.display = resp ? 'none' : 'flex';
         $('respTxt').style.display = resp ? 'flex' : 'none';
         if (resp) { const kr = back(lin(t, P.resp[0], P.resp[1])); $('preg').style.transform = `translate(540px, 340px) scale(${mix(0.6, 1, kr)}) translate(-540px, -340px)`; }
-        // la mano retira la tela
-        const [a, b] = P.tela, f1 = lin(t, a, a + 0.3), f2 = lin(t, a + 0.4, b);
-        const tela = $('tela');
-        const dx = 1300 * ein(f2), dy = -500 * ein(f2);
-        tela.style.transform = `translate(${dx}px, ${dy}px) rotate(${20 * ein(f2)}deg)`;
-        tela.style.transformOrigin = '1000px 540px';
-        let m = null;
-        if (t <= b) {
-          const g = H.telaAgarre;
-          const hx = g.x + (1 - eout(f1)) * 700 + dx, hy = g.y + dy;
-          m = { x: hx, y: hy, rot: -8 + 20 * ein(f2), cierra: t >= a + 0.3 };
+      }
+      let m = null;
+      if (H.tipoEnc !== 'mas_vista') {
+        // la mano arranca las etiquetas "?" una a una
+        (H.tapas || []).forEach((g, i) => {
+          const el = $('tapa' + i);
+          if (!dos) { el.style.transform = 'none'; return; }
+          const [a, b] = P.tapas[i], f1 = eout(lin(t, a, a + 0.25)), f2 = ein(lin(t, a + 0.3, b));
+          const dx = 950 * f2, dy = -650 * f2;
+          el.style.transform = `translate(${dx / H.k}px, ${dy / H.k}px) rotate(${30 * f2}deg)`;
+          el.style.display = f2 >= 1 ? 'none' : 'block';
+          if (t >= a && t <= b) m = { x: g.x + (1 - f1) * 700 + dx, y: g.y + dy, rot: -12 + 25 * f2, cierra: t >= a + 0.25 };
+        });
+      } else {
+        const [ca, cb] = H.cartas, G = H.grande, win = H.ganadora, lose = 1 - win;
+        const pon = (el, c) => { el.style.transform = `translate(${c.x}px, ${c.y}px) scale(${c.k})`; };
+        const els = [$('encA'), $('encB')];
+        pon(els[0], ca); pon(els[1], cb);
+        els[lose].style.display = 'block';
+        $('sello').style.opacity = 0;
+        if (dos) {
+          // la mano se lleva la que no ganó
+          const c = H.cartas[lose], [a, b] = P.quitaB, f1 = eout(lin(t, a, a + 0.25)), f2 = ein(lin(t, a + 0.32, b));
+          const dx = f2 * 1300;
+          els[lose].style.transform = `translate(${c.x + dx}px, ${c.y - dx * 0.08}px) scale(${c.k}) rotate(${9 * f2}deg)`;
+          if (f2 >= 1) els[lose].style.display = 'none';
+          const gx = c.x + 960 * c.k - 24, gy = c.y + 370 * c.k;
+          if (t >= a && t <= b) m = { x: gx + (1 - f1) * 900 + dx, y: gy - dx * 0.08, rot: 9 * f2, cierra: t >= a + 0.25 };
+          // la ganadora crece hasta el centro y sale el sello
+          const w = H.cartas[win], fc = io(lin(t, P.crece[0], P.crece[1]));
+          pon(els[win], { x: mix(w.x, G.x, fc), y: mix(w.y, G.y, fc), k: mix(w.k, G.k, fc) });
+          const ks = back(lin(t, P.crece[1] - 0.1, P.crece[1] + 0.25));
+          $('sello').style.opacity = cl(ks * 3);
+          $('sello').style.transform = `scale(${mix(0.3, 1, ks)})`;
         }
-        ponMano(m);
-      } else ponMano(null);
+      }
+      ponMano(m);
     }
   };
 
