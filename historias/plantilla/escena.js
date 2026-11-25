@@ -72,7 +72,7 @@
   if (P.pop && H.frase !== H.frasePrev) son(P.pop[0] + 0.05, 'pop');
   if (H.ultima && P.pop) son(P.pop[0] + 0.25, 'campanita');
   if (P.quita) son(P.quita[0] + 0.25, 'mano', 0.5);
-  if (P.preg) { son(P.preg[0], 'pop'); son(P.preg[1] + 0.15, 'tictac', P.fin - P.preg[1] - 0.25); }   // tic-tac mientras se piensa
+  if (P.preg) { son(P.preg[0], 'pop'); const ti = Math.max(P.preg[1] + 0.15, (P.pop ? P.pop[0] : 0) + (H.vozDur || 0)); son(ti, 'tictac', P.fin - ti - 0.1); }   // el tic-tac empieza cuando termina de hablar   // tic-tac mientras se piensa
   if (P.tapas) P.tapas.forEach(([a]) => son(a + 0.25, 'tela', 0.45));
   if (P.quitaB) son(P.quitaB[0] + 0.25, 'mano', 0.5);
   if (P.crece) son(P.crece[0], 'zoom', 0.5);

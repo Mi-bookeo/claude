@@ -24,6 +24,16 @@ const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', '
 const TIPOS = { oferta: 'OFERTA', novedad: 'NOVEDAD', evento: 'EVENTO' };
 const VOCES_F = path.join(HIST, 'voces', 'voces.json');
 const VOCES = fs.existsSync(VOCES_F) ? JSON.parse(fs.readFileSync(VOCES_F, 'utf8')) : {};
+function durWav(f) {   // duración de un WAV PCM (recorre los bloques: ffmpeg mete un LIST antes de los datos)
+  const b = fs.readFileSync(f); let i = 12, bps = 0;
+  while (i + 8 <= b.length) {
+    const id = b.toString('ascii', i, i + 4), n = b.readUInt32LE(i + 4);
+    if (id === 'fmt ') bps = b.readUInt32LE(i + 16);
+    if (id === 'data') return n / bps;
+    i += 8 + n + (n % 2);
+  }
+  return 0;
+}
 const FRASES_ENC = { uno: '¡A ver si aciertas!', precio: '¡Ese es el precio!', descuento: '¡Menudo descuento!', mas_vista: '¡Esta es la más vista!' };
 const FRASES = { oferta: '¡Mira esta oferta!', novedad: '¡Mira esta novedad!', evento: '¡No te pierdas este evento!', hoy: '¡Solo hasta hoy!' };
 
@@ -379,9 +389,13 @@ function construir(datos, carpeta, entradaForzada, solo) {
       const num = String(e.respuesta).replace(/[^0-9]/g, '');
       if (num && String(e.publicacion.titulo || '').includes(num)) avisos.push(`El título "${e.publicacion.titulo}" deja ver la respuesta (${e.respuesta}).`);
     }
-    const b1 = e.bocadillo1 || FRASES_ENC.uno, b2 = e.bocadillo2 || FRASES_ENC[tipo];
-    hist.push({ ...base, modo: 'encuesta1', n: 1, frase: b1, frasePrev: null });
-    hist.push({ ...base, modo: 'encuesta2', n: 2, respuesta: e.respuesta, frase: b2, frasePrev: b1 });
+    // voz de la chica: frase de inicio según el tipo y de respuesta; el bocadillo dice lo mismo que la voz
+    const vm = VOCES.maria, gi = vm && vm.grupos.encuesta_inicio, gr = vm && vm.grupos.encuesta_respuesta;
+    const c1 = !e.bocadillo1 && gi && gi.length ? gi[['precio', 'descuento', 'mas_vista'].indexOf(tipo) % gi.length] : null;
+    const c2 = !e.bocadillo2 && gr && gr.length ? gr[tipo === 'mas_vista' ? 0 : Math.min(1, gr.length - 1)] : null;
+    const b1 = e.bocadillo1 || (c1 ? vm.frases[c1] : FRASES_ENC.uno), b2 = e.bocadillo2 || (c2 ? vm.frases[c2] : FRASES_ENC[tipo]);
+    hist.push({ ...base, modo: 'encuesta1', n: 1, frase: b1, frasePrev: null, vozTarjeta: c1, vozDur: c1 ? durWav(path.join(HIST, 'voces', 'maria', c1 + '.wav')) : 0 });
+    hist.push({ ...base, modo: 'encuesta2', n: 2, respuesta: e.respuesta, frase: b2, frasePrev: b1, vozTarjeta: c2 });
   }
   return { hist, avisos, entrada, usaNormal: quiere('normal') && tNormal.length > 0, d: { hoy, fechaHoy: fl, carpeta } };
 }
