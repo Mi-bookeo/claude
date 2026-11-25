@@ -64,6 +64,17 @@ def campanita(notas=(88, 95)):
     for o, x in out: i = int(o * SR); s[i:i + len(x)] += x
     return s
 
+def tictac(d):
+    # reloj suave: tic agudo y tac algo más grave cada medio segundo, con fundido de entrada
+    n = int(d * SR); s = np.zeros(n); k = 0
+    while k * 0.5 < d - 0.05:
+        f = 2400 if k % 2 == 0 else 1800
+        m = int(0.04 * SR); tt = t_(m)
+        x = np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.006) + 0.5 * np.sin(2 * np.pi * f * 0.5 * tt) * np.exp(-tt / 0.01)
+        i = int(k * 0.5 * SR); x = x[:n - i]; s[i:i + len(x)] += x * min(1, 0.4 + k * 0.15)
+        k += 1
+    return s * 0.6
+
 def efecto(e, rng):
     tp, d = e['tipo'], e.get('dur', 0.5)
     if tp == 'persiana_baja': return persiana(d, rng, final=e.get('golpe', True))
@@ -76,10 +87,11 @@ def efecto(e, rng):
     if tp == 'pop': return pop()
     if tp == 'campanita': return campanita()
     if tp == 'respuesta': return campanita((84, 88, 91, 96))
+    if tp == 'tictac': return tictac(d)
     raise ValueError(tp)
 
 GRUPO = {'persiana_baja': 'persiana', 'persiana_sube': 'persiana', 'paso': 'pasos', 'zoom': 'zoom', 'mano': 'mano', 'tela': 'tela',
-         'tarjeta_cae': 'tarjeta_cae', 'pop': 'pop', 'campanita': 'campanita', 'respuesta': 'campanita'}
+         'tarjeta_cae': 'tarjeta_cae', 'pop': 'pop', 'tictac': 'tictac', 'campanita': 'campanita', 'respuesta': 'campanita'}
 
 # ---------------- música: pop alegre (bajo, acordes en contratiempo, melodía de marimba y batería)
 def musica(dur, offset, aj):

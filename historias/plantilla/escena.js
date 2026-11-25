@@ -62,7 +62,7 @@
   if (P.pop && H.frase !== H.frasePrev) son(P.pop[0] + 0.05, 'pop');
   if (H.ultima && P.pop) son(P.pop[0] + 0.25, 'campanita');
   if (P.quita) son(P.quita[0] + 0.25, 'mano', 0.5);
-  if (P.preg) son(P.preg[0], 'pop');
+  if (P.preg) { son(P.preg[0], 'pop'); son(P.preg[1] + 0.15, 'tictac', P.fin - P.preg[1] - 0.25); }   // tic-tac mientras se piensa
   if (P.tela) son(P.tela[0] + 0.35, 'tela', 0.55);
   if (P.resp) son(P.resp[0], 'respuesta');
   window.SONIDOS = SON;
