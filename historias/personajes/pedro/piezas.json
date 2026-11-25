@@ -1,0 +1,63 @@
+{
+ "fuente": "carrusel/personajes/pedro_sonriendo.png",
+ "lienzo": [
+  1500,
+  1875
+ ],
+ "orden": [
+  "pierna_izq",
+  "pierna_der",
+  "cuerpo",
+  "brazo_izq",
+  "brazo_der"
+ ],
+ "piezas": {
+  "pierna_izq": {
+   "x": 602,
+   "y": 1170,
+   "w": 145,
+   "h": 636,
+   "pivote": [
+    684,
+    1215
+   ]
+  },
+  "pierna_der": {
+   "x": 747,
+   "y": 1170,
+   "w": 151,
+   "h": 636,
+   "pivote": [
+    815,
+    1215
+   ]
+  },
+  "cuerpo": {
+   "x": 546,
+   "y": 173,
+   "w": 427,
+   "h": 1072,
+   "pivote": null
+  },
+  "brazo_izq": {
+   "x": 494,
+   "y": 622,
+   "w": 174,
+   "h": 504,
+   "pivote": [
+    612,
+    690
+   ]
+  },
+  "brazo_der": {
+   "x": 833,
+   "y": 622,
+   "w": 173,
+   "h": 504,
+   "pivote": [
+    888,
+    690
+   ]
+  }
+ }
+}

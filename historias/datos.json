@@ -1,0 +1,9 @@
+{
+  "hoy": "2026-11-25",
+  "entrada": "auto",
+  "publicaciones": [
+    { "tipo": "oferta", "titulo": "30% en gafas de sol", "comercio": "Óptica García", "descuento": "-30 %", "fin": "2026-12-11", "foto": "entrada/2026-11-25/gafas_sol.jpg" },
+    { "tipo": "novedad", "titulo": "Las gafas de moda", "comercio": "Óptica García", "precio": "65 €", "foto": "entrada/2026-11-25/gafas_moda.jpg" },
+    { "prueba": true, "tipo": "oferta", "titulo": "Publicación inventada de prueba", "comercio": "Comercio de prueba", "descuento": "-30 %", "precio": "14 €", "precio_antes": "20 €", "fin": "2026-11-25" }
+  ]
+}

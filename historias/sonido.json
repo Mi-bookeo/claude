@@ -1,0 +1,26 @@
+{
+  "_nota": "Ajustes de sonido de las historias. Volúmenes en dB (0 = tal cual, -6 = la mitad). Todo se sintetiza en herramientas/audio.py: no hay audio con derechos de autor.",
+  "activado": true,
+  "volumen_general_db": 9,
+  "musica": {
+    "activada": true,
+    "volumen_db": -15,
+    "bpm": 118,
+    "tonalidad": "C",
+    "acordes": ["I", "V", "vi", "IV"],
+    "semilla": 7,
+    "continua_en_la_tanda": true
+  },
+  "efectos": {
+    "activados": true,
+    "volumen_db": -4,
+    "persiana": -2,
+    "pasos": -6,
+    "zoom": -8,
+    "mano": -5,
+    "tarjeta_cae": -4,
+    "pop": -6,
+    "campanita": -8,
+    "tela": -5
+  }
+}
