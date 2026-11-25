@@ -10,13 +10,16 @@ En el repo solo van el código (`plantilla/`, `herramientas/`), las piezas de Pe
 
 ## Cómo lo pide el usuario
 
-> **Historias** + capturas adjuntas
-
-Variantes que puede añadir en la misma frase:
-- `con entrada A` / `con entrada B` → fuerza la entrada de la tanda normal (si no, alterna).
-- `con encuesta de precio` / `de descuento` / `de la más vista`: `pregunta …; opciones … / …; respuesta …` + la captura (en la de la más vista, las 2 capturas y cuál ganó).
-- `sin música` / `sin sonido` → cambia `sonido.json` solo para esa vez (o `--sin-sonido`).
-- `hoy es …` o fechas → se usa como `hoy` en lugar de la fecha de Madrid.
+1. Hace capturas (o pasa fotos originales) de las publicaciones de la web: máximo 4 por tanda.
+2. Escribe **Historias (historias/README.md)** y adjunta las capturas. Variantes en la misma frase:
+   - `con entrada A` / `con entrada B` → fuerza la entrada de la tanda normal (si no, alterna).
+   - `con encuesta de precio` / `de descuento` / `de la más vista`: `pregunta …; opciones … / …; respuesta …` + la captura (en la de la más vista, las 2 capturas y cuál ganó).
+   - `sin voz` / `sin música` / `sin sonido` → solo para esa vez.
+   - `hoy es …` o fechas → se usa como `hoy` en lugar de la fecha de Madrid.
+3. Claude le enseña la lista de lo que ha leído y en qué tanda va cada una; el usuario corrige o dice OK.
+4. Claude envía los MP4 por el chat (numerados en orden de publicación). El usuario los revisa.
+5. Si están bien, el usuario dice **aprobado** → Claude guarda la entrada usada en `estado.json` y la sube.
+6. El usuario publica en Instagram en orden y añade los stickers: enlace en la última historia de cada tanda (a la derecha, debajo de "Todas en tu móvil") y encuesta en la historia 1 de la encuesta (a la derecha, de y=1250 a y=1500).
 
 ## Pasos (para Claude)
 
@@ -73,6 +76,10 @@ node historias/plantilla/generar.js [--png] [--entrada A|B] [--solo hoy,normal,e
 ## Sonido (`sonido.json`)
 
 Música pop alegre original (bajo, acordes tipo ukelele, marimba y batería) y efectos (persiana, pasos, zoom, mano, tarjeta, pop del bocadillo, campanita, tela), todo sintetizado en `herramientas/audio.py`: sin audio de terceros. La música continúa de una historia a la siguiente dentro de la misma tanda. Volúmenes en dB por grupo; `volumen_general_db` ajusta el total (unos −15 LUFS). Para cambiar la canción: `semilla` (otra melodía), `bpm`, `tonalidad`, `acordes`.
+
+## Voces (`voces/`)
+
+Clips WAV mono a −16 LUFS cortados de los audios de ElevenLabs que pasó el usuario (Sofia para la chica, Dani para Pedro). `voces/voces.json` tiene el texto de cada clip y los grupos (entrada, persiana, hoy, oferta, descuento, novedad, evento, ultima, encuesta_inicio, encuesta_respuesta). El bocadillo muestra el texto de la frase que suena; si un personaje no tiene clip para un momento, sale la frase fija sin voz. Momentos: la chica al señalar (entrada A), Pedro al pararse (entrada B) o al llegar a la persiana ("¡Espera, espera, que aún no ha terminado!"), y la frase de cada tarjeta. La música baja `baja_musica_db` mientras hablan (`sonido.json` → `voces`). Para añadir frases: grabarlas seguidas con pausas, cortarlas por los silencios (`ffmpeg silencedetect`) y añadirlas a `voces.json`.
 
 ## Personajes
 

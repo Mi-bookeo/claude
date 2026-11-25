@@ -17,14 +17,77 @@
       "12": "¿Has acertado?"
     },
     "grupos": {
-      "entrada": ["01", "02"],
-      "oferta": ["03"],
-      "descuento": ["04", "03"],
-      "novedad": ["05"],
-      "evento": ["06"],
-      "ultima": ["07"],
-      "encuesta_inicio": ["08", "09", "10"],
-      "encuesta_respuesta": ["11", "12"]
+      "entrada": [
+        "01",
+        "02"
+      ],
+      "oferta": [
+        "03"
+      ],
+      "descuento": [
+        "04",
+        "03"
+      ],
+      "novedad": [
+        "05"
+      ],
+      "evento": [
+        "06"
+      ],
+      "ultima": [
+        "07"
+      ],
+      "encuesta_inicio": [
+        "08",
+        "09",
+        "10"
+      ],
+      "encuesta_respuesta": [
+        "11",
+        "12"
+      ]
+    }
+  },
+  "pedro": {
+    "origen": "ElevenLabs · Dani - Hurried, Dynamic and Engaging (2026-11-25)",
+    "frases": {
+      "01": "¡Hola! A ver qué hay hoy por aquí…",
+      "02": "¡Uy! ¡Mira este escaparate!",
+      "03": "¡Espera, espera, que aún no ha terminado!",
+      "04": "¡Corre, que se acaba hoy!",
+      "05": "¡Mira qué oferta!",
+      "06": "¡Vaya descuentazo!",
+      "07": "¡Esto es nuevo!",
+      "08": "¡Apúntate este evento!",
+      "09": "¡Todas en tu móvil!"
+    },
+    "grupos": {
+      "entrada": [
+        "01",
+        "02"
+      ],
+      "persiana": [
+        "03"
+      ],
+      "hoy": [
+        "04"
+      ],
+      "oferta": [
+        "05"
+      ],
+      "descuento": [
+        "06",
+        "05"
+      ],
+      "novedad": [
+        "07"
+      ],
+      "evento": [
+        "08"
+      ],
+      "ultima": [
+        "09"
+      ]
     }
   }
 }
