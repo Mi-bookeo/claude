@@ -1,10 +1,10 @@
 Próxima apertura — timeline (1080x1920, 30 fps)
 escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
-01	0.000	3.500	3.500	105	HOOK: cielo con nubes; María muy grande, ceja levantada y gesto de «espera», zoom 90 -> 100 %; «¿ERES DE TUDELA?» / «ESPERA, ESTO TE INTERESA»
-02	3.500	9.000	5.500	165	EL ESCAPARATE: local con rótulo y persiana bajada; golpe del cartel «PRÓXIMA APERTURA · DICIEMBRE»; María mira el cartel y luego a cámara; dolly-in; cae «¿QUÉ ES?»
-03	9.000	19.000	10.000	300	QUÉ ES: interior con ventana; María habla; móvil grande con feed (Oferta, Novedad, Evento) que sube; etiquetas OFERTAS / NOVEDADES / EVENTOS
-04	19.000	24.500	5.500	165	CLIENTES: plano más cerrado de la persiana; al decir «beneficiarnos» iconos %, corazón y bolsa; al decir «comercio local» corazón rojo que late sobre el cartel
-05	24.500	31.000	6.500	195	CTA CLIENTES: María a medio cuerpo con espacio arriba; «CANAL DE WHATSAPP», «Enlace en la descripción» con flecha, «COMENTA: CANAL»; al decir «comenta» queda solo «Comenta CANAL» en grande
-06	31.000	35.500	4.500	135	CTA COMERCIOS: María delante de la persiana; tarjeta «¿TIENES UN COMERCIO?» con botón «QUIERO INFORMACIÓN», correo y «o enlace en la descripción»
-07	35.500	38.500	3.000	90	CIERRE: pantalla roja, logo blanco con rebote, «Próxima apertura · diciembre», escaparatetudela.es; pulso suave
-TOTAL	0.000	38.500
+01	0.000	3.900	3.900	117	HOOK: cielo con nubes; María muy grande, ceja levantada y gesto de «espera», zoom 90 -> 100 %; «¿ERES DE TUDELA?» / «ESPERA, ESTO TE INTERESA»
+02	3.900	10.133	6.233	187	EL ESCAPARATE: local con rótulo y persiana bajada; golpe del cartel «PRÓXIMA APERTURA · DICIEMBRE»; María mira el cartel y luego a cámara; dolly-in; cae «¿QUÉ ES?»
+03	10.133	16.900	6.767	203	QUÉ ES: interior con ventana; María habla; móvil grande con feed (Oferta, Novedad, Evento) que sube; etiquetas OFERTAS / NOVEDADES / EVENTOS
+04	16.900	22.567	5.667	170	CLIENTES: plano más cerrado de la persiana; al decir «beneficiarnos» iconos %, corazón y bolsa; al decir «comercio local» corazón rojo que late sobre el cartel
+05	22.567	30.133	7.567	227	CTA CLIENTES: María a medio cuerpo con espacio arriba; «CANAL DE WHATSAPP», «Enlace en la descripción» con flecha, «COMENTA: CANAL»; al decir «comenta» queda solo «Comenta CANAL» en grande
+06	30.133	35.567	5.433	163	CTA COMERCIOS: María delante de la persiana; tarjeta «¿TIENES UN COMERCIO?» con botón «QUIERO INFORMACIÓN», correo y «o enlace en la descripción»
+07	35.567	38.767	3.200	96	CIERRE: pantalla roja, logo blanco con rebote, «Próxima apertura · diciembre», escaparatetudela.es; pulso suave
+TOTAL	0.000	38.767

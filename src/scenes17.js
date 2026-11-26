@@ -12,6 +12,7 @@ const bumpZ = (t, times, a = 0.03) => 1 + times.reduce((m, t0) => m + (t >= t0 ?
 const seg = (t, a, b) => clamp((t - a) / (b - a));
 const talkOf = (sc, who = 'maria') => (sc.talk && sc.talk[who]) || [];
 const TX = (key, def) => (CFG && CFG.textos && CFG.textos[key] !== undefined) ? CFG.textos[key] : def;
+const TIKTOK = () => CFG && CFG.variant === 'tiktok';
 const inR = (t, rs) => rs.some(([a, b]) => t >= a && t < b);
 // María colocada por la cintura (local 142) en waistY
 const mariaW = (x, waistY, sc, o) => placeMaria(x, mWaist(waistY, sc), sc, o);
@@ -67,11 +68,8 @@ S[2] = (t, T, sc) => {
   const dz = lerp(1, 1.12, easeInOut(seg(t, 0, sc.duration)));
   const shk = t >= sEnd ? 10 * damp(t - sEnd, 50, 9) : 0;
   let s = cam(comicZoom(t, 1.1) * dz, 560, 900, w, shk, shk * 0.6);
-  // segundo cartel «¿QUÉ ES?» que cae delante con rebote
-  if (t >= c.que) {
-    const p = pop(t, c.que, 0.6), y = lerp(-320, 1150, p), rot = 5 + 7 * damp(t - c.que - 0.25, 11, 4);
-    s += at(560, y, 1, redSign17(640, 270, [[TX('s2b', '¿QUÉ ES?'), 160, 6]], { tape: false }), rot);
-  }
+  // segundo cartel «¿QUÉ ES?», grande y en el centro: lo trae una mano desde la derecha, lo deja y se va
+  if (t >= c.que) s += queSign17(t - c.que, c.hold || 0.5);
   return s;
 };
 
@@ -158,7 +156,7 @@ S[5] = (t, T, sc) => {
   }));
   let s = cam(comicZoom(t, 1.12) * bumpZ(t, [c.card, c.strip, c.com], 0.02), 540, 1000, w);
   // al decir «comenta CANAL» (solo Instagram) desaparece lo de arriba y queda «Comenta CANAL» en grande (regla del vídeo 16)
-  if (t >= c.com) {
+  if (!TIKTOK() && t >= c.com) {
     s += bigT(TX('s5d', 'Comenta'), 540, 320, 170, pop(t, c.com, 0.5), -4);
     s += strip15(TX('s5e', 'CANAL'), 540, 540, pop(t, c.com + 0.18, 0.5), 3, { size: 210, h: 240, w: 720, fill: C.yel });
     return s;
@@ -169,7 +167,8 @@ S[5] = (t, T, sc) => {
     s += at(500, 430, kl, text(TX('s5b', 'Enlace en la descripción'), 0, 0, { size: 62, sw: SW * 1.7, sd: 5 }));
     s += arrowDown17(880, 395, 70, pop(t, c.link + 0.15, 0.45), t);
   }
-  s += strip15(TX('s5c', 'COMENTA: CANAL'), 540, 560, pop(t, c.strip, 0.5), -2, { size: 82, h: 118, w: 760 });
+  // en TikTok no hay «comenta»
+  if (!TIKTOK()) s += strip15(TX('s5c', 'COMENTA: CANAL'), 540, 560, pop(t, c.strip, 0.5), -2, { size: 82, h: 118, w: 760 });
   return s;
 };
 

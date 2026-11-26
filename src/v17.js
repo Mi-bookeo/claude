@@ -215,3 +215,38 @@ function infoCard17(t, kBtn = 1, kMail = 1, kSmall = 1, press = 0) {
   g += `<rect x="${x0}" y="${y0}" width="${wd}" height="${ht}" rx="36" fill="none" ${st17(1.2)}/>`;
   return g;
 }
+
+/* ===================== «¿QUÉ ES?» GRANDE, PUESTO POR UNA MANO DESDE LA DERECHA ===================== */
+// mano grande (piel de María) que sujeta el borde derecho del cartel; (x,y) = punto de agarre
+function bigHand17(x, y, grip = 1) {
+  const sk = MG.skin, ss = MG.skinS;
+  let g = `<path d="M${x + 60} ${y - 10} L${W + 400} ${y + 60}" stroke="${INK}" stroke-width="${f(150 + SW * 2)}" stroke-linecap="round"/>`;
+  g += `<path d="M${x + 60} ${y - 10} L${W + 400} ${y + 60}" stroke="${sk}" stroke-width="150" stroke-linecap="round"/>`;
+  g += `<path d="M${x + 150} ${y + 50} L${W + 400} ${y + 108}" stroke="${ss}" stroke-width="34" stroke-linecap="round" opacity="0.8"/>`;
+  // manga azul del vestido de María
+  g += `<path d="M${x + 330} ${y - 100} L${x + 420} ${y + 140} L${W + 400} ${y + 230} L${W + 400} ${y - 60}Z" fill="${MG.dress}" ${st17(1.1)}/>`;
+  // palma y dedos por delante del borde del cartel (los dedos se abren al soltar)
+  g += `<ellipse cx="${x + 70}" cy="${y}" rx="78" ry="92" fill="${sk}" ${st17(1.1)}/>`;
+  [-62, -22, 18, 58].forEach((dy, i) => {
+    const len = 96 - Math.abs(i - 1.5) * 10, op = (1 - grip) * 40;
+    g += `<rect x="${f(x - len + 10 + op)}" y="${f(y + dy - 19)}" width="${f(len)}" height="38" rx="19" fill="${sk}" ${st17(0.9)}/>`;
+  });
+  g += `<path d="M${x + 20} ${y - 70} Q${x - 20} ${y - 120} ${x - 50} ${y - 104}" stroke="${INK}" stroke-width="${f(44 + SW * 2)}" stroke-linecap="round" fill="none"/><path d="M${x + 20} ${y - 70} Q${x - 20} ${y - 120} ${x - 50} ${y - 104}" stroke="${sk}" stroke-width="44" stroke-linecap="round" fill="none"/>`;
+  return g;
+}
+// u = tiempo desde que entra; hold = momento (desde la entrada) en que la mano suelta y se va
+function queSign17(u, hold = 0.5) {
+  const wd = 840, ht = 420, cx = 520, cy = 880;
+  const pin = pop(u, 0, 0.55);                       // entra desde la derecha con rebote
+  const out = easeInOut(seg(u, hold, hold + 0.35));  // la mano se va
+  const sx = cx + (1 - pin) * 1200;
+  const rot = lerp(9, -3, pin) + (u > hold ? 2.5 * damp(u - hold, 10, 4) : 0);
+  let s = `<rect width="${W}" height="${H}" fill="${INK}" opacity="${f(0.28 * clamp(u / 0.3))}"/>`;
+  s += at(sx, cy, 1, redSign17(wd, ht, [[TX('s2b', '¿QUÉ ES?'), 230, 10]], { tape: false }), rot);
+  if (out < 1) {
+    const gx = sx + wd / 2 + 65 + out * 900, gy = cy + 20 + out * 120;
+    s += `<g transform="rotate(${f(rot)} ${f(sx)} ${f(cy)})">${bigHand17(gx, gy, 1 - out * 2)}</g>`;
+  }
+  if (u > 0.5 && u < 1.3) s += sparkle(cx - wd / 2 + 20, cy - ht / 2 - 10, 34, pop(u, 0.5, 0.4)) + sparkle(cx + wd / 2 - 60, cy + ht / 2 + 20, 26, pop(u, 0.6, 0.4));
+  return s;
+}
