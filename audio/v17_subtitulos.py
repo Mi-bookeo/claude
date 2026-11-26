@@ -52,7 +52,7 @@ for s in cfg['scenes']:
         L = sum(len(x) for x in bl); acc = 0
         for x in bl:
             a = tl(tot * acc / L); acc += len(x); b = tl(tot * acc / L)
-            subs.append({'start': starts[s['id']] + a - 0.06, 'end': starts[s['id']] + b + 0.25, 'text': x, 'who': name.split('_')[0]})
+            subs.append({'start': starts[s['id']] + a - 0.06, 'end': starts[s['id']] + b + 0.25, 'speak': b - a, 'text': x, 'who': name.split('_')[0]})
 subs.sort(key=lambda q: q['start'])
 for i in range(len(subs) - 1):  # sin solapes
     if subs[i]['end'] > subs[i + 1]['start'] - 0.04: subs[i]['end'] = subs[i + 1]['start'] - 0.04
@@ -62,6 +62,17 @@ def ts(x, sep=','):
     ms = int(round(x * 1000)); return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d}{sep}{ms % 1000:03d}'
 with open(os.path.join(ROOT, cfg.get('srt', 'subtitles.srt')), 'w') as fh:
     for i, q in enumerate(subs, 1): fh.write(f"{i}\n{ts(q['start'])} --> {ts(q['end'])}\n" + '\n'.join(wrap(q['text'])) + '\n\n')
+def karaoke(q):
+    """cada palabra se rellena de blanco a amarillo (\\kf) mientras se dice; el tiempo con voz del bloque se reparte por letras"""
+    lines = wrap(q['text']); words = [w for ln in lines for w in ln.split(' ')]
+    tot = max(1, round(q['speak'] * 100)); L = sum(len(w) + 1 for w in words); out, acc, done = [], 0, 0
+    for li, ln in enumerate(lines):
+        parts = []
+        for w in ln.split(' '):
+            acc += len(w) + 1; cs = round(tot * acc / L) - done; done += cs
+            parts.append(f'{{\\kf{cs}}}{w}')
+        out.append(' '.join(parts))
+    return '{\\k6}' + '\\N'.join(out)
 def tass(x):
     cs = int(round(x * 100)); return f'{cs // 360000}:{cs // 6000 % 60:02d}:{cs // 100 % 60:02d}.{cs % 100:02d}'
 os.makedirs(os.path.join(ROOT, 'tmp'), exist_ok=True)
@@ -70,9 +81,10 @@ with open(ass, 'w') as fh:
     fh.write('[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 2\nScaledBorderAndShadow: yes\n\n')
     fh.write('[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n')
     # alineación 2 = abajo al centro; MarginV 175 -> la base del bloque en y≈1745 (franja 1450..1750)
-    fh.write('Style: Sub,Baloo 2 ExtraBold,112,&H00FFFFFF,&H00FFFFFF,&H001A1A1E,&H801A1A1E,0,0,0,0,100,100,0,0,1,4,3,2,30,30,175,1\n\n')
+    # karaoke: SecondaryColour = blanco (aún no dicho), PrimaryColour = amarillo de la marca #F2C12E (ya dicho)
+    fh.write('Style: Sub,Baloo 2 ExtraBold,112,&H002EC1F2,&H00FFFFFF,&H001A1A1E,&H801A1A1E,0,0,0,0,100,100,0,0,1,4,3,2,30,30,175,1\n\n')
     fh.write('[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n')
-    for q in subs: fh.write(f"Dialogue: 0,{tass(q['start'])},{tass(q['end'])},Sub,,0,0,0,,{'\\N'.join(wrap(q['text']))}\n")
+    for q in subs: fh.write(f"Dialogue: 0,{tass(q['start'])},{tass(q['end'])},Sub,,0,0,0,,{karaoke(q)}\n")
 for q in subs: print(f"{q['start']:6.2f}-{q['end']:6.2f}  [{q['who']}] {' / '.join(wrap(q['text']))}")
 if '--burn' in sys.argv:
     src = os.path.join(ROOT, cfg.get('audioOut', 'video17_con_audio.mp4')); out = os.path.join(ROOT, cfg.get('subtitledOut', 'video17_subtitulado.mp4')); tmp = out.replace('.mp4', '.partial.mp4')
