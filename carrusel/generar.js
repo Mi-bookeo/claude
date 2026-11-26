@@ -19,7 +19,8 @@ const B64 = p => fs.readFileSync(path.join(ROOT, p)).toString('base64');
   await page.goto('file://' + path.join(__dirname, 'index.html'));
   const fonts = [['Baloo2', 800, B64('fonts/Baloo2-ExtraBold.ttf')], ['Bangers', 400, B64('fonts/Bangers-Regular.ttf')]];
   const logos = [['logoW', 'data:image/png;base64,' + B64('assets/logo_blanco_t.png')], ['logoR', 'data:image/png;base64,' + B64('assets/logo_rojo_t.png')],
-    ['logoI', 'data:image/png;base64,' + B64('logo.png')]];
+    ['logoI', 'data:image/png;base64,' + B64('logo.png')],
+    ['web', 'data:image/png;base64,' + B64('carrusel/captura_web.png'), 1080, 1725]];   // captura de la web (diapositiva 2)
   await page.evaluate(([c, f, l]) => window.init(c, f, l), [cfg, fonts, logos]);
   const shot = async (n, t) => { await page.evaluate(([a, b]) => window.renderSlide(a, b), [n, t]); return page.screenshot({ type: 'png', clip: { x: 0, y: 0, width: 1080, height: 1350 } }); };
   if (mode !== 'mp4') for (let n = 1; n <= 5; n++) {

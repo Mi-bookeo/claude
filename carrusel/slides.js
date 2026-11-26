@@ -59,7 +59,16 @@ SL[1] = T => {
 };
 
 /* 2) ¿QUÉ ES?: cartel rojo, explicación y la web dentro de un móvil */
-const WEB2 = { X: 330, Y: 655, PW: 420, PH: 600 };
+const WEB2 = { X: 346, Y: 634, PW: 388, PH: 592 };
+// marco de móvil con la captura de la web (carrusel/captura_web.png, recortada antes de la primera oferta)
+function shotPhone(X, Y, PW, PH) {
+  const b = 16, R = 54, sx = X + b, sy = Y + b, sw_ = PW - 2 * b, sh = PH - 2 * b, id = 'wp' + (uid++);
+  let g = `<rect x="${X + 16}" y="${Y + 16}" width="${PW}" height="${PH}" rx="${R}" fill="${INK}"/><rect x="${X}" y="${Y}" width="${PW}" height="${PH}" rx="${R}" fill="${INK}" ${st17()}/>`;
+  g += `<clipPath id="${id}"><rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" rx="${R - b}"/></clipPath>`;
+  g += `<g clip-path="url(#${id})"><rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" fill="#FFFFFF"/><svg x="${sx}" y="${sy}" width="${sw_}" height="${sh}" viewBox="0 0 1080 1725" preserveAspectRatio="xMidYMin slice"><use href="#web"/></svg></g>`;
+  g += `<rect x="${sx}" y="${sy}" width="${sw_}" height="${sh}" rx="${R - b}" fill="none" ${st17(0.7)}/><rect x="${X + PW / 2 - 50}" y="${Y + 5}" width="100" height="8" rx="4" fill="#3A3434"/>`;
+  return g;
+}
 SL[2] = T => {
   let s = dotWide(0, W, 0, CAR_H);
   s += rays(540, 880, 18, 4, '#FFFFFF').replace(/<path /g, '<path opacity="0.55" ');
@@ -68,7 +77,7 @@ SL[2] = T => {
   s += band(400, 620);
   s += para(['Una web donde los comercios de Tudela', 'publican sus ofertas, novedades y eventos,', 'y tú lo ves todo en un solo sitio.'], 452, 46);
   // la web en el móvil (feed con las tarjetas del vídeo)
-  s += portalPhone(WEB2.X, WEB2.Y, WEB2.PW, WEB2.PH, feedBody17([1, 1, 1], T), { hh: 130 });
+  s += shotPhone(WEB2.X, WEB2.Y, WEB2.PW, WEB2.PH);
   s += sparkle(WEB2.X - 40, WEB2.Y + 120, 34) + sparkle(WEB2.X + WEB2.PW + 40, WEB2.Y + 300, 26);
   // María pequeña a la izquierda, señalando el móvil
   const SC = 3.4;
