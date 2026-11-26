@@ -6,6 +6,32 @@ Reutiliza la fachada, el toldo, el rótulo y la mano de `historias/` (rama `hist
 
 **Las imágenes y los MP4 no se suben al repo**: `bienvenidas/salida/` está en `.gitignore`. Se envían por el chat.
 
+## Cómo lo pide el usuario
+
+Escribe **Bienvenida** y adjunta una captura o foto por comercio, numeradas, con el nombre y el sector:
+
+```
+Bienvenida
+Imagen 1: Peluquería Anastasio — Salón de peluquería y belleza
+Imagen 2: Calzados Marín — Zapatería de calzado hombre, mujer y niños
+```
+
+Opcional en el mismo mensaje: la cuenta de Instagram de cada uno (para el sticker de mención y para invitarlo como colaborador), la calle (para el pie de foto), `con la A` / `con la B` (si no, alterna) y `hoy es …`.
+
+## Pasos (para Claude)
+
+1. Leer de cada imagen: nombre y sector (descripción) tal como los escribe el usuario. No inventar nada; si falta algo imprescindible (el nombre), preguntar.
+2. Recortar la foto quitando botones, barras, flechas y marcas de la app (Street View, Instagram…), sin deformarla. Guardarla en `bienvenidas/entrada/AAAA-MM-DD/` (no se sube). Avisar si la foto tiene algo que no conviene publicar (personas, marcas de agua, un rótulo que no es el del comercio).
+3. Enseñar la lista leída (y en qué orden irán) y esperar el OK. Máximo 9 por tanda; el resto queda pendiente.
+4. Escribir `bienvenidas/entrada/AAAA-MM-DD/datos.json` (`nombre`, `descripcion`, `foto`, y `instagram`/`calle` si los dio).
+5. Generar las imágenes y las historias (con sonido, sin voces):
+   `node bienvenidas/plantilla/imagenes.js <datos.json> --salida bienvenidas/salida/AAAA-MM-DD/imagenes`
+   `node bienvenidas/plantilla/historias.js <datos.json> --salida bienvenidas/salida/AAAA-MM-DD/historias`
+6. Enviar por el chat los JPG, `pie.txt` y los MP4 (numerados en orden de publicación). No subirlos.
+7. Cuando el usuario apruebe: `node bienvenidas/plantilla/aprobar.js bienvenidas/salida/AAAA-MM-DD/historias` y commit + push solo de `bienvenidas/estado.json`.
+
+Al publicar: sticker de enlace a escaparatetudela.es en la última historia (y=1380–1560) y sticker de mención al comercio en cada historia (y=1590–1700, centrado).
+
 ## Qué se genera
 
 - **1 comercio**: `01.jpg` (post) + 1 historia.
