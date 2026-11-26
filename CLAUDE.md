@@ -36,6 +36,15 @@ con el mismo vídeo; el usuario ya no recorta nada:
 - **Peso**: entregar versiones ligeras para redes (libx264 crf 23, preset slow, tune animation; ≈13 MB por minuto),
   porque TikTok e Instagram vuelven a comprimir. La de máxima calidad (crf 18) solo si la pide.
 
+## Subtítulos en modo karaoke (regla fija desde el vídeo 17)
+**TODOS los vídeos a partir de ahora llevan los subtítulos quemados en modo KARAOKE** (aprobado por el usuario en el
+vídeo 17): cada palabra empieza en BLANCO y se rellena de AMARILLO (#F2C12E, el de la marca) de izquierda a derecha
+mientras la voz la dice (`\kf` de libass: SecondaryColour blanco = aún no dicho, PrimaryColour amarillo = ya dicho).
+Resto del estilo igual: Baloo 2 ExtraBold (Fontsize 112 ≈ 72 px), contorno negro de 4 px y sombra, máx. 2 líneas de
+28 caracteres, franja y=1450..1750, PlayRes 1080x1920. El tiempo con voz de cada bloque se reparte entre sus palabras
+por letras. Referencia: `audio/v17_subtitulos.py` (función `karaoke()`) de la rama `video-17-proxima-apertura`.
+Vale para Instagram y TikTok. El `.srt` sigue siendo texto normal.
+
 ## Personajes
 - **Todos los personajes se dibujan DE FRENTE**, mirando a cámara (nada de perfil ni 3/4), con cuello visible.
 - María: `src/maria.js` (diadema negra y rizos; referencia en la rama `video-11-marta-cuatro-motivos`).
