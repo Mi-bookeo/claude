@@ -9,6 +9,8 @@
      node render.js concat            -> vídeo final (config.output) + timeline.txt
      node render.js all               -> scenes + stills + concat
      node render.js subs              -> versión con subtítulos (subtitles.json) en scenes_sub/ -> tmp/subtitulado_mudo.mp4
+   Vídeo 17 «Próxima apertura»: CONFIG=config17.json node render.js … (página cfg.page, escenas en cfg.scenesDir,
+   fotogramas en cfg.stillsDir, timeline en cfg.timeline)
 */
 'use strict';
 const fs = require('fs');
@@ -37,7 +39,7 @@ function sceneTiming() {
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: cfg.width, height: cfg.height }, deviceScaleFactor: 1 });
   page.on('pageerror', e => console.error('ERROR en la página:', e.message));
-  await page.goto('file://' + path.join(ROOT, 'src', 'index.html'));
+  await page.goto('file://' + path.join(ROOT, 'src', cfg.page || 'index.html'));
   const fonts = [
     ['Baloo2', 800, fs.readFileSync(path.join(ROOT, 'fonts', 'Baloo2-ExtraBold.ttf')).toString('base64')],
     ['Bangers', 400, fs.readFileSync(path.join(ROOT, 'fonts', 'Bangers-Regular.ttf')).toString('base64')],
@@ -146,13 +148,13 @@ async function pool(items, n, fn) {
   const ids = !arg || arg === 'all' ? all : arg.split(',').map(Number);
   const browser = await chromium.launch();
   try {
-    if (cmd === 'stills') await stills(browser, ids, process.argv[4] || path.join(ROOT, 'stills'));
+    if (cmd === 'stills') await stills(browser, ids, process.argv[4] || path.join(ROOT, cfg.stillsDir || 'stills'));
     if (cmd === 'scenes' || cmd === 'all' || cmd === 'subs') {
       fs.mkdirSync(path.join(ROOT, SCN), { recursive: true });
       const timing = sceneTiming().filter(s => ids.includes(s.id)).sort((a, b) => b.frames - a.frames);
       await pool(timing, Number(process.env.JOBS || 3), s => renderScene(browser, s));
     }
-    if (cmd === 'all') await stills(browser, all, path.join(ROOT, 'stills'));
+    if (cmd === 'all') await stills(browser, all, path.join(ROOT, cfg.stillsDir || 'stills'));
     if (cmd === 'concat' || cmd === 'all' || cmd === 'subs') await concat();
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exit(1); });
