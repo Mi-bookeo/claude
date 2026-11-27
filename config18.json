@@ -234,19 +234,19 @@
     {
       "id": 4,
       "name": "LA LLAMADA: Pedro con el móvil al oído; pantalla de llamada saliente con el icono de taller; globo del mecánico «¡Claro!»",
-      "duration": 12.6,
-      "still": 11.39,
+      "duration": 9.6,
+      "still": 8.39,
       "cues": {
         "phone": 0.2,
         "ans": 1.9,
-        "claro": 9.6
+        "claro": 6.6
       },
       "voices": [
         {
           "file": "audio/voces/pedro18_8.mp3",
           "who": "pedro",
           "start": 2.05,
-          "duration": 7.248,
+          "duration": 4.248,
           "text": "Buenas, he visto su oferta de ruedas en Escaparate de Tudela. ¿Puedo pasar ahora?",
           "segments": [
             [
@@ -260,31 +260,23 @@
             [
               5.43,
               6.15
-            ],
-            [
-              6.41,
-              7.33
-            ],
-            [
-              7.49,
-              9.13
             ]
           ]
         },
         {
           "file": "audio/voces/mecanico18_1.mp3",
           "who": "mecanico",
-          "start": 9.55,
+          "start": 6.55,
           "duration": 2.136,
           "text": "Claro, tráigalo cuando quiera.",
           "segments": [
             [
-              9.59,
-              10.05
+              6.59,
+              7.05
             ],
             [
-              10.37,
-              11.53
+              7.37,
+              8.53
             ]
           ]
         }
@@ -298,10 +290,6 @@
           [
             5.4,
             6.19
-          ],
-          [
-            6.38,
-            9.17
           ]
         ]
       }
@@ -309,7 +297,7 @@
     {
       "id": 5,
       "name": "EL TALLER: cartel «2x1», coche elevado, ruedas nuevas apiladas; el mecánico (mono azul, gorra) cambia la rueda; corte a Pedro saliendo feliz con el pulgar arriba",
-      "duration": 8.6,
+      "duration": 8.933,
       "still": 2.3,
       "shots": {
         "A": [
@@ -318,7 +306,7 @@
         ],
         "B": [
           5.0,
-          8.6
+          8.933
         ]
       },
       "cues": {
@@ -328,17 +316,17 @@
         {
           "file": "audio/voces/pedro18_9.mp3",
           "who": "pedro",
-          "start": 5.25,
-          "duration": 2.736,
+          "start": 5.35,
+          "duration": 2.976,
           "text": "¡Dos por uno! Ruedas nuevas y a otra cosa.",
           "segments": [
             [
-              5.29,
-              6.07
+              5.41,
+              6.35
             ],
             [
-              6.25,
-              7.85
+              6.49,
+              8.15
             ]
           ]
         }
@@ -346,8 +334,8 @@
       "talk": {
         "pedro": [
           [
-            5.26,
-            7.89
+            5.38,
+            8.19
           ]
         ]
       }
@@ -355,7 +343,7 @@
     {
       "id": 6,
       "name": "EL SELLO VERDE: el sello baja con golpe; «FAVORABLE» en verde con destellos; Pedro aliviado levanta los brazos",
-      "duration": 5.0,
+      "duration": 3.967,
       "still": 2.0,
       "cues": {
         "hit": 0.8
@@ -364,13 +352,17 @@
         {
           "file": "audio/voces/pedro18_10.mp3",
           "who": "pedro",
-          "start": 1.15,
-          "duration": 2.448,
+          "start": 0.92,
+          "duration": 2.736,
           "text": "¡Favorable! A la segunda ha ido a la vencida.",
           "segments": [
             [
-              1.19,
-              3.53
+              0.96,
+              1.74
+            ],
+            [
+              1.92,
+              3.52
             ]
           ]
         }
@@ -378,8 +370,8 @@
       "talk": {
         "pedro": [
           [
-            1.16,
-            3.57
+            0.93,
+            3.56
           ]
         ]
       }
@@ -387,46 +379,42 @@
     {
       "id": 7,
       "name": "CTA: Pedro a medio cuerpo con espacio arriba; «CANAL DE WHATSAPP», «Enlace en la descripción», «COMENTA: CANAL»; luego solo «Comenta / CANAL» en grande",
-      "duration": 10.4,
-      "still": 8.66,
+      "duration": 10.867,
+      "still": 8.92,
       "cues": {
         "card": 0.3,
-        "link": 4.91,
-        "strip": 6.51,
-        "com": 8.06
+        "link": 5.13,
+        "strip": 6.73,
+        "com": 8.32
       },
       "voices": [
         {
           "file": "audio/voces/pedro18_11.mp3",
           "who": "pedro",
-          "start": 0.3,
-          "duration": 7.392,
+          "start": 0.2,
+          "duration": 7.752,
           "text": "Si tú también quieres aprovechar ofertas como esta, o las que publiquen los comercios de nuestra ciudad, en la descripción tienes el enlace al canal de WhatsApp.",
           "segments": [
             [
-              0.34,
-              2.5
+              0.24,
+              4.98
             ],
             [
-              2.88,
-              5.46
-            ],
-            [
-              5.7,
-              7.54
+              5.2,
+              7.78
             ]
           ]
         },
         {
           "file": "audio/voces/pedro18_12.mp3",
           "who": "pedro",
-          "start": 7.99,
-          "duration": 1.512,
+          "start": 8.2,
+          "duration": 2.064,
           "text": "O comenta canal y te lo enviamos.",
           "segments": [
             [
-              8.03,
-              9.35
+              8.26,
+              10.1
             ]
           ]
         }
@@ -434,20 +422,16 @@
       "talk": {
         "pedro": [
           [
-            0.31,
-            2.54
+            0.21,
+            5.02
           ],
           [
-            2.85,
-            5.5
+            5.17,
+            7.82
           ],
           [
-            5.67,
-            7.58
-          ],
-          [
-            8.0,
-            9.39
+            8.23,
+            10.14
           ]
         ]
       }
@@ -455,7 +439,7 @@
     {
       "id": 8,
       "name": "CIERRE: pantalla roja, logo sin letras (icono) con rebote, «Escaparate de Tudela», escaparatetudela.es",
-      "duration": 3.0,
+      "duration": 3.7,
       "still": 1.5,
       "cues": {
         "logo": 0,
@@ -466,13 +450,17 @@
         {
           "file": "audio/voces/pedro18_13.mp3",
           "who": "pedro",
-          "start": 0.3,
-          "duration": 1.512,
+          "start": 0.15,
+          "duration": 3.048,
           "text": "Escaparate de Tudela. No te pierdas ninguna.",
           "segments": [
             [
-              0.36,
-              1.7
+              0.19,
+              1.51
+            ],
+            [
+              1.73,
+              3.07
             ]
           ]
         }
@@ -480,8 +468,12 @@
       "talk": {
         "pedro": [
           [
-            0.33,
-            1.74
+            0.16,
+            1.55
+          ],
+          [
+            1.7,
+            3.11
           ]
         ]
       }

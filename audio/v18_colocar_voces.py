@@ -59,8 +59,8 @@ def talk_of(vs):
             else: talk.append([round(max(0, a - 0.03), 2), round(b + 0.04, 2)])
     return {'pedro': talk}
 S = {s['id']: s for s in cfg['scenes']}
-def setv(i, vs, dmin):
-    sc = S[i]; sc['voices'] = vs; sc['talk'] = talk_of(vs); sc['duration'] = snap(max(dmin, max(end(v) for v in vs) + 0.6))
+def setv(i, vs, dmin, tail=0.6):
+    sc = S[i]; sc['voices'] = vs; sc['talk'] = talk_of(vs); sc['duration'] = snap(max(dmin, max(end(v) for v in vs) + tail))
 
 S[0].pop('voices', None)
 # 1) el sello: tras el golpe, «¿Desfavorable?» «¿Por las ruedas?» «Vaya por Dios.»
@@ -79,18 +79,18 @@ c = S[4]['cues']; c['phone'] = 0.2; c['ans'] = 1.9; c.pop('talk', None)
 v8 = voice('pedro18_8', c['ans'] + 0.15); vm = voice('mecanico18_1', end(v8) + 0.25)
 c['claro'] = round(vm['start'] + 0.05, 2); setv(4, [v8, vm], 0); S[4]['duration'] = snap(end(vm) + 0.9); S[4]['still'] = round(end(vm) - 0.3, 2)
 # 5) el taller: en el plano B Pedro sale feliz: «¡Dos por uno! Ruedas nuevas y a otra cosa.»
-c = S[5]['cues']; cut = c.get('cut', 5.0); v9 = voice('pedro18_9', cut + 0.25)
+c = S[5]['cues']; cut = c.get('cut', 5.0); v9 = voice('pedro18_9', cut + 0.35)
 setv(5, [v9], 8.0); S[5]['shots'] = {'A': [0, cut], 'B': [cut, S[5]['duration']]}
-# 6) el sello verde: «¡Favorable! A la segunda ha ido a la vencida.»
-c = S[6]['cues']; v10 = voice('pedro18_10', c['hit'] + 0.35); setv(6, [v10], 5.0)
+# 6) el sello verde: «¡Favorable!» justo con el golpe del sello; desde aquí, todo seguido hasta el final
+c = S[6]['cues']; v10 = voice('pedro18_10', c['hit'] + 0.12); setv(6, [v10], 3.6, 0.3)
 # 7) CTA: enlace en la descripción → «O comenta canal y te lo enviamos» (la palabra en grande al decir «comenta»)
-c = S[7]['cues']; v11 = voice('pedro18_11', 0.3); v12 = voice('pedro18_12', end(v11) + 0.3)
+c = S[7]['cues']; v11 = voice('pedro18_11', 0.2); v12 = voice('pedro18_12', end(v11) + 0.25)
 pre = 'Si tú también quieres aprovechar ofertas como esta, o las que publiquen los comercios de nuestra ciudad, '
 c['card'] = 0.3; c['link'] = round(word_t(v11, pre) - 0.1, 2)
 c['strip'] = round(min(end(v11) - 0.2, c['link'] + 1.6), 2); c['com'] = round(word_t(v12, 'O ') - 0.05, 2)
-setv(7, [v11, v12], 0); S[7]['duration'] = snap(end(v12) + 0.9); S[7]['still'] = round(c['com'] + 0.6, 2)
+setv(7, [v11, v12], 0); S[7]['duration'] = snap(end(v12) + 0.6); S[7]['still'] = round(c['com'] + 0.6, 2)
 # 8) cierre: «Escaparate de Tudela. No te pierdas ninguna.»
-v13 = voice('pedro18_13', 0.3); setv(8, [v13], 3.0)
+v13 = voice('pedro18_13', 0.15); setv(8, [v13], 3.0, 0.5)
 json.dump(cfg, open(CFG, 'w'), ensure_ascii=False, indent=2)
 
 # ---------- TikTok: la escena 7 sin «O comenta canal y te lo enviamos» ----------
@@ -100,7 +100,7 @@ tk = copy.deepcopy(cfg); tk.update(keep)
 tk.update({'srt': 'subtitles18_tiktok.srt', 'subtitledOut': 'video18_tiktok.mp4'})
 s7 = [s for s in tk['scenes'] if s['id'] == 7][0]
 s7['voices'] = [copy.deepcopy(v11)]; s7['talk'] = talk_of(s7['voices'])
-s7['cues'] = {'card': 0.3, 'link': c['link']}; s7['duration'] = snap(end(v11) + 0.8); s7['still'] = round(c['link'] + 1.0, 2)
+s7['cues'] = {'card': 0.3, 'link': c['link']}; s7['duration'] = snap(end(v11) + 0.45); s7['still'] = round(c['link'] + 1.0, 2)
 s7['name'] = "CTA (TikTok, sin «comenta»): Pedro a medio cuerpo; «CANAL DE WHATSAPP» y «Enlace en la descripción»"
 json.dump(tk, open(os.path.join(ROOT, 'config18.tiktok.json'), 'w'), ensure_ascii=False, indent=2)
 

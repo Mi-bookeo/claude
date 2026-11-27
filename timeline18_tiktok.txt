@@ -4,11 +4,11 @@ escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
 01	2.500	9.300	6.800	204	EL SELLO: la mano baja el sello sobre el papel; «DESFAVORABLE» en rojo con sacudida y zoom de impacto; «RUEDAS EN MAL ESTADO»; Pedro preocupado (ceja torcida, gota de sudor)
 02	9.300	16.800	7.500	225	EN EL COCHE: coche de lado por la carretera con paralaje (cielo, sol, nubes a la izquierda); Pedro al volante preocupado; nube con cuatro ruedas y «?» que pulsa
 03	16.800	26.933	10.133	304	LA BÚSQUEDA: coche aparcado; móvil grande con Escaparate de Tudela; el feed sube y se para en «2x1 EN RUEDAS · TALLER» (brillo, confeti de estrellas, destello rojo); Pedro con ojos grandes
-04	26.933	39.533	12.600	378	LA LLAMADA: Pedro con el móvil al oído; pantalla de llamada saliente con el icono de taller; globo del mecánico «¡Claro!»
-05	39.533	48.133	8.600	258	EL TALLER: cartel «2x1», coche elevado, ruedas nuevas apiladas; el mecánico (mono azul, gorra) cambia la rueda; corte a Pedro saliendo feliz con el pulgar arriba
-  05-A	39.533	44.533	5.000	150	plano A
-  05-B	44.533	48.133	3.600	108	plano B
-06	48.133	53.133	5.000	150	EL SELLO VERDE: el sello baja con golpe; «FAVORABLE» en verde con destellos; Pedro aliviado levanta los brazos
-07	53.133	61.633	8.500	255	CTA (TikTok, sin «comenta»): Pedro a medio cuerpo; «CANAL DE WHATSAPP» y «Enlace en la descripción»
-08	61.633	64.633	3.000	90	CIERRE: pantalla roja, logo sin letras (icono) con rebote, «Escaparate de Tudela», escaparatetudela.es
-TOTAL	0.000	64.633
+04	26.933	36.533	9.600	288	LA LLAMADA: Pedro con el móvil al oído; pantalla de llamada saliente con el icono de taller; globo del mecánico «¡Claro!»
+05	36.533	45.467	8.933	268	EL TALLER: cartel «2x1», coche elevado, ruedas nuevas apiladas; el mecánico (mono azul, gorra) cambia la rueda; corte a Pedro saliendo feliz con el pulgar arriba
+  05-A	36.533	41.533	5.000	150	plano A
+  05-B	41.533	45.467	3.933	118	plano B
+06	45.467	49.433	3.967	119	EL SELLO VERDE: el sello baja con golpe; «FAVORABLE» en verde con destellos; Pedro aliviado levanta los brazos
+07	49.433	57.833	8.400	252	CTA (TikTok, sin «comenta»): Pedro a medio cuerpo; «CANAL DE WHATSAPP» y «Enlace en la descripción»
+08	57.833	61.533	3.700	111	CIERRE: pantalla roja, logo sin letras (icono) con rebote, «Escaparate de Tudela», escaparatetudela.es
+TOTAL	0.000	61.533

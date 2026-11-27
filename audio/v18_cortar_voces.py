@@ -7,10 +7,11 @@ import os, subprocess
 import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 V = lambda *p: os.path.join(ROOT, 'audio', 'voces', *p)
-# cortes (s) en mitad de las pausas: ¿Desfavorable? | ¿Por las ruedas? | Vaya por Dios. | ¿Y ahora…? | Y a ver… |
+# cortes (s) en mitad de las pausas, comprobados por el número de sílabas (picos de energía) y la entonación
+# (las preguntas suben al final: «¿Puedo pasar ahora?» acaba en 17,54 s): ¿Desfavorable? | ¿Por las ruedas? | Vaya por Dios. | ¿Y ahora…? | Y a ver… |
 # A ver si en Escaparate… | ¡Bingo!… | Buenas… ¿Puedo pasar ahora? | ¡Dos por uno!… | ¡Favorable!… | Si tú también… |
 # O comenta canal… | Escaparate de Tudela. No te pierdas ninguna.
-CUTS = {'original_pedro18.mp3': ('pedro18', [1.07, 2.28, 3.67, 6.15, 8.42, 10.85, 13.26, 20.68, 23.58, 26.17, 33.56, 35.14]),
+CUTS = {'original_pedro18.mp3': ('pedro18', [1.07, 2.28, 3.67, 6.15, 8.42, 10.85, 13.26, 17.67, 20.68, 23.58, 31.46, 33.56]),
         'original_mecanico18.mp3': ('mecanico18', [])}
 def dur(p): return float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', p], capture_output=True, text=True, check=True).stdout)
 def trim(src, a, b):
