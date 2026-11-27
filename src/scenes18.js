@@ -13,6 +13,9 @@ const TX = (key, def) => (CFG && CFG.textos && CFG.textos[key] !== undefined) ? 
 const shakeAt = (t, t0, amp = 24) => t >= t0 ? amp * damp(t - t0, 50, 7) : 0;
 const easeOutBack = (u, c1 = 1.25) => { u = clamp(u); const c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); };
 const TIKTOK = () => CFG && CFG.variant === 'tiktok';
+// boca de Pedro: tramos con voz (config18.json -> talk.pedro, los escribe audio/v18_colocar_voces.py)
+const talkOf = sc => (sc && sc.talk && sc.talk.pedro) || [];
+const PT = (t, sc) => talkA(t, talkOf(sc), 11);
 
 // Pedro tras el mostrador: brazos apoyados (o arriba), respiración, parpadeo y gota de sudor
 function pedroITV(T, o = {}) {
@@ -40,7 +43,7 @@ function stampScene(t, T, sc, o) {
   const sp = stampPose18(t, hit);
   const mark = t >= hit ? { col: o.col, str: o.str, k: 1 } : (o.oldMark || null);
   const after = t >= hit;
-  const po = pedroITV(T, o.pedro(t, after));
+  const po = pedroITV(T, Object.assign({ talk: PT(t, sc) }, o.pedro(t, after)));
   const w = itvWorld18(T, po, mark, sp);
   // cámara: corte seco, empuje lento y zoom de impacto al sello
   let z = comicZoom(t, 1.1) * lerp(1, 1.04, seg(t, 0, hit));
@@ -90,7 +93,7 @@ S[2] = (t, T, sc) => {
   const driver = () => {
     let d = `<rect x="-6" y="-420" width="132" height="150" rx="26" fill="#7D838A" stroke="${INK}" stroke-width="${f(SW * 0.8)}"/>`;  // reposacabezas
     d += placePF(ppx, ppy + bob * 0.4, SC, {
-      expr: 'worried', drop: drop18(T), blink: blink18(T, 0.6), look: [0.6, 0], head: 2 * Math.sin(T * 2.1),
+      expr: 'worried', talk: PT(t, sc), drop: drop18(T), blink: blink18(T, 0.6), look: [0.6, 0], head: 2 * Math.sin(T * 2.1),
       armF: { h: [sw0[0] - 2, sw0[1] - 6], side: -1, hand: 'fist', hs: 1.2 }, armB: { h: [sw0[0] - 8, sw0[1] + 8], side: -1, hand: 'fist', hs: 1.2 }
     });
     d += `<g transform="rotate(${f(-18 + 4 * Math.sin(t * 2.2))} 152 -312)"><ellipse cx="152" cy="-312" rx="13" ry="44" fill="none" stroke="${INK}" stroke-width="${f(SW * 1.9)}"/><ellipse cx="152" cy="-312" rx="13" ry="44" fill="none" stroke="#3A3434" stroke-width="${f(SW * 0.9)}"/></g>`;
@@ -155,7 +158,7 @@ S[3] = (t, T, sc) => {
   const SC = 7.6, px = 250, py = pfFootAtWaist(1420, SC), wow = t >= c.bingo;
   const hop = wow ? -10 * Math.max(0, damp(t - c.bingo, 14, 6)) : 0;
   w += placePF(px, py, SC, {
-    expr: wow ? 'wow' : 'focus', blink: !wow && blink18(T, 1.1), look: wow ? [0.4, 0] : [1.6, 0.8],
+    expr: wow ? 'wow' : 'focus', talk: PT(t, sc), blink: !wow && blink18(T, 1.1), look: wow ? [0.4, 0] : [1.6, 0.8],
     bob: breath18(T) + hop, head: wow ? -3 + 2 * Math.sin(T * 3) : 4 + 1.5 * Math.sin(T * 1.7),
     armF: { h: pfLoc(px, py, SC, 450, 1250), side: -1, hand: 'fist', hs: 1.2 }
   });
@@ -186,14 +189,14 @@ S[3] = (t, T, sc) => {
 
 /* ---------- 4) LA LLAMADA: móvil al oído; llamada saliente al taller; «¡Claro!» ---------- */
 S[4] = (t, T, sc) => {
-  const c = cues(sc, { phone: 0.2, ans: 3.0, claro: 3.25, talk: [[1.0, 2.7]] });
+  const c = cues(sc, { phone: 0.2, ans: 3.0, claro: 3.25 });
   let w = parked18(T);
   const SC = 8.2, px = 320, py = pfFootAtWaist(1420, SC);
-  const talking = c.talk.some(([a, b]) => t >= a && t < b), happy = t >= c.claro + 0.2;
+  const talking = talkOf(sc).some(([a, b]) => t >= a && t < b), happy = t >= c.claro + 0.2;
   const hop = happy ? -12 * Math.max(0, damp(t - c.claro - 0.2, 14, 6)) : 0;
   // móvil al oído (mano derecha de la imagen, junto a la oreja); la otra mano gesticula y, tras «¡Claro!», pulgar arriba
   w += placePF(px, py, SC, {
-    expr: happy ? 'grin' : (talking ? 'talk' : 'normal'), talk: talkA(t, c.talk, 11), blink: blink18(T, 0.4),
+    expr: happy ? 'grin' : (talking ? 'talk' : 'normal'), talk: PT(t, sc), blink: blink18(T, 0.4),
     bob: breath18(T) + hop, head: -3 + 2 * Math.sin(T * 1.8), look: happy ? [0, 0] : [0.8, -0.3],
     armF: { h: [209, 92], side: 1, hand: 'phone', hs: 1.45, hrot: 10 },
     armB: happy ? { h: [160, 96 - 4 * Math.max(0, damp(t - c.claro - 0.2, 12, 5))], side: -1, hand: 'thumb', hs: 1.5 }
@@ -219,7 +222,7 @@ const CARL = { cx: 540, gy: 1060, k: 0.95 };
 const HUB = [CARL.cx + CAR18.front[0] * CARL.k, CARL.gy + CAR18.front[1] * CARL.k], WR = CAR18.r * CARL.k;
 S[5] = (t, T, sc) => {
   const c = cues(sc, { cut: 5.0, loosen: [0.2, 0.9], pull: [0.9, 1.4], drop: [1.4, 2.1], bring: [2.0, 2.6], mount: [2.6, 3.1], tight: [3.1, 4.2] });
-  if (t >= c.cut) return shot5B(t - c.cut, T, sc);
+  if (t >= c.cut) return shot5B(t - c.cut, T, sc, PT(t, sc));
   let w = tallerRoom18(T);
   w += tallerSign18(540, 290, 560);
   w += poster2x1(180, 560, 280, 1, -5);
@@ -283,7 +286,7 @@ S[5] = (t, T, sc) => {
   if (t >= c.tight[1]) w += sparkle(HUB[0] - 40, HUB[1] - 50, 40, pop(t, c.tight[1], 0.4) * (0.8 + 0.2 * Math.sin(t * 9)));
   return cam(comicZoom(t, 1.1) * bumpZ(t, [c.mount[1], c.tight[1]], 0.02), 540, 960, w);
 };
-function shot5B(u, T, sc) {
+function shot5B(u, T, sc, talk = 0) {
   let w = tallerRoom18(T);
   w += poster2x1(540, 400, 480, 1, -4);
   w += pegboard18(-60, 560, 220, 200);
@@ -296,7 +299,7 @@ function shot5B(u, T, sc) {
   w += shadowEll(px, foot + 4, 120);
   w += placePF(px, foot, SC, {
     walk: walking ? ph : undefined, bob: (walking ? -2.4 * Math.abs(Math.sin(ph)) : 0) + breath18(T) - (thumb ? 8 * Math.max(0, damp(u - walkEnd - 0.1, 14, 6)) : 0),
-    expr: 'grin', blink: blink18(T, 0.2), head: thumb ? -3 + 2 * Math.sin(T * 2.4) : 2 * sw, lean: walking ? 2 : 0,
+    expr: 'grin', talk, blink: blink18(T, 0.2), head: thumb ? -3 + 2 * Math.sin(T * 2.4) : 2 * sw, lean: walking ? 2 : 0,
     armF: thumb ? { h: [222, 96], side: 1, hand: 'thumb', hs: 1.5 } : { h: [211 + 3 * sw, 140], side: -1, hand: 'fist', hs: 1.2 },
     armB: { h: [169 - 3 * sw, 140], side: 1, hand: 'fist', hs: 1.2 }
   });
@@ -348,11 +351,11 @@ S[7] = (t, T, sc) => {
   const SC = 8.6, px = 540, py = pfFootAtWaist(1530, SC);
   const up = 3 * Math.sin(t * 4.5);
   w += placePF(px, py, SC, {
-    expr: com ? 'wow' : 'grin', blink: blink18(T, 0.7), bob: breath18(T), head: 2 * Math.sin(T * 1.6),
+    expr: com ? 'wow' : 'grin', talk: PT(t, sc), blink: blink18(T, 0.7), bob: breath18(T), head: 2 * Math.sin(T * 1.6),
     armF: { h: [216, 66 + up], side: 1, hand: 'point', dir: -90, hs: 1.45 },
     armB: com ? { h: [162, 70 + up], side: -1, hand: 'open', hs: 1.45, hrot: -15 + 8 * Math.sin(t * 7) } : { h: [166, 126], side: 1, hand: 'open', hs: 1.4, hrot: -20 + 8 * Math.sin(t * 3) }
   });
-  w += `<rect x="-400" y="1530" width="${W + 800}" height="900" fill="#FFFFFF" stroke="${INK}" stroke-width="${f(SW)}"/><rect x="-400" y="1530" width="${W + 800}" height="22" fill="${C.red}"/>`;
+  w += `<rect x="-400" y="1530" width="${W + 800}" height="900" fill="${C.navy}" stroke="${INK}" stroke-width="${f(SW)}"/><rect x="-400" y="1530" width="${W + 800}" height="22" fill="${C.red}"/>`;
   let s = cam(comicZoom(t, 1.12) * bumpZ(t, [c.card, c.link, c.strip, c.com], 0.02), 540, 1000, w);
   if (com) {
     s += bigT(TX('s5d', 'Comenta'), 540, 290, 160, pop(t, c.com, 0.5), -4);

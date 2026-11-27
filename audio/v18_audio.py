@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Pista de sonido del vídeo 18 «Pedro y la ITV» (sin voces todavía) y vídeo con audio.
+"""Pista de sonido del vídeo 18 «Pedro y la ITV» y vídeo con audio (la imagen NO se vuelve a codificar: -c:v copy;
+   los subtítulos karaoke se queman después con audio/v18_subtitulos.py --burn, que deja la versión ligera).
+   0) Voces de Pedro y del mecánico según config ('voices', las escribe v18_colocar_voces.py), a -20 dBFS RMS;
+      la del mecánico con filtro de teléfono (habla por el móvil).
    1) Efectos: audio/sfx/<nombre>.wav|.mp3 si existe (los que pase el usuario, con ese nombre); si no, se sintetizan
       con código. Nombres: whoosh, whoosh_s, pop, pop_s, golpe, sello, impacto, malo (estribillo de «suspenso»),
       gota, trago, motor_<s>, freno, swipe, tap, bingo, ting, tono_<s>, descolgar, ok, carraca_<s>, clonk, rodar_<s>,
       clunk, pasos_<s>, tachan, chispas, ding2, ding_b.
    2) Música: audio/musica18.mp3 (v18_music.py): tensión en el sello y el coche, alegre tras la llamada.
-   Uso: python3 audio/v18_audio.py   (TikTok: CONFIG=config18.tiktok.json python3 audio/v18_audio.py)
-   Salida: audio/mezcla18.wav y el vídeo con audio (cfg.audioOut), imagen ligera para redes (crf 23, tune animation)
-   y volumen normalizado a -15 LUFS."""
+   Uso: python3 audio/v18_audio.py   (TikTok: CONFIG=config18.tiktok.json …; story: CONFIG=config18.story.json …)
+   Salida: audio/mezcla18.wav y el vídeo con audio (cfg.audioOut), volumen normalizado a -15 LUFS."""
 import json, os, subprocess, wave
 import numpy as np
 
@@ -141,73 +143,96 @@ def syn(name):
 
 EV = []
 def ev(name, t, g_db=0.0): EV.append((name, t, g_db))
-# 0) HOOK (solo efectos): golpe de cámara, caja roja que cae con golpe, gota
-ev('whoosh_s', st(0), -10); ev('golpe', at(0, 'box') + 0.12, -4); ev('pop', at(0, 'box'), -8); ev('gota', st(0) + 1.4, -14)
-# 1) EL SELLO: la mano entra, coge impulso, ¡golpe!; impacto y estribillo de suspenso; franja; trago
-h = at(1, 'hit')
-ev('whoosh', h - 1.0, -10); ev('whoosh_s', h - 0.16, -6)
-ev('sello', h, 0); ev('impacto', h, -5); ev('malo', h + 0.08, -6)
-ev('whoosh_s', h + 0.4, -14); ev('pop', at(1, 'sub'), -9)
-ev('trago', h + 1.4, -9); ev('gota', h + 2.4, -14); ev('gota', h + 3.9, -15)
-# 2) EN EL COCHE: motor todo el plano; nube de pensamiento con «pops»
-ev(f"motor_{SC[2]['duration']:.2f}", st(2), -8)
-th = at(2, 'think'); [ev('pop_s', th + 0.06 * j, -14) for j in range(3)]; ev('pop', th + 0.15, -9)
-# 3) LA BÚSQUEDA: freno de mano; móvil que entra; deslizamientos; ¡bingo! con destellos
-ev('freno', st(3) + 0.02, -12); ev('whoosh_s', at(3, 'phoneIn'), -11)
-for a, b, dd in cu(3, 'flicks'): ev('tap', st(3) + a - 0.1, -12); ev('swipe', st(3) + a - 0.05, -9)
-bg = at(3, 'bingo'); ev('bingo', bg, -4); ev('ting', bg + 0.05, -9); ev('chispas', bg + 0.15, -10); ev('pop', bg, -8)
-# 4) LA LLAMADA: móvil, tonos de llamada, descuelga, «¡Claro!»
-ev('whoosh_s', at(4, 'phone'), -12); [ev('tap', at(4, 'phone') + 0.3 + 0.12 * j, -14) for j in range(4)]
-ev(f"tono_{cu(4, 'ans') - 0.7:.2f}", at(4, 'phone') + 0.6, -14); ev('descolgar', at(4, 'ans'), -10)
-ev('pop', at(4, 'claro'), -7); ev('ok', at(4, 'claro') + 0.05, -9); ev('chispas', at(4, 'claro') + 0.3, -14)
-# 5) EL TALLER: carraca, la rueda cae y rueda, trae la nueva, encaja, carraca, destello; corte: pasos y pulgar
-lo, pu, dr, br, mo, ti = (cu(5, k) for k in ('loosen', 'pull', 'drop', 'bring', 'mount', 'tight')) if 'loosen' in SC[5]['cues'] else ([0.2, 0.9], [0.9, 1.4], [1.4, 2.1], [2.0, 2.6], [2.6, 3.1], [3.1, 4.2])
-s5 = st(5)
-ev(f'carraca_{lo[1] - lo[0]:.2f}', s5 + lo[0], -10); ev('whoosh_s', s5 + pu[0], -15)
-ev('clonk', s5 + dr[0] + 0.21, -6); ev(f'rodar_{(dr[1] - dr[0]) * 0.7:.2f}', s5 + dr[0] + 0.21, -10)
-ev(f'rodar_{br[1] - br[0]:.2f}', s5 + br[0], -14); ev('clunk', s5 + mo[1], -6)
-ev(f'carraca_{ti[1] - ti[0]:.2f}', s5 + ti[0], -10); ev('chispas', s5 + ti[1], -11); ev('pop', s5 + ti[1] + 0.1, -12)
-cut = s5 + SC[5]['cues'].get('cut', 5.0)
-ev('pasos_0.80', cut, -12); ev('ting', cut + 0.95, -10); ev('chispas', cut + 1.0, -13)
-# 6) EL SELLO VERDE: golpe, «ta-chán» y destellos
-h6 = at(6, 'hit')
-ev('whoosh', h6 - 1.0, -12); ev('whoosh_s', h6 - 0.16, -7); ev('sello', h6, -2)
-ev('tachan', h6 + 0.05, -3); ev('chispas', h6 + 0.2, -8); ev('ting', h6 + 0.4, -11)
-# 7) CTA: canal, enlace, «comenta» (solo Instagram) y la palabra en grande
-ev('pop', at(7, 'card'), -8); ev('ding2', at(7, 'card') + 0.2, -10); ev('pop_s', at(7, 'link'), -12)
-if not TK: ev('pop_s', at(7, 'strip'), -12); ev('pop', at(7, 'com'), -7); ev('pop', at(7, 'com') + 0.18, -8)
-# 8) CIERRE
-ev('whoosh', st(8) - 0.15, -9); ev('ding_b', st(8) + 0.05, -8); ev('pop_s', at(8, 'sub'), -14); ev('pop_s', at(8, 'url'), -14)
+# ---------------- voces ----------------
+voice = np.zeros(N); missing = []
+for i, sc in SC.items():
+    for vo in sc.get('voices', []):
+        f = os.path.join(ROOT, vo['file'])
+        if not os.path.exists(f): missing.append(vo['file']); continue
+        v = load(f)
+        if vo['who'] == 'mecanico':  # teléfono: banda 300-3400 Hz aprox.
+            v = sm(v, 7) - sm(v, 160); v += 0.02 * np.tanh(v * 8)
+        fr_ = v[: len(v) // 480 * 480].reshape(-1, 480); r = np.sqrt((fr_ ** 2).mean(1)); ac = r[r > r.max() * 0.1]
+        v *= 10 ** (-20 / 20) / max(np.sqrt((ac ** 2).mean()), 1e-6)
+        t0 = st(i) + vo['start']; a_ = int(t0 * SR); voice[a_:a_ + len(v)] += v[: max(0, N - a_)]
+        print(f"escena {i}: {os.path.basename(f):18s} {len(v) / SR:5.2f} s  {t0:6.2f} → {t0 + len(v) / SR:6.2f}")
+if missing: print('AVISO: faltan voces:', ', '.join(missing))
 
+def story_events():
+    c = SC[20]['cues']; h = st(20) + c['hit']
+    ev('whoosh_s', st(20), -10); ev('pop', st(20) + c['ban'], -7); ev('pop_s', st(20) + c['q'], -11); ev('pop_s', st(20) + c['q'] + 0.18, -12)
+    ev('whoosh', h - 1.0, -10); ev('whoosh_s', h - 0.16, -6); ev('sello', h, 0); ev('impacto', h, -5); ev('malo', h + 0.08, -6)
+    ev('pop', h + 0.1, -10); ev('gota', h + 1.6, -13); ev('pop', st(20) + c['tag'], -8); ev('ding2', st(20) + c['tag'] + 0.15, -10)
+def video_events():
+    # 0) HOOK (solo efectos): golpe de cámara, caja roja que cae con golpe, gota
+    ev('whoosh_s', st(0), -10); ev('golpe', at(0, 'box') + 0.12, -4); ev('pop', at(0, 'box'), -8); ev('gota', st(0) + 1.4, -14)
+    # 1) EL SELLO: la mano entra, coge impulso, ¡golpe!; impacto y estribillo de suspenso; franja; trago
+    h = at(1, 'hit')
+    ev('whoosh', h - 1.0, -10); ev('whoosh_s', h - 0.16, -6)
+    ev('sello', h, 0); ev('impacto', h, -5); ev('malo', h + 0.08, -9)
+    ev('whoosh_s', h + 0.4, -14); ev('pop', at(1, 'sub'), -9)
+    ev('gota', h + 2.4, -14); ev('gota', h + 3.9, -15)
+    # 2) EN EL COCHE: motor todo el plano; nube de pensamiento con «pops»
+    ev(f"motor_{SC[2]['duration']:.2f}", st(2), -8)
+    th = at(2, 'think'); [ev('pop_s', th + 0.06 * j, -14) for j in range(3)]; ev('pop', th + 0.15, -9)
+    # 3) LA BÚSQUEDA: freno de mano; móvil que entra; deslizamientos; ¡bingo! con destellos
+    ev('freno', st(3) + 0.02, -12); ev('whoosh_s', at(3, 'phoneIn'), -11)
+    for a, b, dd in cu(3, 'flicks'): ev('tap', st(3) + a - 0.1, -12); ev('swipe', st(3) + a - 0.05, -9)
+    bg = at(3, 'bingo'); ev('bingo', bg, -4); ev('ting', bg + 0.05, -9); ev('chispas', bg + 0.15, -10); ev('pop', bg, -8)
+    # 4) LA LLAMADA: móvil, tonos de llamada, descuelga, «¡Claro!»
+    ev('whoosh_s', at(4, 'phone'), -12); [ev('tap', at(4, 'phone') + 0.3 + 0.12 * j, -14) for j in range(4)]
+    ev(f"tono_{cu(4, 'ans') - 0.7:.2f}", at(4, 'phone') + 0.6, -14); ev('descolgar', at(4, 'ans'), -10)
+    ev('pop', at(4, 'claro'), -7); ev('ok', at(4, 'claro') + 0.05, -9); ev('chispas', at(4, 'claro') + 0.3, -14)
+    # 5) EL TALLER: carraca, la rueda cae y rueda, trae la nueva, encaja, carraca, destello; corte: pasos y pulgar
+    lo, pu, dr, br, mo, ti = (cu(5, k) for k in ('loosen', 'pull', 'drop', 'bring', 'mount', 'tight')) if 'loosen' in SC[5]['cues'] else ([0.2, 0.9], [0.9, 1.4], [1.4, 2.1], [2.0, 2.6], [2.6, 3.1], [3.1, 4.2])
+    s5 = st(5)
+    ev(f'carraca_{lo[1] - lo[0]:.2f}', s5 + lo[0], -10); ev('whoosh_s', s5 + pu[0], -15)
+    ev('clonk', s5 + dr[0] + 0.21, -6); ev(f'rodar_{(dr[1] - dr[0]) * 0.7:.2f}', s5 + dr[0] + 0.21, -10)
+    ev(f'rodar_{br[1] - br[0]:.2f}', s5 + br[0], -14); ev('clunk', s5 + mo[1], -6)
+    ev(f'carraca_{ti[1] - ti[0]:.2f}', s5 + ti[0], -10); ev('chispas', s5 + ti[1], -11); ev('pop', s5 + ti[1] + 0.1, -12)
+    cut = s5 + SC[5]['cues'].get('cut', 5.0)
+    ev('pasos_0.80', cut, -12); ev('ting', cut + 0.95, -10); ev('chispas', cut + 1.0, -13)
+    # 6) EL SELLO VERDE: golpe, «ta-chán» y destellos
+    h6 = at(6, 'hit')
+    ev('whoosh', h6 - 1.0, -12); ev('whoosh_s', h6 - 0.16, -7); ev('sello', h6, -2)
+    ev('tachan', h6 + 0.05, -3); ev('chispas', h6 + 0.2, -8); ev('ting', h6 + 0.4, -11)
+    # 7) CTA: canal, enlace, «comenta» (solo Instagram) y la palabra en grande
+    ev('pop', at(7, 'card'), -8); ev('ding2', at(7, 'card') + 0.2, -10); ev('pop_s', at(7, 'link'), -12)
+    if not TK: ev('pop_s', at(7, 'strip'), -12); ev('pop', at(7, 'com'), -7); ev('pop', at(7, 'com') + 0.18, -8)
+    # 8) CIERRE
+    ev('whoosh', st(8) - 0.15, -9); ev('ding_b', st(8) + 0.05, -8); ev('pop_s', at(8, 'sub'), -14); ev('pop_s', at(8, 'url'), -14)
+
+
+story_events() if cfg.get('story') else video_events()
 fx = np.zeros(N)
 for name, t, g in EV:
-    s = syn(name); s = s / max(np.abs(s).max(), 1e-9) * 10 ** ((g - 4) / 20)
+    s = syn(name); s = s / max(np.abs(s).max(), 1e-9) * 10 ** ((g - 7) / 20)
     a = int(t * SR); fx[a:a + len(s)] += s[: max(0, N - a)]
 synth = sorted(n for n in SYN if n not in SYN_FILE)
 print('efectos desde audio/sfx/:', ', '.join(sorted(SYN_FILE)) or 'ninguno')
 if synth: print('efectos sintetizados con código:', ', '.join(synth))
 
-# ---------------- música (sin voces: a -21 dBFS RMS; baja 4 dB bajo los golpes fuertes) ----------------
+# ---------------- música: -31 dBFS RMS (11 dB bajo las voces), baja 6 dB mientras hay voz ----------------
 MUS = os.path.join(ROOT, cfg.get('musicMp3', 'audio/musica18.mp3'))
-raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', MUS, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
+raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', str(cfg.get('musicOffset', 0)), '-i', MUS, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
 mus = np.frombuffer(raw, '<f4').astype(np.float64).reshape(-1, 2)
 mus = np.vstack([mus, np.zeros((max(0, N - len(mus)), 2))])[:N]
-act = mus[int(SC[1]['start'] * SR): int((TOTAL - 2) * SR)]
-mus *= 10 ** (-21 / 20) / max(np.sqrt((act ** 2).mean()), 1e-9)
-envx = np.convolve(np.abs(fx), np.ones(int(0.25 * SR)) / int(0.25 * SR), 'same')
-mus *= (10 ** (-4 * np.clip(envx / 0.08, 0, 1) / 20))[:, None]
-mix = fx[:, None] * np.array([1.0, 1.0]) + mus
+act = mus[int((SC[1]['start'] if 1 in SC else 0) * SR): int(max(TOTAL - 2, 1) * SR)]
+mus *= 10 ** (-31 / 20) / max(np.sqrt((act ** 2).mean()), 1e-9)
+envv = np.convolve(np.abs(voice), np.ones(int(0.3 * SR)) / int(0.3 * SR), 'same')
+mus *= (10 ** (-6 * np.clip(envv / 0.02, 0, 1) / 20))[:, None]
+mix = (voice + fx)[:, None] * np.array([1.0, 1.0]) + mus
 print(f'música: {os.path.relpath(MUS, ROOT)}  RMS {db(np.sqrt((mus ** 2).mean())):.1f} dBFS')
+fo = int(0.35 * SR); mix[-fo:] *= np.linspace(1, 0, fo)[:, None]
 pk = np.abs(mix).max()
 if pk > 0.95: mix *= 0.95 / pk
 MEZ = A(cfg.get('mixWav', 'mezcla18.wav'))
 with wave.open(MEZ, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((np.clip(mix, -1, 1) * 32767).astype('<i2').tobytes())
-vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, cfg.get('audioOut', 'video18_con_audio.mp4')); tmp = out.replace('.mp4', '.partial.mp4')
-# versión ligera para redes (TikTok e Instagram vuelven a comprimir): crf 23, preset slow, tune animation
-subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-i', MEZ, '-map', '0:v:0', '-map', '1:a:0',
-                '-c:v', 'libx264', '-crf', '23', '-preset', 'slow', '-tune', 'animation', '-pix_fmt', 'yuv420p',
+vid = os.path.join(ROOT, cfg['output']); out = os.path.join(ROOT, cfg.get('audioOut', 'tmp/video18_con_audio.mp4')); tmp = out.replace('.mp4', '.partial.mp4')
+os.makedirs(os.path.dirname(out), exist_ok=True)
+subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-i', MEZ, '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy',
                 '-af', 'loudnorm=I=-15:TP=-1.5:LRA=11', '-ar', '48000', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', tmp], check=True)
 os.replace(tmp, out)
 print('->', os.path.relpath(out, ROOT), f'({TOTAL:.2f} s, {os.path.getsize(out) / 1e6:.1f} MB)')

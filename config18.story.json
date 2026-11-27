@@ -1,0 +1,63 @@
+{
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": {
+    "codec": "libx264",
+    "crf": 18,
+    "preset": "medium",
+    "pix_fmt": "yuv420p"
+  },
+  "page": "index18.html",
+  "title": "Story · Mañana: ¿Qué le pasa a Pedro en la ITV?",
+  "output": "story18/story18_sin_audio.mp4",
+  "scenesDir": "story18/scenes",
+  "stillsDir": "story18/stills",
+  "timeline": "story18/timeline.txt",
+  "story": true,
+  "musicMp3": "audio/musica18.mp3",
+  "musicOffset": 1.6,
+  "mixWav": "mezcla18_story.wav",
+  "audioOut": "story18/story18.mp4",
+  "textos": {
+    "h1": "¿SUSPENDES LA ITV",
+    "h2": "POR LAS RUEDAS?",
+    "itv": "ITV",
+    "desf": "DESFAVORABLE",
+    "desf2": "RUEDAS EN MAL ESTADO",
+    "oferta": "Oferta",
+    "t2x1": "2x1",
+    "ofertaTitulo": "EN RUEDAS · TALLER",
+    "taller": "TALLER",
+    "llamando": "Llamando",
+    "enLlamada": "En llamada",
+    "claro": "¡Claro!",
+    "fav": "FAVORABLE",
+    "s5a": "CANAL DE WHATSAPP",
+    "comenta": "COMENTA: CANAL",
+    "enlace": "Enlace en la descripción",
+    "marca": "Escaparate de Tudela",
+    "web": "escaparatetudela.es",
+    "s5d": "Comenta",
+    "s5e": "CANAL",
+    "story1": "MAÑANA:",
+    "story2": "¿Qué le pasa a Pedro",
+    "story3": "en la ITV?",
+    "story4": "Nuevo vídeo en Escaparate de Tudela"
+  },
+  "_ayuda": "Story de anuncio (antes del vídeo). musicOffset = segundo de audio/musica18.mp3 donde empieza la música de la story (el golpe del sello de la música cae con el del sello de la story).",
+  "scenes": [
+    {
+      "id": 20,
+      "name": "Story de anuncio: «MAÑANA:» «¿Qué le pasa a Pedro en la ITV?»; golpe del sello DESFAVORABLE; «Nuevo vídeo en Escaparate de Tudela»",
+      "duration": 7.5,
+      "still": 5.2,
+      "cues": {
+        "ban": 0.15,
+        "q": 0.45,
+        "hit": 2.4,
+        "tag": 4.6
+      }
+    }
+  ]
+}

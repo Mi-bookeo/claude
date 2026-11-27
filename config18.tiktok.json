@@ -50,62 +50,257 @@
     {
       "id": 1,
       "name": "EL SELLO: la mano baja el sello sobre el papel; «DESFAVORABLE» en rojo con sacudida y zoom de impacto; «RUEDAS EN MAL ESTADO»; Pedro preocupado (ceja torcida, gota de sudor)",
-      "duration": 7.0,
-      "still": 3.2,
+      "duration": 6.8,
+      "still": 4.08,
       "cues": {
         "hit": 1.6,
-        "sub": 2.25
+        "sub": 3.53
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_1.mp3",
+          "who": "pedro",
+          "start": 2.15,
+          "duration": 1.08,
+          "text": "¿Desfavorable?",
+          "segments": [
+            [
+              2.19,
+              3.03
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/pedro18_2.mp3",
+          "who": "pedro",
+          "start": 3.48,
+          "duration": 1.056,
+          "text": "¿Por las ruedas?",
+          "segments": [
+            [
+              3.52,
+              4.36
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/pedro18_3.mp3",
+          "who": "pedro",
+          "start": 4.84,
+          "duration": 1.344,
+          "text": "Vaya por Dios.",
+          "segments": [
+            [
+              4.9,
+              6.14
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            2.16,
+            3.07
+          ],
+          [
+            3.49,
+            4.4
+          ],
+          [
+            4.87,
+            6.18
+          ]
+        ]
       }
     },
     {
       "id": 2,
       "name": "EN EL COCHE: coche de lado por la carretera con paralaje (cielo, sol, nubes a la izquierda); Pedro al volante preocupado; nube con cuatro ruedas y «?» que pulsa",
       "duration": 7.5,
-      "still": 3.0,
+      "still": 3.27,
       "cues": {
-        "think": 1.0
+        "think": 1.91
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_4.mp3",
+          "who": "pedro",
+          "start": 0.45,
+          "duration": 2.424,
+          "text": "¿Y ahora dónde busco yo unas ruedas?",
+          "segments": [
+            [
+              0.61,
+              2.71
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/pedro18_5.mp3",
+          "who": "pedro",
+          "start": 3.17,
+          "duration": 2.016,
+          "text": "Y a ver cómo me cuestan lo menos posible.",
+          "segments": [
+            [
+              3.23,
+              5.03
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            0.58,
+            2.75
+          ],
+          [
+            3.2,
+            5.07
+          ]
+        ]
       }
     },
     {
       "id": 3,
       "name": "LA BÚSQUEDA: coche aparcado; móvil grande con Escaparate de Tudela; el feed sube y se para en «2x1 EN RUEDAS · TALLER» (brillo, confeti de estrellas, destello rojo); Pedro con ojos grandes",
-      "duration": 11.0,
-      "still": 6.4,
+      "duration": 10.133,
+      "still": 7.81,
       "cues": {
         "phoneIn": 0.25,
         "flicks": [
           [
-            1.0,
-            2.2,
+            2.81,
+            3.91,
             430
           ],
           [
-            2.5,
-            3.8,
+            4.16,
+            5.31,
             440
           ],
           [
-            4.1,
-            5.6,
+            5.56,
+            6.91,
             341
           ]
         ],
-        "bingo": 5.6
+        "bingo": 6.91
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_6.mp3",
+          "who": "pedro",
+          "start": 0.5,
+          "duration": 2.208,
+          "text": "A ver si en Escaparate de Tudela hay suerte.",
+          "segments": [
+            [
+              0.56,
+              2.54
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/pedro18_7.mp3",
+          "who": "pedro",
+          "start": 6.96,
+          "duration": 2.184,
+          "text": "¡Bingo! Dos por uno en ruedas.",
+          "segments": [
+            [
+              7.02,
+              8.98
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            0.53,
+            2.58
+          ],
+          [
+            6.99,
+            9.02
+          ]
+        ]
       }
     },
     {
       "id": 4,
       "name": "LA LLAMADA: Pedro con el móvil al oído; pantalla de llamada saliente con el icono de taller; globo del mecánico «¡Claro!»",
-      "duration": 7.0,
-      "still": 4.2,
+      "duration": 12.6,
+      "still": 11.39,
       "cues": {
         "phone": 0.2,
-        "ans": 3.0,
-        "claro": 3.25,
-        "talk": [
+        "ans": 1.9,
+        "claro": 9.6
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_8.mp3",
+          "who": "pedro",
+          "start": 2.05,
+          "duration": 7.248,
+          "text": "Buenas, he visto su oferta de ruedas en Escaparate de Tudela. ¿Puedo pasar ahora?",
+          "segments": [
+            [
+              2.09,
+              2.53
+            ],
+            [
+              2.65,
+              5.21
+            ],
+            [
+              5.43,
+              6.15
+            ],
+            [
+              6.41,
+              7.33
+            ],
+            [
+              7.49,
+              9.13
+            ]
+          ]
+        },
+        {
+          "file": "audio/voces/mecanico18_1.mp3",
+          "who": "mecanico",
+          "start": 9.55,
+          "duration": 2.136,
+          "text": "Claro, tráigalo cuando quiera.",
+          "segments": [
+            [
+              9.59,
+              10.05
+            ],
+            [
+              10.37,
+              11.53
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
           [
-            1.0,
-            2.7
+            2.06,
+            5.25
+          ],
+          [
+            5.4,
+            6.19
+          ],
+          [
+            6.38,
+            9.17
           ]
         ]
       }
@@ -113,7 +308,7 @@
     {
       "id": 5,
       "name": "EL TALLER: cartel «2x1», coche elevado, ruedas nuevas apiladas; el mecánico (mono azul, gorra) cambia la rueda; corte a Pedro saliendo feliz con el pulgar arriba",
-      "duration": 8.0,
+      "duration": 8.6,
       "still": 2.3,
       "shots": {
         "A": [
@@ -122,11 +317,38 @@
         ],
         "B": [
           5.0,
-          8.0
+          8.6
         ]
       },
       "cues": {
         "cut": 5.0
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_9.mp3",
+          "who": "pedro",
+          "start": 5.25,
+          "duration": 2.736,
+          "text": "¡Dos por uno! Ruedas nuevas y a otra cosa.",
+          "segments": [
+            [
+              5.29,
+              6.07
+            ],
+            [
+              6.25,
+              7.85
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            5.26,
+            7.89
+          ]
+        ]
       }
     },
     {
@@ -136,16 +358,78 @@
       "still": 2.0,
       "cues": {
         "hit": 0.8
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_10.mp3",
+          "who": "pedro",
+          "start": 1.15,
+          "duration": 2.448,
+          "text": "¡Favorable! A la segunda ha ido a la vencida.",
+          "segments": [
+            [
+              1.19,
+              3.53
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            1.16,
+            3.57
+          ]
+        ]
       }
     },
     {
       "id": 7,
       "name": "CTA (TikTok, sin «comenta»): Pedro a medio cuerpo; «CANAL DE WHATSAPP» y «Enlace en la descripción»",
-      "duration": 4.0,
-      "still": 2.5,
+      "duration": 8.5,
+      "still": 5.91,
       "cues": {
         "card": 0.3,
-        "link": 0.9
+        "link": 4.91
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_11.mp3",
+          "who": "pedro",
+          "start": 0.3,
+          "duration": 7.392,
+          "text": "Si tú también quieres aprovechar ofertas como esta, o las que publiquen los comercios de nuestra ciudad, en la descripción tienes el enlace al canal de WhatsApp.",
+          "segments": [
+            [
+              0.34,
+              2.5
+            ],
+            [
+              2.88,
+              5.46
+            ],
+            [
+              5.7,
+              7.54
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            0.31,
+            2.54
+          ],
+          [
+            2.85,
+            5.5
+          ],
+          [
+            5.67,
+            7.58
+          ]
+        ]
       }
     },
     {
@@ -157,12 +441,37 @@
         "logo": 0,
         "sub": 0.4,
         "url": 0.65
+      },
+      "voices": [
+        {
+          "file": "audio/voces/pedro18_13.mp3",
+          "who": "pedro",
+          "start": 0.3,
+          "duration": 1.512,
+          "text": "Escaparate de Tudela. No te pierdas ninguna.",
+          "segments": [
+            [
+              0.36,
+              1.7
+            ]
+          ]
+        }
+      ],
+      "talk": {
+        "pedro": [
+          [
+            0.33,
+            1.74
+          ]
+        ]
       }
     }
   ],
-  "audioOut": "video18_tiktok.mp4",
+  "audioOut": "tmp/video18_tiktok_con_audio.mp4",
   "musicMp3": "audio/musica18_tiktok.mp3",
   "mixWav": "mezcla18_tiktok.wav",
   "variant": "tiktok",
-  "_ayuda_tiktok": "Versión TikTok: la misma que Instagram sin el momento «comenta» (escena 7 más corta, sin franja «COMENTA: CANAL» ni «Comenta CANAL» en grande). Solo cambia y se vuelve a renderizar la escena 7; las demás se copian de scenes18/."
+  "_ayuda_tiktok": "Versión TikTok: la misma que Instagram sin el momento «comenta» (escena 7 más corta, sin franja «COMENTA: CANAL» ni «Comenta CANAL» en grande). Solo cambia y se vuelve a renderizar la escena 7; las demás se copian de scenes18/.",
+  "srt": "subtitles18_tiktok.srt",
+  "subtitledOut": "video18_tiktok.mp4"
 }

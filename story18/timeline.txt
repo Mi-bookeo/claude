@@ -1,0 +1,4 @@
+Story · Mañana: ¿Qué le pasa a Pedro en la ITV? — timeline (1080x1920, 30 fps)
+escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
+20	0.000	7.500	7.500	225	Story de anuncio: «MAÑANA:» «¿Qué le pasa a Pedro en la ITV?»; golpe del sello DESFAVORABLE; «Nuevo vídeo en Escaparate de Tudela»
+TOTAL	0.000	7.500
