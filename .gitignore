@@ -6,3 +6,4 @@ concat_list.txt
 stills_preview/
 audio/mezcla.wav
 story/story_mezcla.wav
+__pycache__/
