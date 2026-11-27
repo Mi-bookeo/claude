@@ -1,0 +1,14 @@
+Pedro y la ITV — timeline (1080x1920, 30 fps)
+escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
+00	0.000	2.500	2.500	75	HOOK: mostrador de la ITV con el sello rojo ya puesto; caja roja «¿SUSPENDES LA ITV / POR LAS RUEDAS?» con rebote (solo SFX)
+01	2.500	9.500	7.000	210	EL SELLO: la mano baja el sello sobre el papel; «DESFAVORABLE» en rojo con sacudida y zoom de impacto; «RUEDAS EN MAL ESTADO»; Pedro preocupado (ceja torcida, gota de sudor)
+02	9.500	17.000	7.500	225	EN EL COCHE: coche de lado por la carretera con paralaje (cielo, sol, nubes a la izquierda); Pedro al volante preocupado; nube con cuatro ruedas y «?» que pulsa
+03	17.000	28.000	11.000	330	LA BÚSQUEDA: coche aparcado; móvil grande con Escaparate de Tudela; el feed sube y se para en «2x1 EN RUEDAS · TALLER» (brillo, confeti de estrellas, destello rojo); Pedro con ojos grandes
+04	28.000	35.000	7.000	210	LA LLAMADA: Pedro con el móvil al oído; pantalla de llamada saliente con el icono de taller; globo del mecánico «¡Claro!»
+05	35.000	43.000	8.000	240	EL TALLER: cartel «2x1», coche elevado, ruedas nuevas apiladas; el mecánico (mono azul, gorra) cambia la rueda; corte a Pedro saliendo feliz con el pulgar arriba
+  05-A	35.000	40.000	5.000	150	plano A
+  05-B	40.000	43.000	3.000	90	plano B
+06	43.000	48.000	5.000	150	EL SELLO VERDE: el sello baja con golpe; «FAVORABLE» en verde con destellos; Pedro aliviado levanta los brazos
+07	48.000	55.000	7.000	210	CTA: Pedro a medio cuerpo con espacio arriba; «CANAL DE WHATSAPP», «COMENTA: CANAL», «Enlace en la descripción»
+08	55.000	58.000	3.000	90	CIERRE: pantalla roja, logo blanco con rebote, «Escaparate de Tudela», escaparatetudela.es
+TOTAL	0.000	58.000
