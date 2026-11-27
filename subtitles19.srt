@@ -1,0 +1,158 @@
+1
+00:00:02,660 --> 00:00:03,780
+Dos carteles.
+
+2
+00:00:03,820 --> 00:00:05,120
+El mismo producto.
+
+3
+00:00:05,160 --> 00:00:06,200
+¿Cuál vende más?
+
+4
+00:00:06,240 --> 00:00:07,080
+A la izquierda,
+
+5
+00:00:07,120 --> 00:00:08,020
+un precio suelto:
+
+6
+00:00:08,060 --> 00:00:09,540
+siete euros con veinte.
+
+7
+00:00:09,580 --> 00:00:11,620
+A la derecha,
+el mismo precio,
+
+8
+00:00:11,660 --> 00:00:12,800
+pero con el de antes:
+
+9
+00:00:12,840 --> 00:00:14,050
+doce euros.
+
+10
+00:00:14,520 --> 00:00:16,310
+Tu cerebro no calcula.
+
+11
+00:00:16,400 --> 00:00:17,310
+Compara.
+
+12
+00:00:20,520 --> 00:00:21,690
+Sin una referencia,
+
+13
+00:00:21,730 --> 00:00:23,090
+no sabe si siete euros
+
+14
+00:00:23,130 --> 00:00:25,240
+con veinte es
+mucho o es poco.
+
+15
+00:00:25,280 --> 00:00:26,600
+Con el precio de antes,
+
+16
+00:00:26,640 --> 00:00:28,750
+lo ve claro: es un ahorro.
+
+17
+00:00:29,670 --> 00:00:31,920
+Eso se llama efecto ancla.
+
+18
+00:00:31,960 --> 00:00:33,320
+El primer número que ves
+
+19
+00:00:33,360 --> 00:00:34,720
+se te queda enganchado,
+
+20
+00:00:34,760 --> 00:00:35,630
+como un ancla,
+
+21
+00:00:35,670 --> 00:00:36,500
+y todo lo demás
+
+22
+00:00:36,540 --> 00:00:37,970
+lo comparas con él.
+
+23
+00:00:38,520 --> 00:00:40,240
+Pero ojo: el precio de antes
+
+24
+00:00:40,280 --> 00:00:41,660
+tiene que ser real.
+
+25
+00:00:41,700 --> 00:00:42,600
+Uno inflado puede
+
+26
+00:00:42,640 --> 00:00:44,150
+jugar en tu contra.
+
+27
+00:00:45,400 --> 00:00:46,580
+En Escaparate de Tudela
+
+28
+00:00:46,620 --> 00:00:47,860
+pones el precio de antes
+
+29
+00:00:47,900 --> 00:00:48,780
+y el de ahora,
+
+30
+00:00:48,820 --> 00:00:49,680
+y le llega directo
+
+31
+00:00:49,720 --> 00:00:51,370
+al móvil de tus clientes.
+
+32
+00:00:51,450 --> 00:00:52,550
+Si tienes un comercio,
+
+33
+00:00:52,590 --> 00:00:53,800
+en la descripción tienes
+
+34
+00:00:53,840 --> 00:00:55,330
+el enlace al formulario.
+
+35
+00:00:55,370 --> 00:00:56,230
+O comenta ALTA
+
+36
+00:00:56,270 --> 00:00:57,680
+y te lo enviamos.
+
+37
+00:00:58,080 --> 00:00:59,660
+Escaparate de Tudela.
+
+38
+00:00:59,700 --> 00:01:00,580
+Tus ofertas,
+
+39
+00:01:00,620 --> 00:01:02,490
+en la mano de tus clientes.
+

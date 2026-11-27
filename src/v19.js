@@ -609,6 +609,27 @@ S[8] = (t, T, sc) => {
   return s;
 };
 
+/* ---------- STORY (encuesta): «¿SABES QUÉ ES EL EFECTO ANCLA?» (vertical 9:16, ~8 s). Zonas seguras de las stories:
+   nada importante por encima de y=250 ni por debajo de y=1560. Hueco libre y=1080..1480 para la encuesta de Instagram. ---------- */
+S[20] = (t, T, sc) => {
+  const c = cues(sc, { box: 0.2, q2: 0.4, fall: 1.0, hit: 1.45, tags: 1.9, vote: 2.6 });
+  let w = water19(T, 640);
+  const ay = dropY(t, c.fall, 830, -300, c.hit - c.fall, 40);
+  if (ay !== null) w += anchor19(540, ay, 0.52, -4, squashAt(t, c.hit) * 0.5 + 0.5);
+  w += at(225, 850 + 14 * Math.sin(t * 2), pop(t, c.tags, 0.45), tag19(250, 112, TX('antes', '12 €'), { fill: C.yel, col: INK, hole: K19.water }), -8);
+  w += at(860, 830 + 14 * Math.sin(t * 2 + 1.5), pop(t, c.tags + 0.15, 0.45), tag19(270, 112, TX('precio', '7,20 €')), 7);
+  const shk = shakeAt(t, c.hit, 14), jx = shk * Math.sin(t * 90), jy = shk * 0.6 * Math.cos(t * 77);
+  let s = `<g transform="translate(${f(jx)} ${f(jy)})">` + cam(comicZoom(t, 1.08) * bumpZ(t, [c.hit], 0.03), 540, 960, w);
+  if (t >= c.hit && t < c.hit + 0.6) { const kp = pop(t, c.hit, 0.25) * (1 - seg(t, c.hit + 0.3, c.hit + 0.6)); s += puff(400, 960, 36, kp) + puff(690, 960, 32, kp); }
+  s += `</g>`;
+  const k = pop(t, c.box, 0.5);
+  s += at(540, 430, k, redSign17(980, 320, [[TX('story1', '¿SABES QUÉ ES'), 104, -66], [TX('story2', 'EL EFECTO ANCLA?'), 118, 62, C.yel]]), lerp(-6, -2, clamp(k)));
+  const kv = pop(t, c.vote, 0.5) * (1 + 0.03 * Math.sin(t * 6));
+  s += whoPill(TX('story3', 'Vota en la encuesta'), 540, 1010, kv, { size: 52, col: INK });
+  s += arrowDown17(540, 1062, 46, pop(t, c.vote + 0.2, 0.45), t);
+  return s;
+};
+
 /* ---------- API para el renderizador ---------- */
 window.init = async function (cfg, fonts, logos) {
   CFG = cfg;

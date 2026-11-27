@@ -1,0 +1,18 @@
+El precio de antes — timeline (1080x1920, 30 fps)
+escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
+00	0.000	2.500	2.500	75	HOOK: pantalla dividida; izq. «TARTA DE QUESO · 7,20 €», der. el mismo cartel con «12 €» tachado y «7,20 €»; caja roja «DOS CARTELES, MISMO PRODUCTO / ¿CUÁL VENDE MÁS?» con rebote (sin voz)
+01	2.500	14.367	11.867	356	LOS DOS CARTELES: cada uno a pantalla completa con cortes secos (izq., der., izq.) y luego los dos juntos con flecha que pulsa sobre el de la derecha; pared crema con semitono y ventana con cielo
+  01-A	2.500	3.967	1.467	44	plano A
+  01-B	3.967	6.100	2.133	64	plano B
+  01-C	6.100	9.500	3.400	102	plano C
+  01-D	9.500	14.367	4.867	146	plano D
+02	14.367	20.367	6.000	180	EL CEREBRO: cerebro rosa (sin cara) con rebote; «NO CALCULA. COMPARA.»; + − = que aparecen y se desvanecen; balanza que se inclina hacia el «12 €»
+03	20.367	29.367	9.000	270	SIN REFERENCIA: izq. «7,20 €» con «?» enorme que pulsa y cerebro pequeño con gotas de duda; der. «12 €» tachado → flecha → «7,20 €» con check verde y brillo; contador «AHORRAS» sin cifra
+04	29.367	38.367	9.000	270	EL EFECTO ANCLA: fondo azul con onda de agua; el ancla cae con rebote sobre el «12 €» y queda atado con una cadena; «7,20 €» flotando; «EFECTO ANCLA» / «el primer número manda»
+05	38.367	45.367	7.000	210	OJO: TIENE QUE SER REAL: cartel «ANTES 99 €» tachado / «AHORA 7,20 €» que se agrieta; sello rojo «NO»; cartel verde «REAL ✔» cae junto a un cartel normal; «EL PRECIO DE ANTES TIENE QUE SER REAL»
+06	45.367	51.367	6.000	180	EN ESCAPARATE: móvil con el formulario de publicar, campos «Precio» y «Precio antes» con halo rojo (A); tarjeta publicada «7,20 €» / «12 €» tachado y avisos (chat, campana, corazones) volando a móviles de clientes (B)
+  06-A	45.367	48.167	2.800	84	plano A
+  06-B	48.167	51.367	3.200	96	plano B
+07	51.367	58.000	6.633	199	CTA: fondo rojo; cartel «¿TIENES UN COMERCIO?», botón blanco «COMENTA: ALTA», «Enlace al formulario en la descripción»; entrada con rebote y destello
+08	58.000	62.967	4.967	149	CIERRE: pantalla roja, logo blanco con rebote, «Escaparate de Tudela», escaparatetudela.es
+TOTAL	0.000	62.967
