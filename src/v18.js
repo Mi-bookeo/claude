@@ -1,11 +1,10 @@
 /* Vídeo 18 — «Pedro y la ITV». Piezas nuevas sobre lib.js + series.js + v04…v17.js:
-   PEDRO tal cual (v05: alto, gafas redondas negras, camiseta verde) con los brazos con codo del vídeo 07 y tres caras
-   nuevas (preocupado con ceja torcida y gota de sudor, ojos grandes, aliviado); mostrador de la ITV (pared crema #FFF5F3
+   PEDRO y el MECÁNICO de frente y con cuello (src/pedro_frente.js); mostrador de la ITV (pared crema #FFF5F3
    con puntos de semitono, rótulo «ITV», papel), sello de goma con la mano del inspector y su marca (DESFAVORABLE /
    FAVORABLE), coche genérico visto de lado (ruedas gastadas o nuevas), carretera con paralaje, nube de pensamiento con
    cuatro ruedas y «?», tarjeta de oferta «2x1 EN RUEDAS · TALLER», confeti de estrellas, pantalla de llamada saliente
    con el icono de taller, globo de respuesta, interior de taller genérico (elevador, cartel «2x1», ruedas apiladas,
-   panel de herramientas) y el MECÁNICO (personaje nuevo genérico: mono azul y gorra). Sin marcas ni nombres reales. */
+   panel de herramientas). Sin marcas ni nombres reales. */
 'use strict';
 
 const st18 = (v = 1) => `stroke="${INK}" stroke-width="${f(SW * v)}" stroke-linejoin="round"`;
@@ -16,77 +15,7 @@ const K18 = {
   screen: '#22394F', counter: '#B9BFC6', counterTop: '#E4E7EA', counterS: '#8D949C', sleeve: '#2D4A6B', wood: '#A9743F', woodS: '#7E5328'
 };
 
-/* ===================== PEDRO (v05) con codos (v07) y caras nuevas ===================== */
-function pedro18Face(o, w) {
-  const e = o.expr || 'normal';
-  if (!['worried', 'wow', 'relief'].includes(e)) return pedro7Face(o, w);
-  const L = (d, sw = 1.7, col = INK) => `<path d="${d}" stroke="${col}" stroke-width="${w(sw)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
-  const lx = o.look ? o.look[0] : 0, ly = o.look ? o.look[1] : 0;
-  const glasses = `<circle cx="196" cy="80" r="4" fill="none" stroke="${INK}" stroke-width="${w(1.8)}"/><circle cx="204" cy="80" r="4" fill="none" stroke="${INK}" stroke-width="${w(1.8)}"/><line x1="192" y1="80" x2="178" y2="79" stroke="${INK}" stroke-width="${w(1.8)}"/>`;
-  const cheek = op => `<circle cx="193.4" cy="87.2" r="2.6" fill="${C.pink}" opacity="${op}"/>`;
-  let s = `<circle cx="196" cy="80" r="4" fill="#FFFFFF" fill-opacity="${e === 'wow' ? 1 : 0.5}"/><circle cx="204" cy="80" r="4" fill="#FFFFFF" fill-opacity="${e === 'wow' ? 1 : 0.5}"/>`;
-  if (e === 'worried') {
-    s += o.blink ? L('M193.2 81 H198.8 M201.2 81 H206.8', 1.6)
-      : `<circle cx="${f(196 + lx)}" cy="${f(81 + ly)}" r="1.5" fill="${INK}"/><circle cx="${f(204 + lx)}" cy="${f(81 + ly)}" r="1.5" fill="${INK}"/>`;
-    // ceja torcida: la de atrás sube hacia el centro, la de delante baja
-    s += glasses + L('M192.8 74.6 Q195.6 74.2 198.6 71.4', 1.7) + L('M201.4 72.2 Q204.4 72.8 207.2 74.8', 1.7);
-    // boca ondulada
-    s += L('M196.2 90 Q197.7 88.4 199.2 90 Q200.7 91.6 202.2 90 Q203.4 88.8 204.4 89.6', 1.8);
-    // gota de sudor que resbala
-    const dy = o.drop || 0;
-    s += `<path d="M209.5 ${f(65 + dy)} Q214.6 ${f(72.6 + dy)} 209.5 ${f(75.4 + dy)} Q204.4 ${f(72.6 + dy)} 209.5 ${f(65 + dy)}Z" fill="${C.glass}" stroke="${INK}" stroke-width="${w(1.5)}" stroke-linejoin="round"/><circle cx="208.3" cy="${f(72.3 + dy)}" r="0.9" fill="#FFFFFF"/>`;
-  } else if (e === 'wow') {
-    // ojos grandes que llenan los cristales, con brillo
-    s += `<circle cx="${f(196 + lx * 0.6)}" cy="${f(80 + ly * 0.6)}" r="2.9" fill="${INK}"/><circle cx="${f(204 + lx * 0.6)}" cy="${f(80 + ly * 0.6)}" r="2.9" fill="${INK}"/>`;
-    s += `<circle cx="${f(197.1 + lx * 0.6)}" cy="${f(78.8 + ly * 0.6)}" r="1.1" fill="#FFFFFF"/><circle cx="${f(205.1 + lx * 0.6)}" cy="${f(78.8 + ly * 0.6)}" r="1.1" fill="#FFFFFF"/>`;
-    s += `<circle cx="${f(195 + lx * 0.6)}" cy="${f(81.4 + ly * 0.6)}" r="0.55" fill="#FFFFFF"/><circle cx="${f(203 + lx * 0.6)}" cy="${f(81.4 + ly * 0.6)}" r="0.55" fill="#FFFFFF"/>`;
-    s += glasses + L('M192.8 70.2 Q195.6 67.4 198.6 69.4 M201.4 69.4 Q204.4 67.4 207.2 70.2', 1.6) + cheek(0.65);
-    s += `<path d="M195.2 86 Q200.3 97.4 205.4 85.8 Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.7)}" stroke-linejoin="round"/><path d="M196.3 86.7 H204.3 L203.6 88.3 H197Z" fill="#FFFFFF"/>`;
-  } else { // relief: ojos cerrados de alivio, sonrisa grande
-    s += glasses + L('M193.6 81 Q196 78.2 198.4 81 M201.6 81 Q204 78.2 206.4 81', 1.7);
-    s += L('M193 71.6 Q195.8 69.8 198.6 71.4 M201.4 71.4 Q204.2 69.8 207 71.6', 1.6) + cheek(0.7);
-    s += `<path d="M195.4 86 Q200.4 96 205.2 85.8 Z" fill="${C.dred}" stroke="${INK}" stroke-width="${w(1.7)}" stroke-linejoin="round"/><path d="M196.5 86.6 H204.1 L203.4 88 H197.2Z" fill="#FFFFFF"/>`;
-  }
-  return s;
-}
-// Pedro en coordenadas locales (suelo y=214, mira a la derecha): cuerpo de pedro() del vídeo 05 (camiseta verde lisa)
-// y brazos de dos segmentos (armJoints del vídeo 07). o: legF, legB, bob, head, lean, expr, smile, look, blink, drop,
-// talk, armF/armB ({ang,bend} | {ik,side}), itemF/itemB(w,x,y), front(w) (encima de todo)
-function pedro18(o) {
-  const k = o.k || 1, w = v => f(v * k);
-  const st = (v = 3) => `stroke="${INK}" stroke-width="${w(v)}"`, lj = 'stroke-linejoin="round"';
-  const leg = (ang, shoe) => `<g transform="rotate(${f(ang)} 190 150)"><rect x="185" y="148" width="8" height="58" rx="4" fill="${P5.pants}" ${st()}/><path d="M182 206 h17 a5 5 0 0 1 0 8 h-17z" fill="${shoe}" ${st()} ${lj}/></g>`;
-  let g = leg(o.legB || 0, '#E8E8E8') + leg(o.legF || 0, '#FFFFFF');
-  const arm = (S, a, back, item) => {
-    const { E, H } = armJoints(S, a || {});
-    const sk = back ? P5.skinS : P5.skin;
-    let s = limb(S, E, 7.4, sk, w) + limb(E, H, 7, sk, w);
-    // manga corta verde
-    s += limb(S, [lerp(S[0], E[0], 0.5), lerp(S[1], E[1], 0.5)], 11, back ? P5.greenS : P5.green, w);
-    s += `<circle cx="${f(H[0])}" cy="${f(H[1])}" r="4.2" fill="${sk}" ${st(2.2)}/>`;
-    if (item) s += item(w, H[0], H[1]);
-    return s;
-  };
-  let b = arm([174, 108], o.armB, true, o.itemB);
-  b += `<rect x="174" y="98" width="32" height="56" rx="10" fill="${P5.green}"/><rect x="174" y="98" width="9" height="56" rx="5" fill="${P5.greenS}"/><rect x="174" y="98" width="32" height="56" rx="10" fill="none" ${st()}/>`;
-  b += `<path d="M184.5 98.6 Q190 103.4 195.5 98.6" stroke="${INK}" stroke-width="${w(1.6)}" fill="none" stroke-linecap="round"/>`;
-  b += arm([206, 108], o.armF, false, o.itemF);
-  let hd = `<circle cx="190" cy="78" r="14" fill="${P5.skin}" ${st()}/>`;
-  hd += `<path d="M176 74 Q178 60 192 61 Q205 62 205 74 Q198 68 188 70 Q181 70 176 74Z" fill="${P5.hair}" ${st()} ${lj}/>`;
-  hd += pedro18Face(o, w);
-  b += `<g transform="rotate(${f(o.head || 0)} 190 94)">${hd}</g>`;
-  if (o.front) b += o.front(w);
-  g += `<g transform="translate(0 ${f(o.bob || 0)})">${b}</g>`;
-  if (o.lean) g = `<g transform="rotate(${f(o.lean)} 190 214)">${g}</g>`;
-  return g;
-}
-function placeP18(px, py, sc, o) {
-  o.k = SW / (3 * sc);
-  const sx = o.flip ? -sc : sc;
-  return `<g transform="translate(${f(px - 190 * sx)} ${f(py - 214 * sc)}) scale(${f(sx)} ${f(sc)})">${pedro18(o)}</g>`;
-}
-// punto del mundo -> coordenadas locales del personaje (para apuntar las manos)
-const toLocal18 = (px, py, sc, wx, wy, flip) => [190 + (wx - px) / sc * (flip ? -1 : 1), 214 + (wy - py) / sc];
+/* Pedro y el mecánico (de frente, con cuello): src/pedro_frente.js */
 // respiración y parpadeo
 const breath18 = T => -0.9 * (0.5 - 0.5 * Math.cos(2 * PI * T / 1.7));
 const blink18 = (T, off = 0) => ((T + off) % 3.1) < 0.11;
@@ -209,14 +138,13 @@ function bigStamp18(str, col, x, y, k, rot = -5, size = 150) {
 // mostrador completo (pared + Pedro + mostrador + papel + sello); po = opciones de Pedro; mark = marca del papel
 function itvWorld18(T, po, mark, stampP) {
   let s = itvBack18(T);
-  const { px, sc } = ITV, py = ITV.back + (214 - 150) * sc;
-  s += placeP18(px, py, sc, po);
+  s += placePF(ITV.px, itvPedroPy(), ITV.sc, po);
   s += counter18();
   s += paper18(mark);
   if (stampP) s += stamp18(stampP.x, stampP.y, stampP.sq, stampP.rot);
   return s;
 }
-const itvPedroPy = () => ITV.back + (214 - 150) * ITV.sc;
+const itvPedroPy = () => pfFootAtWaist(ITV.back + 12, ITV.sc);
 
 /* ===================== RUEDAS ===================== */
 // rueda vista de lado (centro x,y; r = radio del neumático); worn = gastada (gris, sin dibujo, grietas); rot en grados
@@ -468,12 +396,6 @@ function sayBubble18(x, y, k, str, o = {}) {
   g += text(str, 0, size * 0.04, { size, fill: o.col || INK, stroke: null, shadow: false });
   return at(x, y, k, g, o.rot || 0);
 }
-// móvil en la oreja (local de Pedro): mano + teléfono por delante de la cabeza
-function earPhone18(w) {
-  return `<g transform="rotate(-14 182 82)"><rect x="174" y="64" width="13" height="30" rx="3" fill="${INK}" stroke="${INK}" stroke-width="${w(2)}"/><rect x="175.6" y="66.4" width="9.8" height="25" rx="1.6" fill="${C.glass}"/></g>` +
-    `<circle cx="181" cy="90" r="4.4" fill="${P5.skin}" stroke="${INK}" stroke-width="${w(2.2)}"/><path d="M178.4 87.6 Q181 85.6 183.6 87.4" stroke="${INK}" stroke-width="${w(1)}" fill="none"/>`;
-}
-
 /* ===================== TALLER ===================== */
 const SHOP18 = { floor: 1330 };
 function poster2x1(x, y, wd, k = 1, rot = -4) {
@@ -532,58 +454,5 @@ function tallerRoom18(T) {
   return s;
 }
 
-/* ===================== MECÁNICO (personaje nuevo genérico) ===================== */
-// local: suelo y=214, centro x=190, cabeza en (190,78), mira a la derecha. Mono azul con bolsillo de peto, gorra azul
-// marino con visera, bigote castaño. o: legF, legB, bob, head, expr ('smile'|'talk'|'focus'), talk, blink,
-// armF/armB ({ang,bend}|{ik,side}), itemF/itemB(w,x,y), front(w)
-function mechanic18(o) {
-  const k = o.k || 1, w = v => f(v * k);
-  const st = (v = 3) => `stroke="${INK}" stroke-width="${w(v)}"`, lj = 'stroke-linejoin="round"';
-  const leg = (ang, sh) => `<g transform="rotate(${f(ang)} 190 150)"><rect x="184.5" y="148" width="9.5" height="58" rx="4.5" fill="${sh ? K18.monoS : K18.mono}" ${st()}/><path d="M181 205 h19 a5 5 0 0 1 0 9 h-19z" fill="${INK}" ${st()} ${lj}/></g>`;
-  let g = leg(o.legB || 0, true) + leg(o.legF || 0, false);
-  const arm = (S, a, back, item) => {
-    const { E, H } = armJoints(S, a || {});
-    let s = limb(S, E, 10, back ? K18.monoS : K18.mono, w) + limb(E, H, 9, back ? K18.monoS : K18.mono, w);
-    s += `<circle cx="${f(H[0])}" cy="${f(H[1])}" r="4.5" fill="${back ? P5.skinS : P5.skin}" ${st(2.2)}/>`;
-    if (item) s += item(w, H[0], H[1]);
-    return s;
-  };
-  let b = arm([173, 108], o.armB, true, o.itemB);
-  b += `<rect x="171" y="97" width="38" height="60" rx="11" fill="${K18.mono}"/><rect x="171" y="97" width="10" height="60" rx="6" fill="${K18.monoS}"/>`;
-  // peto con bolsillo, tirantes y parche blanco sin nombre
-  b += `<rect x="186" y="112" width="18" height="18" rx="3" fill="${K18.monoS}" ${st(1.6)}/><rect x="189" y="116" width="9" height="4" rx="1.5" fill="#FFFFFF"/>`;
-  b += `<path d="M184 98 L187 113 M206 99 L203 113" stroke="${INK}" stroke-width="${w(1.4)}"/>`;
-  b += `<rect x="171" y="138" width="38" height="5" fill="${K18.monoS}"/>`;
-  b += `<rect x="171" y="97" width="38" height="60" rx="11" fill="none" ${st()}/>`;
-  b += `<path d="M183 98 Q190 104 198 98" stroke="${INK}" stroke-width="${w(1.6)}" fill="#FFFFFF" stroke-linecap="round"/>`;
-  b += arm([207, 108], o.armF, false, o.itemF);
-  // cabeza
-  let hd = `<circle cx="190" cy="79" r="14" fill="${P5.skin}" ${st()}/>`;
-  hd += `<circle cx="179" cy="81" r="3.2" fill="${P5.skinS}" ${st(1.6)}/>`;
-  // gorra: copa y visera hacia delante
-  hd += `<path d="M175.6 75 Q175 61 190 60.6 Q204.6 60.6 204.6 74 Z" fill="${K18.cap}" ${st()} ${lj}/>`;
-  hd += `<path d="M175.6 75 Q176 68 181 64" stroke="${K18.capS}" stroke-width="${w(3)}" fill="none"/>`;
-  hd += `<path d="M200 73.4 Q209 72 216 75.6 Q211 78.4 200.6 77.4Z" fill="${K18.capS}" ${st(2)} ${lj}/>`;
-  hd += `<circle cx="189" cy="66" r="2.6" fill="${C.red}" ${st(1)}/>`;
-  // cara
-  const L = (d, sw = 1.7, col = INK) => `<path d="${d}" stroke="${col}" stroke-width="${w(sw)}" stroke-linecap="round" fill="none"/>`;
-  if (o.blink) hd += L('M195.2 82 H198.6 M201.6 82 H205', 1.6);
-  else hd += `<circle cx="197" cy="82" r="1.7" fill="${INK}"/><circle cx="203.4" cy="82" r="1.7" fill="${INK}"/>`;
-  hd += o.expr === 'focus' ? L('M194.4 78.6 L199.4 79.6 M201 79.6 L205.8 78.4', 1.5) : L('M194.6 78.2 Q197 77 199.4 78 M201 78 Q203.4 77 205.8 78.2', 1.4);
-  hd += `<circle cx="196" cy="88" r="2.4" fill="${C.pink}" opacity="0.5"/>`;
-  hd += `<path d="M196.8 87.2 Q200.6 84.8 204.6 87.4 Q203 89.4 200.6 88.4 Q198.6 89.4 196.8 87.2Z" fill="${K18.mous}" ${st(1.3)} ${lj}/>`;
-  if (o.expr === 'talk') { const op = clamp(o.talk || 0); hd += `<path d="M198 90.4 Q200.6 ${f(91.4 + op * 4)} 203.4 90.2 Z" fill="${C.dred}" ${st(1.4)} ${lj}/>`; }
-  else if (o.expr === 'focus') hd += L('M198.6 91 H202.8', 1.6);
-  else hd += L('M197.8 90.4 Q200.6 93 203.6 90.2', 1.6);
-  b += `<g transform="rotate(${f(o.head || 0)} 190 95)">${hd}</g>`;
-  if (o.front) b += o.front(w);
-  g += `<g transform="translate(0 ${f(o.bob || 0)})">${b}</g>`;
-  return g;
-}
-function placeMech18(px, py, sc, o) {
-  o.k = SW / (3 * sc);
-  const sx = o.flip ? -sc : sc;
-  return `<g transform="translate(${f(px - 190 * sx)} ${f(py - 214 * sc)}) scale(${f(sx)} ${f(sc)})">${mechanic18(o)}</g>`;
-}
 // llave inglesa en la mano (local); ang = giro
-const wrenchItem18 = ang => (w, x, y) => `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(ang)})"><path d="${wrenchPath18(18)}" transform="translate(0 -14)" fill="${K18.rim}" stroke="${INK}" stroke-width="${w(1.8)}" stroke-linejoin="round"/></g><circle cx="${f(x)}" cy="${f(y)}" r="4.5" fill="${P5.skin}" stroke="${INK}" stroke-width="${w(2.2)}"/>`;
+const wrenchItem18 = ang => (w, x, y) => `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(ang)})"><path d="${wrenchPath18(18)}" transform="translate(0 -14)" fill="${K18.rim}" stroke="${INK}" stroke-width="${w(1.8)}" stroke-linejoin="round"/></g>`;

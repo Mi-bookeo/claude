@@ -9,6 +9,6 @@ escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
   05-A	35.000	40.000	5.000	150	plano A
   05-B	40.000	43.000	3.000	90	plano B
 06	43.000	48.000	5.000	150	EL SELLO VERDE: el sello baja con golpe; «FAVORABLE» en verde con destellos; Pedro aliviado levanta los brazos
-07	48.000	55.000	7.000	210	CTA: Pedro a medio cuerpo con espacio arriba; «CANAL DE WHATSAPP», «COMENTA: CANAL», «Enlace en la descripción»
-08	55.000	58.000	3.000	90	CIERRE: pantalla roja, logo blanco con rebote, «Escaparate de Tudela», escaparatetudela.es
+07	48.000	55.000	7.000	210	CTA: Pedro a medio cuerpo con espacio arriba; «CANAL DE WHATSAPP», «Enlace en la descripción», «COMENTA: CANAL»; luego solo «Comenta / CANAL» en grande
+08	55.000	58.000	3.000	90	CIERRE: pantalla roja, logo sin letras (icono) con rebote, «Escaparate de Tudela», escaparatetudela.es
 TOTAL	0.000	58.000
