@@ -1,0 +1,14 @@
+{
+  "title": "Story · Mañana: lo que le pasa a Rosa",
+  "output": "story/story_manana_rosa.mp4",
+  "scenesDir": "story/scenes",
+  "stillsDir": "story/stills",
+  "timeline": "story/timeline.txt",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
+  "scenes": [
+    { "id": 11, "name": "Story teaser: «Mañana: lo que le pasa a Rosa con los pasteles que le sobran 🥐👀»", "duration": 7.0, "still": 3.5 }
+  ]
+}

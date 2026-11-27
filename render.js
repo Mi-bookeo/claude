@@ -15,7 +15,8 @@ const { spawn } = require('child_process');
 const { chromium } = require('playwright');
 
 const ROOT = __dirname;
-const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8'));
+const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, process.env.CONFIG || 'config.json'), 'utf8'));
+const SCN = path.join(ROOT, cfg.scenesDir || 'scenes'), STL = path.join(ROOT, cfg.stillsDir || 'stills');
 const FPS = cfg.fps;
 const pad = n => String(n).padStart(2, '0');
 
@@ -63,8 +64,8 @@ function run(cmd, args, opts = {}) {
 
 async function renderScene(browser, sc) {
   const page = await openPage(browser);
-  const out = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.mp4`);
-  const tmp = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.partial.mp4`);
+  const out = path.join(SCN, `scene_${pad(sc.id)}.mp4`);
+  const tmp = path.join(SCN, `scene_${pad(sc.id)}.partial.mp4`);
   const e = cfg.encoder;
   let proc;
   const done = run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error',
@@ -102,7 +103,7 @@ async function stills(browser, ids, dir) {
 async function concat() {
   const sc = sceneTiming();
   const list = path.join(ROOT, 'concat_list.txt');
-  fs.writeFileSync(list, sc.map(s => `file 'scenes/scene_${pad(s.id)}.mp4'`).join('\n') + '\n');
+  fs.writeFileSync(list, sc.map(s => `file '${path.join(SCN, `scene_${pad(s.id)}.mp4`)}'`).join('\n') + '\n');
   const tmp = path.join(ROOT, cfg.output.replace(/\.mp4$/, '.partial.mp4'));
   await run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-an', '-movflags', '+faststart', tmp]);
   fs.renameSync(tmp, path.join(ROOT, cfg.output));
@@ -111,7 +112,7 @@ async function concat() {
   tl += `escena\tinicio_s\tfin_s\tduracion_s\tfotogramas\tnombre\n`;
   sc.forEach(s => { tl += `${pad(s.id)}\t${s.start.toFixed(3)}\t${s.end.toFixed(3)}\t${(s.end - s.start).toFixed(3)}\t${s.frames}\t${s.name}\n`; });
   tl += `TOTAL\t0.000\t${sc[sc.length - 1].end.toFixed(3)}\n`;
-  fs.writeFileSync(path.join(ROOT, 'timeline.txt'), tl);
+  fs.writeFileSync(path.join(ROOT, cfg.timeline || 'timeline.txt'), tl);
   console.log(tl);
 }
 
@@ -126,13 +127,13 @@ async function pool(items, n, fn) {
   const ids = !arg || arg === 'all' ? all : arg.split(',').map(Number);
   const browser = await chromium.launch();
   try {
-    if (cmd === 'stills') await stills(browser, ids, process.argv[4] || path.join(ROOT, 'stills'));
+    if (cmd === 'stills') await stills(browser, ids, process.argv[4] || STL);
     if (cmd === 'scenes' || cmd === 'all') {
-      fs.mkdirSync(path.join(ROOT, 'scenes'), { recursive: true });
+      fs.mkdirSync(SCN, { recursive: true });
       const timing = sceneTiming().filter(s => ids.includes(s.id)).sort((a, b) => b.frames - a.frames);
       await pool(timing, Number(process.env.JOBS || 3), s => renderScene(browser, s));
     }
-    if (cmd === 'all') await stills(browser, all, path.join(ROOT, 'stills'));
+    if (cmd === 'all') await stills(browser, all, STL);
     if (cmd === 'concat' || cmd === 'all') await concat();
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exit(1); });

@@ -352,6 +352,7 @@ function interiorBack(T, o = {}) {
   // reloj de pared
   if (o.tm !== undefined) s += wallClock(INT.clockX, INT.clockY, INT.clockR, o.tm, o.clockK || 1, o.clockWob || 0);
   // estante con panes (derecha)
+  if (o.noShelf) return s;
   s += `<rect x="790" y="520" width="290" height="26" rx="6" fill="${C.wood}" ${st()}/>`;
   s += `<path d="M830 546 L850 590 M1040 546 L1020 590" ${st(1.1)} stroke-linecap="round"/>`;
   if (!o.emptyShelf) s += unitBox(800, 400, 130, 125, ITEMS.bread, 0.95) + unitBox(930, 400, 130, 125, PITEMS.croissant, 0.95);

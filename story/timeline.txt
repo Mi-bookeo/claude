@@ -1,0 +1,4 @@
+Story · Mañana: lo que le pasa a Rosa — timeline (1080x1920, 30 fps)
+escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
+11	0.000	7.000	7.000	210	Story teaser: «Mañana: lo que le pasa a Rosa con los pasteles que le sobran 🥐👀»
+TOTAL	0.000	7.000
