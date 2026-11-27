@@ -79,5 +79,9 @@
       "still": 4.0,
       "cut": 4.5
     }
-  ]
+  ],
+  "story": {
+    "duration": 8.0,
+    "still": 6.2
+  }
 }

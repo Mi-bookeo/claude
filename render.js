@@ -63,8 +63,8 @@ function run(cmd, args, opts = {}) {
 
 async function renderScene(browser, sc) {
   const page = await openPage(browser);
-  const out = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.mp4`);
-  const tmp = path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.partial.mp4`);
+  const out = sc.out || path.join(ROOT, 'scenes', `scene_${pad(sc.id)}.mp4`);
+  const tmp = out.replace(/\.mp4$/, '.partial.mp4');
   const e = cfg.encoder;
   let proc;
   const done = run('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error',
@@ -126,6 +126,14 @@ async function pool(items, n, fn) {
   const ids = !arg || arg === 'all' ? all : arg.split(',').map(Number);
   const browser = await chromium.launch();
   try {
+    if (cmd === 'story') { // historia: node render.js story [still_t]
+      const st = cfg.story, dir = path.join(ROOT, 'historia');
+      fs.mkdirSync(dir, { recursive: true });
+      const page = await openPage(browser);
+      fs.writeFileSync(path.join(dir, 'historia_marta.png'), await frame(page, 'H', st.still, st.still));
+      await page.close();
+      if (arg !== 'still') await renderScene(browser, { id: 'H', frames: Math.round(st.duration * FPS), start: 0, out: path.join(dir, 'historia_marta_mudo.mp4') });
+    }
     if (cmd === 'stills') await stills(browser, ids, process.argv[4] || path.join(ROOT, 'stills'));
     if (cmd === 'scenes' || cmd === 'all') {
       fs.mkdirSync(path.join(ROOT, 'scenes'), { recursive: true });

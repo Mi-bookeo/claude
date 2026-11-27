@@ -495,8 +495,9 @@ S[4] = (t, T, sc) => {
   const beat = 0.5 + 0.5 * Math.sin(t * 2 * PI / (t > dur * 0.6 ? 0.3 : 0.5));
   const red = beat > 0.5;
   const kc = pop(t, 0.05, 0.45) * (1 + 0.09 * beat);
-  s += at(865, 300, kc, clockFace(96, min, red), 6 * Math.sin(t * 30));
-  s += at(865, 462, kc, digital(250, 104, min, red), -3);
+  const cx = (sc && sc.clockX) || 865, cy = (sc && sc.clockY) || 300;
+  s += at(cx, cy, kc, clockFace(96, min, red), 6 * Math.sin(t * 30));
+  s += at(cx, cy + 162, kc, digital(250, 104, min, red), -3);
   return s;
 };
 
