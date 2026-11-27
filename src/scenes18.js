@@ -27,11 +27,28 @@ function pedroITV(T, o = {}) {
 
 /* ---------- 0) HOOK: el mostrador con el sello ya puesto; caja roja «¿SUSPENDES LA ITV / POR LAS RUEDAS?» ---------- */
 S[0] = (t, T, sc) => {
-  const c = cues(sc, { box: 0.12 });
-  const w = itvWorld18(T, pedroITV(T), { col: C.red, str: TX('desf', 'DESFAVORABLE'), k: 1 }, null);
-  const z = comicZoom(t, 1.1) * lerp(1, 1.06, easeInOut(seg(t, 0, sc.duration))) * bumpZ(t, [c.box], 0.02);
-  const shk = shakeAt(t, c.box + 0.14, 10);
-  let s = `<g transform="translate(${f(shk)} ${f(shk * 0.5)})">` + camAt(z, ITV.paperX, ITV.paperY, 560, 850, w) + `</g>`;
+  const c = cues(sc, { hit: 0.4, box: 0.95 });
+  const hit = c.hit, after = t >= hit;
+  // sello rápido: baja desde arriba con golpe en «hit», se queda un momento y se va
+  let sp = null;
+  if (t < hit + 0.75) {
+    let dy = 0, dx = 0;
+    if (t < hit) { const u = t / hit; dy = lerp(-900, 0, u * u); }
+    else if (t >= hit + 0.3) { const u = easeInOut(seg(t, hit + 0.3, hit + 0.75)); dy = lerp(0, -1500, u); dx = lerp(0, 380, u); }
+    const sq = t >= hit && t < hit + 0.3 ? Math.max(0, damp(t - hit, 30, 9)) : 0;
+    sp = { x: ITV.paperX + 10 + dx, y: ITV.paperY + 12 + dy, sq, rot: -9 + dx * 0.02 };
+  }
+  const po = pedroITV(T, after && t < hit + 0.5 ? { expr: 'panic', jit: 0.8 * Math.sin(t * 60), bob: -6 * Math.max(0, damp(t - hit, 16, 6)) } : {});
+  const w = itvWorld18(T, po, after ? { col: C.red, str: TX('desf', 'DESFAVORABLE'), k: 1 } : null, sp);
+  // zoom de impacto al sello y vuelta; sacudida en el golpe y al caer la caja
+  let z = comicZoom(t, 1.1);
+  if (after) { const u = t - hit; z = u < 0.08 ? lerp(1, 1.3, u / 0.08) : lerp(1.3, 1.04, easeInOut(seg(u, 0.25, 0.75))); }
+  z *= bumpZ(t, [c.box], 0.02);
+  const shk = shakeAt(t, hit, 22) + shakeAt(t, c.box + 0.14, 10), jx = shk * Math.sin(t * 90), jy = shk * 0.6 * Math.cos(t * 77);
+  let s = `<g transform="translate(${f(jx)} ${f(jy)})">` + camAt(z, ITV.paperX, ITV.paperY, 560, 850, w);
+  if (after && t < hit + 0.3) s += `<g opacity="${f(1 - seg(t, hit, hit + 0.3))}">${impactLines(560, 850, t, 30, 360)}</g>`;
+  if (after && t < hit + 0.55) { const kp = pop(t, hit, 0.22) * (1 - seg(t, hit + 0.3, hit + 0.55)); s += puff(300, 890, 44, kp) + puff(830, 880, 38, kp); }
+  s += `</g>`;
   const k = pop(t, c.box, 0.5);
   s += at(540, 1212, k, redSign17(980, 290, [[TX('h1', '¿SUSPENDES LA ITV'), 96, -58], [TX('h2', 'POR LAS RUEDAS?'), 96, 60]]), lerp(-6, -2, clamp(k)));
   return s;

@@ -164,8 +164,10 @@ def story_events():
     ev('whoosh', h - 1.0, -10); ev('whoosh_s', h - 0.16, -6); ev('sello', h, 0); ev('impacto', h, -5); ev('malo', h + 0.08, -6)
     ev('pop', h + 0.1, -10); ev('gota', h + 1.6, -13); ev('pop', st(20) + c['tag'], -8); ev('ding2', st(20) + c['tag'] + 0.15, -10)
 def video_events():
-    # 0) HOOK (solo efectos): golpe de cámara, caja roja que cae con golpe, gota
-    ev('whoosh_s', st(0), -10); ev('golpe', at(0, 'box') + 0.12, -4); ev('pop', at(0, 'box'), -8); ev('gota', st(0) + 1.4, -14)
+    # 0) HOOK (solo efectos): el sello baja con «whoosh» y golpea (sello + impacto), la caja roja cae con golpe, gota
+    h0 = at(0, 'hit', 0.4)
+    ev('whoosh_s', st(0), -9); ev('sello', h0, 0); ev('impacto', h0, -6); ev('whoosh_s', h0 + 0.3, -15)
+    ev('golpe', at(0, 'box') + 0.12, -4); ev('pop', at(0, 'box'), -8); ev('gota', st(0) + 1.9, -14)
     # 1) EL SELLO: la mano entra, coge impulso, ¡golpe!; impacto y estribillo de suspenso; franja; trago
     h = at(1, 'hit')
     ev('whoosh', h - 1.0, -10); ev('whoosh_s', h - 0.16, -6)

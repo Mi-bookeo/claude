@@ -1,6 +1,6 @@
 Pedro y la ITV — timeline (1080x1920, 30 fps)
 escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
-00	0.000	2.500	2.500	75	HOOK: mostrador de la ITV con el sello rojo ya puesto; caja roja «¿SUSPENDES LA ITV / POR LAS RUEDAS?» con rebote (solo SFX)
+00	0.000	2.500	2.500	75	HOOK: el sello baja con golpe sobre el papel del mostrador (DESFAVORABLE, zoom de impacto y sacudida); caja roja «¿SUSPENDES LA ITV / POR LAS RUEDAS?» con rebote (solo SFX)
 01	2.500	9.300	6.800	204	EL SELLO: la mano baja el sello sobre el papel; «DESFAVORABLE» en rojo con sacudida y zoom de impacto; «RUEDAS EN MAL ESTADO»; Pedro preocupado (ceja torcida, gota de sudor)
 02	9.300	16.800	7.500	225	EN EL COCHE: coche de lado por la carretera con paralaje (cielo, sol, nubes a la izquierda); Pedro al volante preocupado; nube con cuatro ruedas y «?» que pulsa
 03	16.800	26.933	10.133	304	LA BÚSQUEDA: coche aparcado; móvil grande con Escaparate de Tudela; el feed sube y se para en «2x1 EN RUEDAS · TALLER» (brillo, confeti de estrellas, destello rojo); Pedro con ojos grandes

@@ -40,11 +40,12 @@
   "scenes": [
     {
       "id": 0,
-      "name": "HOOK: mostrador de la ITV con el sello rojo ya puesto; caja roja «¿SUSPENDES LA ITV / POR LAS RUEDAS?» con rebote (solo SFX)",
+      "name": "HOOK: el sello baja con golpe sobre el papel del mostrador (DESFAVORABLE, zoom de impacto y sacudida); caja roja «¿SUSPENDES LA ITV / POR LAS RUEDAS?» con rebote (solo SFX)",
       "duration": 2.5,
-      "still": 1.2,
+      "still": 1.6,
       "cues": {
-        "box": 0.12
+        "hit": 0.4,
+        "box": 0.95
       }
     },
     {
