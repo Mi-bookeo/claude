@@ -563,47 +563,62 @@ S[6] = (t, T, sc) => {
   return s;
 };
 
-/* ---------- 7) CTA: «¿TIENES UN COMERCIO?», botón «COMENTA: ALTA», «Enlace al formulario en la descripción» ---------- */
+/* ---------- 7) CTA: «¿TIENES UN COMERCIO?», «Enlace al formulario en la descripción» y después el botón «COMENTA: ALTA»;
+   en Instagram, al decir «comenta ALTA» desaparece todo y queda solo «Comenta» / «ALTA» en grande (regla del vídeo 16).
+   En TikTok (CFG.variant) no hay «comenta»: ni botón ni palabra en grande. ---------- */
+const TIKTOK = () => CFG && CFG.variant === 'tiktok';
 S[7] = (t, T, sc) => {
-  const c = cues(sc, { board: 0.1, btn: 0.5, link: 0.95, flash: 0.5 });
+  const c = cues(sc, { board: 0.1, link: 0.5, btn: 2.4, com: 4.0, flash: 0.1 });
+  const tk = TIKTOK(), com = !tk && t >= c.com;
   let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 700, 18, t * 7, C.dred);
   const pulse = 1 + 0.025 * Math.sin(t * 2 * PI * 1.1);
+  if (com) {
+    s += bigT(TX('s7f', 'Comenta'), 540, 470, 180, pop(t, c.com, 0.5), -4);
+    s += strip15(TX('s7g', 'ALTA'), 540, 730, pop(t, c.com + 0.18, 0.5), 3, { size: 230, h: 260, w: 760, fill: C.yel });
+    const u = t - c.com;
+    [[130, 330, 44], [950, 360, 38], [120, 880, 30], [960, 900, 34]].forEach(([x, y, r], i) => {
+      s += sparkle(x, y, r, pop(t, c.com + 0.25 + 0.06 * i, 0.4) * (0.75 + 0.25 * Math.sin(u * 8 + i * 1.7)), i % 2 ? C.yel : '#FFFFFF');
+    });
+    return s;
+  }
   // cartel blanco
   const kb = pop(t, c.board, 0.5);
   let g = `<rect x="-460" y="-170" width="920" height="340" rx="36" transform="translate(16 16)" fill="${INK}"/><rect x="-460" y="-170" width="920" height="340" rx="36" fill="#FFFFFF" ${st19(1.2)}/>`;
   g += `<rect x="-440" y="-150" width="880" height="300" rx="24" fill="none" stroke="${C.red}" stroke-width="${f(SW * 0.6)}" stroke-dasharray="22 14" opacity="0.7"/>`;
   g += text(TX('s7a', '¿TIENES UN'), 0, -62, { size: 118, fill: C.red, sw: SW * 2, sd: 7 }) + text(TX('s7b', 'COMERCIO?'), 0, 70, { size: 132, fill: C.red, sw: SW * 2, sd: 7 });
   s += at(540, 470, kb * pulse, g, lerp(-6, -2, clamp(kb)));
-  // botón blanco «COMENTA: ALTA»
-  const kbt = pop(t, c.btn, 0.5), press = t > c.btn + 1.2 ? 1 - 0.05 * Math.max(0, Math.sin((t - c.btn - 1.2) * 2 * PI * 0.8)) : 1;
-  const bs = TX('s7c', 'COMENTA: ALTA');
-  let b = `<rect x="-420" y="-88" width="840" height="176" rx="88" transform="translate(12 12)" fill="${INK}"/><rect x="-420" y="-88" width="840" height="176" rx="88" fill="#FFFFFF" ${st19(1.2)}/>`;
-  b += text(bs, 0, 6, { size: fit(bs, 112, 740), fill: C.red, sw: SW * 2, sd: 6 });
-  s += at(540, 820, kbt * press, b, 1.5);
-  // enlace
-  const kl = pop(t, c.link, 0.5);
-  s += bigT(TX('s7d', 'Enlace al formulario'), 540, 1040, 80, kl, -1, { sw: SW * 2, sd: 7 });
-  s += bigT(TX('s7e', 'en la descripción'), 540, 1140, 80, pop(t, c.link + 0.12, 0.5), -1, { sw: SW * 2, sd: 7 });
-  s += arrowDown17(540, 1215, 80, pop(t, c.link + 0.3, 0.45), t);
+  // 1) enlace al formulario en la descripción
+  const ly = tk ? 820 : 760, kl = pop(t, c.link, 0.5);
+  s += bigT(TX('s7d', 'Enlace al formulario'), 540, ly, 80, kl, -1, { sw: SW * 2, sd: 7 });
+  s += bigT(TX('s7e', 'en la descripción'), 540, ly + 100, 80, pop(t, c.link + 0.12, 0.5), -1, { sw: SW * 2, sd: 7 });
+  s += arrowDown17(540, ly + 175, 80, pop(t, c.link + 0.3, 0.45), t);
+  // 2) después, el botón blanco «COMENTA: ALTA» (solo Instagram)
+  if (!tk) {
+    const kbt = pop(t, c.btn, 0.5), press = t > c.btn + 0.8 ? 1 - 0.05 * Math.max(0, Math.sin((t - c.btn - 0.8) * 2 * PI * 0.8)) : 1;
+    const bs = TX('s7c', 'COMENTA: ALTA');
+    let bt = `<rect x="-420" y="-88" width="840" height="176" rx="88" transform="translate(12 12)" fill="${INK}"/><rect x="-420" y="-88" width="840" height="176" rx="88" fill="#FFFFFF" ${st19(1.2)}/>`;
+    bt += text(bs, 0, 6, { size: fit(bs, 112, 740), fill: C.red, sw: SW * 2, sd: 6 });
+    s += at(540, 1160, kbt * press, bt, 1.5);
+  }
   // destello
   if (t >= c.flash) {
     const u = t - c.flash;
     if (u < 0.3) s += `<rect width="${W}" height="${H}" fill="#FFFFFF" opacity="${f(0.6 * (1 - u / 0.3))}"/>`;
-    [[110, 300, 48], [970, 340, 40], [90, 700, 30], [990, 980, 36], [140, 1180, 28]].forEach(([x, y, r], i) => {
+    [[110, 300, 48], [970, 340, 40], [90, 700, 30], [990, 980, 36], [140, 1060, 28]].forEach(([x, y, r], i) => {
       s += sparkle(x, y, r, pop(t, c.flash + 0.05 * i, 0.4) * (0.75 + 0.25 * Math.sin(u * 8 + i * 1.7)), i % 2 ? C.yel : '#FFFFFF');
     });
   }
   return s;
 };
 
-/* ---------- 8) CIERRE: pantalla roja, logo blanco con rebote, «Escaparate de Tudela», web ---------- */
+/* ---------- 8) CIERRE: pantalla roja, logo con rebote, «Escaparate de Tudela», web. Como el nombre va escrito debajo,
+   el logo es el icono SIN letras (logo.png) sobre disco blanco (regla de CLAUDE.md, como en el vídeo 18) ---------- */
 S[8] = (t, T, sc) => {
   const c = cues(sc, { logo: 0, sub: 0.4, url: 0.65 });
   let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 680, 16, t * 8, C.dred);
   const pulse = 1 + 0.03 * Math.sin(t * 2 * PI * 1.1);
   const kl = pop(t, c.logo, 0.5);
-  // logo_blanco.png (1000x1000 de la raíz, fondo quitado en assets/logo_blanco_t.png)
-  s += at(540, 660, pulse, logoBadge(0, 6 * Math.sin(t * 3), 800, lerp(-10, 0, clamp(kl)), kl, 'logoW'));
+  s += at(540, 640 + 6 * Math.sin(t * 3), pulse * kl, `<circle cx="16" cy="16" r="330" fill="${INK}"/><circle r="330" fill="#FFFFFF" ${st19(1.3)}/>` + logoI13(0, 10, 560), lerp(-10, 0, clamp(kl)));
   s += bigT(TX('marca', 'Escaparate de Tudela'), 540, 1150, 96, pop(t, c.sub, 0.5) * pulse, -2, { maxW: 960 });
   s += whoPill(TX('web', 'escaparatetudela.es'), 540, 1290, pop(t, c.url, 0.5), { size: 56, col: INK });
   return s;

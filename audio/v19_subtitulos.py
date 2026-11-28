@@ -100,6 +100,6 @@ for q in subs: print(f"{q['start']:6.2f}-{q['end']:6.2f}  [{q['who']}] {' / '.jo
 if '--burn' in sys.argv:
     src = os.path.join(ROOT, cfg['audioOut']); out = os.path.join(ROOT, cfg['tiktokOut'] if TIKTOK else cfg['subtitledOut']); tmp = out.replace('.mp4', '.partial.mp4')
     vf = f"subtitles=filename={ass}:fontsdir={os.path.join(ROOT, 'fonts')}:original_size=1080x1920"
-    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-vf', vf, '-c:v', 'libx264', '-crf', str(cfg.get('burnCrf', 20)), '-preset', cfg.get('burnPreset', 'medium'), '-pix_fmt', 'yuv420p',
+    subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-vf', vf, '-c:v', 'libx264', '-crf', str(cfg.get('burnCrf', 23)), '-preset', cfg.get('burnPreset', 'slow'), *(['-tune', cfg['burnTune']] if cfg.get('burnTune') else []), '-pix_fmt', 'yuv420p',
                     '-r', str(FPS), '-c:a', 'copy', '-movflags', '+faststart', tmp], check=True)
     os.replace(tmp, out); print('->', os.path.relpath(out, ROOT))

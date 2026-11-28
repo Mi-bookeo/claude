@@ -155,7 +155,9 @@ def video_events():
     b0 = st(6) + SC[6]['shots']['B'][0]; ev('pop', b0, -8); ev('ding_c', b0 + c6['toast'], -10)
     for j in range(6): ev('whoosh_s', b0 + c6['fly'] + j * 0.28, -18); ev('notif', b0 + c6['fly'] + j * 0.28 + 0.6, -9)
     # 7) pop del botón y ding corto
-    ev('pop', at(7, 'board'), -8); ev('pop', at(7, 'btn'), -5); ev('ding_c', at(7, 'flash'), -7); ev('pop_s', at(7, 'link'), -12)
+    ev('pop', at(7, 'board'), -8); ev('ding_c', at(7, 'flash'), -9); ev('pop_s', at(7, 'link'), -12)
+    if cfg.get('variant') != 'tiktok':  # el botón y «Comenta / ALTA» en grande solo existen en Instagram
+        ev('pop', at(7, 'btn'), -5); ev('ding_c', at(7, 'btn') + 0.12, -8); ev('whoosh_s', at(7, 'com') - 0.15, -12); ev('pop', at(7, 'com'), -6); ev('pop', at(7, 'com') + 0.18, -7)
     # 8) ding suave de cierre
     ev('whoosh', st(8) - 0.15, -10); ev('ding_b', st(8) + 0.05, -6); ev('pop_s', at(8, 'sub'), -14); ev('pop_s', at(8, 'url'), -14)
 

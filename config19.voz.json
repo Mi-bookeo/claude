@@ -47,7 +47,9 @@
     "s7d": "Enlace al formulario",
     "s7e": "en la descripción",
     "marca": "Escaparate de Tudela",
-    "web": "escaparatetudela.es"
+    "web": "escaparatetudela.es",
+    "s7f": "Comenta",
+    "s7g": "ALTA"
   },
   "scenes": [
     {
@@ -342,14 +344,15 @@
     },
     {
       "id": 7,
-      "name": "CTA: fondo rojo; cartel «¿TIENES UN COMERCIO?», botón blanco «COMENTA: ALTA», «Enlace al formulario en la descripción»; entrada con rebote y destello",
+      "name": "CTA: fondo rojo; «¿TIENES UN COMERCIO?», «Enlace al formulario en la descripción», botón «COMENTA: ALTA»; al decir «comenta ALTA» queda solo «Comenta / ALTA» en grande",
       "duration": 6.633,
-      "still": 2.5,
+      "still": 4.93,
       "cues": {
         "board": 0.1,
-        "btn": 0.5,
-        "link": 0.95,
-        "flash": 0.5
+        "btn": 3.34,
+        "link": 1.2,
+        "flash": 0.1,
+        "com": 4.13
       },
       "voices": [
         {
@@ -421,6 +424,9 @@
   "srt": "subtitles19.srt",
   "subtitledOut": "video19_instagram.mp4",
   "tiktokOut": "video19_tiktok.mp4",
+  "burnCrf": 23,
+  "burnPreset": "slow",
+  "burnTune": "animation",
   "_render": [
     1,
     2,

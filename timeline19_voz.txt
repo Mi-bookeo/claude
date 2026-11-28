@@ -13,6 +13,6 @@ escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
 06	45.367	51.367	6.000	180	EN ESCAPARATE: móvil con el formulario de publicar, campos «Precio» y «Precio antes» con halo rojo (A); tarjeta publicada «7,20 €» / «12 €» tachado y avisos (chat, campana, corazones) volando a móviles de clientes (B)
   06-A	45.367	48.167	2.800	84	plano A
   06-B	48.167	51.367	3.200	96	plano B
-07	51.367	58.000	6.633	199	CTA: fondo rojo; cartel «¿TIENES UN COMERCIO?», botón blanco «COMENTA: ALTA», «Enlace al formulario en la descripción»; entrada con rebote y destello
+07	51.367	58.000	6.633	199	CTA: fondo rojo; «¿TIENES UN COMERCIO?», «Enlace al formulario en la descripción», botón «COMENTA: ALTA»; al decir «comenta ALTA» queda solo «Comenta / ALTA» en grande
 08	58.000	62.967	4.967	149	CIERRE: pantalla roja, logo blanco con rebote, «Escaparate de Tudela», escaparatetudela.es
 TOTAL	0.000	62.967
