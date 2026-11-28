@@ -467,7 +467,7 @@ function lights20(T, t, k, o = {}) {
   [[330, 372, 70], [262, 382, 50], [423, 382, 50], [678, 360, 80]].forEach(([lx, ly, r]) => { s += glow(LX(lx), LY(ly), r * BS * 0.9, 'g20warm', 0.7 * k); });
   [...BALC_L, ...BALC_R].forEach(lx => { s += glow(LX(lx), LY(360), 40 * BS * 0.6, 'g20warm', 0.45 * k); });
   // cortinas de luces
-  BALC_C.forEach((lx, i) => { s += curtain20(LX(lx - 17), LX(lx + 17), LY(253), LY(292), 5, T, i * 3); });
+  BALC_C.forEach((lx, i) => { if (o.noMid && i === 1) return; s += curtain20(LX(lx - 17), LX(lx + 17), LY(253), LY(292), 5, T, i * 3); });
   [...BALC_L, ...BALC_R].forEach((lx, i) => { s += curtain20(LX(lx - 15), LX(lx + 15), LY(218), LY(255), 4, T, 10 + i * 2); });
   // guirnaldas bajo las cornisas
   s += garland20(LX(-10), LX(221), LY(162), 4, 14, T, 1) + garland20(LX(440), LX(710), LY(162), 5, 14, T, 5) + garland20(LX(222), LX(440), LY(149), 3, 16, T, 9);
@@ -503,11 +503,15 @@ function world20(t, T, L = {}) {
     s += glow(cx, cy, r * 2.2, 'g20white', 0.25 * L.spot);
   }
   if (L.singers) s += L.singers;
-  if (L.spot && L.singers) { // la balaustrada vuelve a ir delante de los cantantes
+  if (L.singers) { // la balaustrada vuelve a ir delante de los cantantes
     const id = 'bl' + (uid++);
-    s += `<clipPath id="${id}"><rect x="${f(LX(218))}" y="${f(LY(292))}" width="${f(226 * BS)}" height="${f(23 * BS)}"/></clipPath><g clip-path="url(#${id})">${casa('spot')}</g>`;
+    s += `<clipPath id="${id}"><rect x="${f(LX(218))}" y="${f(LY(292))}" width="${f(226 * BS)}" height="${f(23 * BS)}"/></clipPath><g clip-path="url(#${id})">${casa(L.spot ? 'spot' : (L.on ? 'on' : 'off'))}</g>`;
   }
-  if (L.on) s += lights20(T, L.t || 0, L.lk === undefined ? 1 : L.lk) + towerStar20(T, pop(L.t || 0, 0, 0.5));
+  if (L.on) s += lights20(T, L.t || 0, L.lk === undefined ? 1 : L.lk, { noMid: !!L.singers }) + towerStar20(T, pop(L.t || 0, 0, 0.5));
+  if (L.on && L.singers) { // con todo encendido, los cantantes por delante de los brillos (y la barandilla y el letrero delante de ellos)
+    const id = 'bl' + (uid++);
+    s += L.singers + `<clipPath id="${id}"><rect x="${f(LX(218))}" y="${f(LY(292))}" width="${f(226 * BS)}" height="${f(23 * BS)}"/></clipPath><g clip-path="url(#${id})">${casa('on')}</g>` + sign20(T, pop(L.t || 0, 0.12, 0.45));
+  }
   FAROLAS20.forEach(([x, b]) => { s += farola20(x, b, L.on); });
   if (!L.noStage) s += stage20(L.stage || 0);
   if (!L.noStage && !L.noBulbs) s += bulbs20(T, L.on);
@@ -593,18 +597,19 @@ S[2] = (t, T, sc) => {
 };
 
 /* ---------- 3) LOS CANTANTES EN EL BALCÓN: zoom rápido, foco circular, dos cantantes, notas; vuelve el plano amplio ---------- */
+// los dos cantantes del balcón central (siguen cantando en el coro, en el encendido y con todo encendido)
+function singers20(T, ks = 1) {
+  if (ks <= 0.01) return '';
+  const sing = T * 2 * PI / 1.3, yb = LY(309);
+  return at(505, yb, ks, fig20(0, 0, 0.5, { kind: 'singerA', hair: 'curly', mood: 'sing', mic: 'R', tilt: 4 * Math.sin(sing), arms: [[14, 8], [18, 172]] }, T)) +
+    at(578, yb, ks, fig20(0, 0, 0.5, { kind: 'singerB', hair: 'cap', mood: 'sing', mic: 'L', tilt: -4 * Math.sin(sing + 0.6), arms: [[18, 172], [14, 8]] }, T));
+}
 S[3] = (t, T, sc) => {
   const c = cues(sc, { zoom: 0, zoomDur: 0.4, spot: 0.8, singers: 1.2, notes: 1.7 });
   const [shot] = shotOf(sc, t);
   const spot = pop(t, c.spot, 0.35);
   const ks = pop(t, c.singers, 0.5);
-  const sing = T * 2 * PI / 1.3;
-  let singers = '';
-  if (ks > 0.01) {
-    const yb = LY(309);
-    singers += at(505, yb, ks, fig20(0, 0, 0.5, { kind: 'singerA', hair: 'curly', mood: 'sing', mic: 'R', tilt: 4 * Math.sin(sing), arms: [[14, 8], [18, 172]] }, T));
-    singers += at(578, yb, ks, fig20(0, 0, 0.5, { kind: 'singerB', hair: 'cap', mood: 'sing', mic: 'L', tilt: -4 * Math.sin(sing + 0.6), arms: [[18, 172], [14, 8]] }, T));
-  }
+  const singers = singers20(T, ks);
   const w = world20(t, T, { dim: 0.25, spot, singers, stage: 0.25, noBulbs: shot === 'zoom' });
   let s = sky20(T);
   if (shot === 'zoom') {
@@ -626,7 +631,7 @@ S[3] = (t, T, sc) => {
 S[4] = (t, T, sc) => {
   const c = cues(sc, { ladies: 0.2, kids: 0.5, notes: 1.0 });
   let s = sky20(T);
-  const w = world20(t, T, { dim: 0.3, stage: 1, flashes: 0.35, performers: choir20(t, T, c) });
+  const w = world20(t, T, { dim: 0.3, stage: 1, flashes: 0.35, spot: 1, singers: singers20(T), performers: choir20(t, T, c) });
   const z = lerp(1.02, 1.12, easeInOut(t / sc.duration));
   s += cam(z, 540, 1060, w, 0, -40);
   if (t >= c.notes) s += notes20(t - c.notes, 540, 920, 7, 520, 0.95);
@@ -640,7 +645,7 @@ S[5] = (t, T, sc) => {
   const on = t >= c.on, u = t - c.on;
   let s = sky20(T);
   const cc = { ladies: -9, kids: -9 };
-  const w = world20(t, T, { on, t: u, stage: on ? 1 : 0.12, dim: on ? 0 : 0.15, performers: choir20(5, T, cc) });
+  const w = world20(t, T, { on, t: u, stage: on ? 1 : 0.12, dim: on ? 0 : 0.15, spot: on ? 0 : 1, singers: singers20(T), performers: choir20(5, T, cc) });
   const z = on ? lerp(1.0, 1.06, seg(u, 0, 5.8)) * bumpZ(t, c.on, 0.05) : 1.0;
   s += cam(z, 540, 880, w, 0, 0);
   if (!on) s += `<rect width="${W}" height="${H}" fill="#050817" opacity="0.35"/>`;
@@ -666,7 +671,7 @@ function snow20(T, op = 0.85) {
 }
 S[6] = (t, T, sc) => {
   let s = sky20(T);
-  const w = world20(t, T, { on: true, t: 3 + t, stage: 1, performers: choir20(5, T, { ladies: -9, kids: -9 }) });
+  const w = world20(t, T, { on: true, t: 3 + t, stage: 1, singers: singers20(T), performers: choir20(5, T, { ladies: -9, kids: -9 }) });
   s += cam(lerp(0.93, 0.87, easeInOut(t / sc.duration)), 540, 980, w, 0, 0);
   s += snow20(T);
   s += crowd20(T, 'cheer', 1, true);
