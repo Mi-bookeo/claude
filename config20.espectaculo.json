@@ -1,0 +1,45 @@
+{
+  "title": "Story · Gran espectáculo para iluminar Tudela",
+  "output": "tmp/story20k_sin_audio.mp4",
+  "page": "index20.html",
+  "scenesDir": "tmp/story20k_scenes",
+  "stillsDir": "tmp/story20k_stills",
+  "timeline": "tmp/story20k_timeline.txt",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": {
+    "codec": "libx264",
+    "crf": 18,
+    "preset": "medium",
+    "pix_fmt": "yuv420p"
+  },
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'cues' = momentos de textos y acciones (tiempo local; se recolocan con el audio en la segunda pasada). 'shots' = planos dentro de una escena (cortes secos). 'still' = instante del PNG de stills20/. 'textos' = textos en pantalla. Figuras de cómic genéricas, sin caras ni personas reales, sin nombres.",
+  "textos": {
+    "h1": "AYER, TUDELA",
+    "h2": "SE ILUMINÓ ✨",
+    "letrero": "Feliz Navidad",
+    "cierre1": "Feliz Navidad",
+    "cierre2": "Escaparate de Tudela",
+    "k1": "AYER, UN GRAN ESPECTÁCULO",
+    "k2": "PARA ILUMINAR TUDELA"
+  },
+  "scenes": [
+    {
+      "id": 32,
+      "name": "STORY: plaza con kiosco apagada, caja «AYER, UN GRAN ESPECTÁCULO / PARA ILUMINAR TUDELA»; un segundo de silencio y se enciende todo",
+      "duration": 10.0,
+      "still": 6.0,
+      "cues": {
+        "box": 0.3,
+        "l1": 0.45,
+        "l2": 0.7,
+        "on": 3.2
+      }
+    }
+  ],
+  "story": true,
+  "audioOut": "video20_story_espectaculo.mp4",
+  "mixWav": "mezcla20_story_k.wav",
+  "musicMp3": "audio/musica20_espectaculo.mp3"
+}

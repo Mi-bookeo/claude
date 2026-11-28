@@ -460,7 +460,7 @@ function fountain20(x, y, t, k, seed) {
 const BALC_C = [262, 330, 398];                   // ventanas del balcón central (local)
 const BALC_L = [18, 70, 122, 174];                // ala izquierda
 const BALC_R = [462, 512, 562, 612, 662];         // ala derecha
-function lights20(T, t, k) {
+function lights20(T, t, k, o = {}) {
   if (k <= 0.01) return '';
   let s = '';
   // soportales y huecos de la planta baja
@@ -474,7 +474,7 @@ function lights20(T, t, k) {
   // mariposas moradas en los balcones
   const bf = [[LX(331), LY(188), 1.25, -8], [LX(250), LY(232), 1.0, -14], [LX(412), LY(232), 1.0, 14],
     [LX(70), LY(248), 0.8, -10], [LX(170), LY(248), 0.8, 8], [LX(512), LY(248), 0.8, -8], [LX(612), LY(248), 0.8, 10]];
-  bf.forEach(([x, y, sc, rot], i) => { s += at(x, y, 1, butterfly20(0, 0, sc * pop(t, 0.05 + 0.03 * i, 0.4), T, i), rot); });
+  (o.noSide ? bf.slice(0, 3) : bf).forEach(([x, y, sc, rot], i) => { s += at(x, y, 1, butterfly20(0, 0, sc * pop(t, 0.05 + 0.03 * i, 0.4), T, i), rot); });
   s += fountain20(LX(232), LY(309), t + 0.2, k * 0.6, 3) + fountain20(LX(430), LY(309), t + 0.6, k * 0.6, 4);
   s += clockLit20(T, k) + sign20(T, pop(t, 0.12, 0.45));
   return s;
@@ -758,8 +758,8 @@ const PEOPLE20 = (() => {
   const a = [];
   for (let i = 0; a.length < 170 && i < 2000; i++) {
     const y = 985 + Math.pow(hash(i * 1.37 + 3), 0.85) * 920, x = -30 + hash(i * 2.71 + 9) * 1140;
-    if (y > 1180 && y < 1400 && x > 230 && x < 850) continue;            // el kiosco
-    if (y < 1180 && x > 250 && x < 830 && y > 1040) continue;            // detrás del kiosco: casi no se ve
+    if (y > 1180 && y < 1400 && x > 290 && x < 790) continue;            // el kiosco
+    if (y < 1180 && x > 320 && x < 760 && y > 1040) continue;            // detrás del kiosco: casi no se ve
     a.push({ x, y, h: hash(i * 5.9), c: hash(i * 7.3), kid: hash(i * 8.8) > 0.88 });
   }
   return a.sort((p, q) => p.y - q.y);
@@ -779,13 +779,13 @@ function walker20(p, lit, T) {
   if (p.h > 0.86 && lit) g += `<rect x="${f(14 * s)}" y="${f(-176 * s)}" width="${f(9 * s)}" height="${f(15 * s)}" rx="2" fill="#BFE3F2" stroke="${o}" stroke-width="${sw}"/><line x1="${f(16 * s)}" y1="${f(-100 * s)}" x2="${f(18 * s)}" y2="${f(-162 * s)}" stroke="${coat}" stroke-width="${f(8 * s)}" stroke-linecap="round"/>`;
   return `<g transform="translate(${f(p.x)} ${f(p.y)})">${g}</g>`;
 }
-function kioskPlaza20(t, T, lit, lt = 3) {
+function kioskPlaza20(t, T, lit, lt = 3, noSky = false) {
   const on = lit > 0.5;
-  let s = sky20(T);
+  let s = noSky ? '' : sky20(T);
   // la casa del reloj (mundo de las escenas, reducido)
   let w = casa(on ? 'on' : 'off');
   if (!on) w += glow(LX(330), LY(372), 120, 'g20warm', 0.15) + glow(LX(332), LY(92), 70, 'g20warm', 0.1);
-  if (on) w += lights20(T, lt, 1) + towerStar20(T, pop(lt, 0, 0.5));
+  if (on) w += lights20(T, lt, 1, { noSide: true }) + towerStar20(T, pop(lt, 0, 0.5));   // mariposas solo en la casa del reloj
   FAROLAS20.forEach(([x, b]) => { w += farola20(x, b - 90, on); });
   s += `<g transform="translate(${f(KQ.ox)} ${f(KQ.oy)}) scale(${f(KQ.k)})">${w}</g>`;
   // suelo de la plaza
@@ -800,15 +800,40 @@ function kioskPlaza20(t, T, lit, lt = 3) {
   KSTR.side.forEach((b, i) => { s += string20(KA, b, 60, lit, T, 10 + i, 2.6, 3.4, 30); });
   // gente detrás del kiosco, el kiosco y la gente de delante
   PEOPLE20.filter(p => p.y < 1300).forEach(p => { s += walker20(p, on, T); });
-  s += kiosk20(lit, T);
+  s += `<g transform="translate(540 0) scale(0.8 1) translate(-540 0)">${kiosk20(lit, T)}</g>`;   // kiosco un 20 % más estrecho
   PEOPLE20.filter(p => p.y >= 1300).forEach(p => { s += walker20(p, on, T); });
   // cuerdas hacia la cámara (por delante de todo)
   KSTR.front.forEach((b, i) => { s += string20(KA, b, 240, lit, T, 20 + i, 2.6, 7.5, 30); });
-  if (!on) s += `<rect width="${W}" height="${H}" fill="#050817" opacity="0.25"/>`;
+  if (!on) s += `<rect x="-200" y="-600" width="${W + 400}" height="${H + 1200}" fill="#050817" opacity="0.25"/>`;
   return s;
 }
 S[30] = (t, T) => kioskPlaza20(t, T, 0);
 S[31] = (t, T) => kioskPlaza20(t, T, 1);
+/* ---------- STORY «Gran espectáculo» (9:16, ~10 s): todo apagado con la caja roja «AYER, UN GRAN ESPECTÁCULO / PARA
+   ILUMINAR TUDELA» (primera línea pequeña, segunda grande); un segundo de silencio y, de golpe, se enciende todo con
+   destello. La plaza baja 250 px para que la estrella de la torre quede debajo de la caja. Zonas seguras de las
+   stories: nada importante por encima de y=250 ni por debajo de y≈1600. ---------- */
+S[32] = (t, T, sc) => {
+  const c = cues(sc, { box: 0.3, l1: 0.45, l2: 0.7, on: 3.2 });
+  const on = t >= c.on, u = t - c.on;
+  const z = on ? lerp(1.0, 1.04, seg(u, 0, 6)) * bumpZ(t, c.on, 0.04) : lerp(1.0, 1.015, t / c.on);
+  let s = sky20(T);
+  s += cam(z, 540, 1100, `<g transform="translate(0 250)">${kioskPlaza20(t, T, on ? 1 : 0, on ? u : 0, true)}</g>`);
+  if (on) {
+    s += snow20(T, 0.6);
+    [[120, 620, 30], [960, 600, 26], [90, 980, 20], [990, 1000, 24], [180, 1300, 18], [900, 1280, 20]].forEach(([x, y, r], i) => {
+      s += sparkle(x, y, r, pop(t, c.on + 0.1 + 0.05 * i, 0.4) * (0.7 + 0.3 * Math.sin(u * 6 + i * 1.7)), i % 2 ? K20.gold : '#FFFFFF');
+    });
+    if (u < 0.45) s += `<rect width="${W}" height="${H}" fill="#FFFFFF" opacity="${f(0.9 * (1 - u / 0.45))}"/>`;
+  }
+  const kb = pop(t, c.box, 0.5);
+  const l1 = TX('k1', 'AYER, UN GRAN ESPECTÁCULO'), l2 = TX('k2', 'PARA ILUMINAR TUDELA');
+  let g = redSign17(1000, 196, []);
+  g += at(0, -46, pop(t, c.l1, 0.45), text(l1, 0, 0, { size: fit(l1, 54, 880), sw: SW * 1.6, sd: 5 }));
+  g += at(0, 34, pop(t, c.l2, 0.45), text(l2, 0, 0, { size: fit(l2, 92, 900), sw: SW * 2, sd: 7, fill: on ? C.yel : '#FFFFFF' }));
+  s += at(540, 348, kb, g, lerp(-6, -2, clamp(kb)));
+  return s;
+};
 
 /* ---------- API para el renderizador ---------- */
 window.init = async function (cfg, fonts, logos) {
