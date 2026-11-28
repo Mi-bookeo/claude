@@ -1,0 +1,39 @@
+{
+  "title": "Plaza con kiosco (apagada / encendida)",
+  "output": "tmp/kiosko20.mp4",
+  "page": "index20.html",
+  "scenesDir": "tmp/kiosko20_scenes",
+  "stillsDir": "tmp/kiosko20",
+  "timeline": "tmp/kiosko20_timeline.txt",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": {
+    "codec": "libx264",
+    "crf": 18,
+    "preset": "medium",
+    "pix_fmt": "yuv420p"
+  },
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'cues' = momentos de textos y acciones (tiempo local; se recolocan con el audio en la segunda pasada). 'shots' = planos dentro de una escena (cortes secos). 'still' = instante del PNG de stills20/. 'textos' = textos en pantalla. Figuras de cómic genéricas, sin caras ni personas reales, sin nombres.",
+  "textos": {
+    "h1": "AYER, TUDELA",
+    "h2": "SE ILUMINÓ ✨",
+    "letrero": "Feliz Navidad",
+    "cierre1": "Feliz Navidad",
+    "cierre2": "Escaparate de Tudela"
+  },
+  "scenes": [
+    {
+      "id": 30,
+      "name": "Plaza con kiosco APAGADA",
+      "duration": 1.0,
+      "still": 0.5
+    },
+    {
+      "id": 31,
+      "name": "Plaza con kiosco ENCENDIDA",
+      "duration": 1.0,
+      "still": 0.5
+    }
+  ]
+}

@@ -690,6 +690,126 @@ S[7] = (t, T, sc) => {
   return s + (dy ? `<g transform="translate(0 ${dy})">${g}</g>` : g);
 };
 
+/* ===================== PLAZA CON KIOSCO (imágenes y story «Gran espectáculo») =====================
+   La casa del reloj al fondo, de frente (el mismo mundo de las escenas, reducido: escala 1,5 en vez de 1,9, suelo en
+   y=960), el kiosco octogonal en el centro, cuerdas de bombillas que van del kiosco a los edificios y hacia la cámara,
+   y la gente debajo. lit: 0 apagado … 1 encendido. */
+const KQ = { k: 1.5 / 1.9, ground: 960 };
+KQ.ox = 540 - 540 * KQ.k; KQ.oy = KQ.ground - 1150 * KQ.k;
+const KA = [540, 935];   // anclaje de las cuerdas: base del farol del kiosco
+const KSTR = {
+  back: [[-30, 690], [90, 700], [215, 712], [330, 660], [750, 660], [865, 712], [990, 700], [1110, 690]],
+  side: [[-40, 880], [-40, 1060], [1120, 880], [1120, 1060]],
+  front: [[-160, 1330], [-160, 1760], [230, 2150], [850, 2150], [1240, 1760], [1240, 1330]]
+};
+function string20(a, b, sag, lit, T, seed, r0, r1, n) {
+  let s = '', d = '';
+  const P = u => [lerp(a[0], b[0], u), lerp(a[1], b[1], u) + sag * 4 * u * (1 - u)];
+  for (let i = 0; i <= 30; i++) { const [x, y] = P(i / 30); d += (i ? 'L' : 'M') + f(x) + ' ' + f(y); }
+  s += `<path d="${d}" fill="none" stroke="${lit ? '#5A4E3A' : '#262B40'}" stroke-width="${f(lerp(1.4, 3.2, (r0 + r1) / 18))}"/>`;
+  for (let i = 1; i < n; i++) {
+    const u = i / n, [x, y] = P(u), r = lerp(r0, r1, u);
+    if (lit) {
+      const tw = 0.75 + 0.25 * Math.sin(T * 4 + seed * 3.1 + i * 1.7);
+      s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 3)}" fill="#FFE6A8" opacity="${f(0.22 * lit * tw)}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${tw > 0.95 ? '#FFFFFF' : '#FFF4D2'}" opacity="${f(lit)}"/>`;
+    } else s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.8)}" fill="#3A4058"/>`;
+  }
+  return s;
+}
+function kiosk20(lit, T) {
+  const L = `stroke="${INK}" stroke-width="${f(SW * 0.55)}" stroke-linejoin="round"`;
+  const metal = lit ? '#24302F' : '#151A26', metalL = lit ? '#3C4C4A' : '#1E2433';
+  const base = lit ? '#5E5866' : '#1D2131', baseS = lit ? '#433E4C' : '#151827';
+  let s = '';
+  if (lit) s += glow(540, 1160, 520, 'g20white', 0.55 * lit) + glow(540, 1160, 300, 'g20cyan', 0.35 * lit);
+  // tarima octogonal (frente y caras laterales)
+  s += `<path d="M250 1300 L290 1282 L790 1282 L830 1300 L830 1372 L790 1392 L290 1392 L250 1372Z" fill="${baseS}" ${L}/>`;
+  s += `<rect x="290" y="1292" width="500" height="100" fill="${base}" ${L}/>`;
+  for (let x = 330; x < 790; x += 40) s += `<line x1="${x}" y1="1298" x2="${x}" y2="1386" stroke="${baseS}" stroke-width="3"/>`;
+  s += `<path d="M262 1290 L300 1272 L780 1272 L818 1290Z" fill="${lit ? '#BFC8D6' : '#2A3044'}" ${L}/>`;
+  // interior: decoraciones de luz (estrellas y copos genéricos) entre las columnas
+  if (lit) {
+    s += `<rect x="300" y="1080" width="480" height="190" fill="#D9F0FF" opacity="${f(0.22 * lit)}"/>`;
+    [[365, 1160, 34], [470, 1130, 44], [610, 1130, 44], [715, 1160, 34], [540, 1185, 30]].forEach(([x, y, r], i) => {
+      const tw = 0.8 + 0.2 * Math.sin(T * 3 + i);
+      s += glow(x, y, r * 2.4, 'g20cyan', 0.6 * lit * tw);
+      s += at(x, y, lit, `<path d="${starPath(r, r * 0.42, 5)}" fill="none" stroke="#F4FBFF" stroke-width="4" stroke-linejoin="round"/><path d="M0 ${-r * 0.4} V${r * 0.4} M${-r * 0.4} 0 H${r * 0.4}" stroke="#F4FBFF" stroke-width="3"/>`, i * 8);
+    });
+  }
+  // columnas del fondo (más finas y oscuras) y del frente
+  [360, 720].forEach(x => { s += `<rect x="${x - 6}" y="1075" width="12" height="200" fill="${metalL}" opacity="0.8"/>`; });
+  // barandilla
+  let rd = 'M268 1212 H812 M268 1240 H812';
+  for (let x = 280; x <= 800; x += 26) rd += ` M${x} 1212 V1272`;
+  s += `<path d="${rd}" fill="none" stroke="${INK}" stroke-width="7"/><path d="${rd}" fill="none" stroke="${lit ? '#E9EEF5' : '#3A4258'}" stroke-width="3.5"/>`;
+  [272, 420, 660, 808].forEach(x => { s += `<rect x="${x - 10}" y="1070" width="20" height="206" fill="${metal}" ${L}/><rect x="${x - 15}" y="1262" width="30" height="12" fill="${metal}" ${L}/>`; });
+  // tejado octogonal, tambor del farol, cúpula y remate
+  s += `<path d="M205 1078 L290 1040 L420 990 L660 990 L790 1040 L875 1078 L860 1090 L220 1090Z" fill="${metal}" ${L}/>`;
+  s += `<path d="M420 990 L470 1040 L610 1040 L660 990" fill="none" stroke="${metalL}" stroke-width="4"/><line x1="540" y1="990" x2="540" y2="1040" stroke="${metalL}" stroke-width="4"/>`;
+  s += `<rect x="478" y="940" width="124" height="52" fill="${metal}" ${L}/>`;
+  [492, 522, 552, 582].forEach(x => { s += `<rect x="${x}" y="950" width="18" height="32" rx="4" fill="${lit ? '#FFF1C9' : '#2A3146'}" ${L}/>`; });
+  s += `<path d="M470 942 L610 942 L590 922 L490 922Z" fill="${metal}" ${L}/><path d="M500 922 Q540 870 580 922Z" fill="${metal}" ${L}/><line x1="540" y1="880" x2="540" y2="852" stroke="${INK}" stroke-width="5"/><circle cx="540" cy="850" r="7" fill="${lit ? K20.gold : metalL}" ${L}/>`;
+  // bombillas bajo el alero
+  if (lit) for (let i = 0; i <= 20; i++) { const x = lerp(225, 855, i / 20); s += `<circle cx="${f(x)}" cy="1094" r="4.5" fill="#FFF4D2"/><circle cx="${f(x)}" cy="1094" r="12" fill="#FFE6A8" opacity="0.3"/>`; }
+  return s;
+}
+// gente de la plaza (de espaldas, en perspectiva). Mismo reparto en las dos imágenes.
+const PEOPLE20 = (() => {
+  const a = [];
+  for (let i = 0; a.length < 170 && i < 2000; i++) {
+    const y = 985 + Math.pow(hash(i * 1.37 + 3), 0.85) * 920, x = -30 + hash(i * 2.71 + 9) * 1140;
+    if (y > 1180 && y < 1400 && x > 230 && x < 850) continue;            // el kiosco
+    if (y < 1180 && x > 250 && x < 830 && y > 1040) continue;            // detrás del kiosco: casi no se ve
+    a.push({ x, y, h: hash(i * 5.9), c: hash(i * 7.3), kid: hash(i * 8.8) > 0.88 });
+  }
+  return a.sort((p, q) => p.y - q.y);
+})();
+const COATS20 = ['#3B3046', '#5A3A3A', '#2E3A50', '#6B5A4A', '#8C7A66', '#CFC8C0', '#2A2A30', '#7A2E3A', '#4A5A44'];
+function walker20(p, lit, T) {
+  const s = lerp(0.32, 1.05, (p.y - 960) / 960) * (p.kid ? 0.7 : 1), sway = Math.sin(T * 1.5 + p.h * 9) * 2 * s;
+  const coat = lit ? COATS20[Math.floor(p.c * COATS20.length)] : (p.c > 0.5 ? '#0B1028' : '#0E1430');
+  const skin = lit ? '#C9A08A' : '#141A36', hair = lit ? (p.h > 0.5 ? '#2E211C' : '#5A3A2A') : '#0A0F24';
+  const sw = f(Math.max(1.2, 2.6 * s)), o = lit ? '#1E1A1A' : '#2A3460';
+  let g = `<ellipse cx="0" cy="0" rx="${f(26 * s)}" ry="${f(6 * s)}" fill="#000" opacity="0.25"/>`;
+  g += `<rect x="${f(-13 * s)}" y="${f(-48 * s)}" width="${f(10 * s)}" height="${f(48 * s)}" fill="#1E1A24" stroke="${o}" stroke-width="${sw}"/><rect x="${f(3 * s)}" y="${f(-48 * s)}" width="${f(10 * s)}" height="${f(48 * s)}" fill="#1E1A24" stroke="${o}" stroke-width="${sw}"/>`;
+  g += `<path d="M${f(-22 * s)} ${f(-40 * s)} L${f(-18 * s)} ${f(-108 * s)} Q0 ${f(-120 * s)} ${f(18 * s)} ${f(-108 * s)} L${f(22 * s)} ${f(-40 * s)}Z" fill="${coat}" stroke="${o}" stroke-width="${sw}"/>`;
+  g += `<rect x="${f(-6 * s)}" y="${f(-124 * s)}" width="${f(12 * s)}" height="${f(12 * s)}" fill="${skin}"/>`;
+  g += `<circle cx="${f(sway)}" cy="${f(-136 * s)}" r="${f(15 * s)}" fill="${hair}" stroke="${o}" stroke-width="${sw}"/>`;
+  if (p.h < 0.12) g += `<path d="M${f(sway - 15 * s)} ${f(-138 * s)} Q${f(sway)} ${f(-162 * s)} ${f(sway + 15 * s)} ${f(-138 * s)}Z" fill="${lit ? '#D32F2F' : '#0B1028'}" stroke="${o}" stroke-width="${sw}"/><circle cx="${f(sway)}" cy="${f(-156 * s)}" r="${f(5 * s)}" fill="${lit ? '#FFFFFF' : '#0B1028'}"/>`;
+  if (p.h > 0.86 && lit) g += `<rect x="${f(14 * s)}" y="${f(-176 * s)}" width="${f(9 * s)}" height="${f(15 * s)}" rx="2" fill="#BFE3F2" stroke="${o}" stroke-width="${sw}"/><line x1="${f(16 * s)}" y1="${f(-100 * s)}" x2="${f(18 * s)}" y2="${f(-162 * s)}" stroke="${coat}" stroke-width="${f(8 * s)}" stroke-linecap="round"/>`;
+  return `<g transform="translate(${f(p.x)} ${f(p.y)})">${g}</g>`;
+}
+function kioskPlaza20(t, T, lit, lt = 3) {
+  const on = lit > 0.5;
+  let s = sky20(T);
+  // la casa del reloj (mundo de las escenas, reducido)
+  let w = casa(on ? 'on' : 'off');
+  if (!on) w += glow(LX(330), LY(372), 120, 'g20warm', 0.15) + glow(LX(332), LY(92), 70, 'g20warm', 0.1);
+  if (on) w += lights20(T, lt, 1) + towerStar20(T, pop(lt, 0, 0.5));
+  FAROLAS20.forEach(([x, b]) => { w += farola20(x, b - 90, on); });
+  s += `<g transform="translate(${f(KQ.ox)} ${f(KQ.oy)}) scale(${f(KQ.k)})">${w}</g>`;
+  // suelo de la plaza
+  const g0 = on ? '#3E3648' : '#121730', gl = on ? '#514659' : '#1B2140';
+  s += `<rect x="0" y="${KQ.ground}" width="${W}" height="${H - KQ.ground}" fill="${g0}"/>`;
+  [985, 1020, 1070, 1140, 1230, 1350, 1500, 1690].forEach(y => { s += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="${gl}" stroke-width="3"/>`; });
+  for (let i = -10; i <= 10; i++) s += `<line x1="${540 + i * 60}" y1="${KQ.ground}" x2="${540 + i * 260}" y2="${H}" stroke="${gl}" stroke-width="3"/>`;
+  s += `<line x1="0" y1="${KQ.ground}" x2="${W}" y2="${KQ.ground}" stroke="${INK}" stroke-width="4"/>`;
+  if (on) s += glow(540, 1300, 760, 'g20warm', 0.35 * lit);
+  // cuerdas hacia los edificios y los lados (detrás del kiosco)
+  KSTR.back.forEach((b, i) => { s += string20(KA, b, 26, lit, T, i, 2.4, 2.0, 26); });
+  KSTR.side.forEach((b, i) => { s += string20(KA, b, 60, lit, T, 10 + i, 2.6, 3.4, 30); });
+  // gente detrás del kiosco, el kiosco y la gente de delante
+  PEOPLE20.filter(p => p.y < 1300).forEach(p => { s += walker20(p, on, T); });
+  s += kiosk20(lit, T);
+  PEOPLE20.filter(p => p.y >= 1300).forEach(p => { s += walker20(p, on, T); });
+  // cuerdas hacia la cámara (por delante de todo)
+  KSTR.front.forEach((b, i) => { s += string20(KA, b, 240, lit, T, 20 + i, 2.6, 7.5, 30); });
+  if (!on) s += `<rect width="${W}" height="${H}" fill="#050817" opacity="0.25"/>`;
+  return s;
+}
+S[30] = (t, T) => kioskPlaza20(t, T, 0);
+S[31] = (t, T) => kioskPlaza20(t, T, 1);
+
 /* ---------- API para el renderizador ---------- */
 window.init = async function (cfg, fonts, logos) {
   CFG = cfg;
