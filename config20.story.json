@@ -1,0 +1,115 @@
+{
+  "title": "Story · Se encienden las luces de Navidad",
+  "output": "tmp/story20_sin_audio.mp4",
+  "page": "index20.html",
+  "scenesDir": "tmp/story20_scenes",
+  "stillsDir": "tmp/story20_stills",
+  "timeline": "tmp/story20_timeline.txt",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": {
+    "codec": "libx264",
+    "crf": 18,
+    "preset": "medium",
+    "pix_fmt": "yuv420p"
+  },
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'cues' = momentos de textos y acciones (tiempo local; se recolocan con el audio en la segunda pasada). 'shots' = planos dentro de una escena (cortes secos). 'still' = instante del PNG de stills20/. 'textos' = textos en pantalla. Figuras de cómic genéricas, sin caras ni personas reales, sin nombres.",
+  "textos": {
+    "h1": "AYER, TUDELA",
+    "h2": "SE ILUMINÓ ✨",
+    "letrero": "Feliz Navidad",
+    "cierre1": "Feliz Navidad",
+    "cierre2": "Escaparate de Tudela"
+  },
+  "scenes": [
+    {
+      "id": 0,
+      "name": "HOOK: la casa del reloj de cerca, APAGADA y en penumbra (farolas apagadas, resplandor tenue); caja roja «AYER, TUDELA / SE ILUMINÓ ✨» con rebote (sin voz)",
+      "duration": 2.5,
+      "still": 1.6,
+      "cues": {
+        "box": 0.15,
+        "l1": 0.3,
+        "l2": 0.55,
+        "spark": 0.8
+      }
+    },
+    {
+      "id": 5,
+      "name": "SE HIZO LA LUZ: un segundo a oscuras y de golpe se enciende todo (estrella, reloj, mariposas moradas, cortinas de luces, «Feliz Navidad», fuegos fríos); destello blanco",
+      "duration": 6.3,
+      "still": 5.1,
+      "cues": {
+        "on": 3.3
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_6.mp3",
+          "who": "narradora",
+          "start": 0.2,
+          "duration": 3.504,
+          "text": "Y después de este gran espectáculo… se hizo la luz.",
+          "segments": [
+            [
+              0.24,
+              2.22
+            ],
+            [
+              2.44,
+              3.54
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "CIERRE: pantalla roja, logo blanco con rebote, «Feliz Navidad» y «Escaparate de Tudela»",
+      "duration": 4.0,
+      "still": 2.2,
+      "cues": {
+        "logo": 0.1,
+        "t1": 0.5,
+        "t2": 0.8
+      },
+      "voices": [
+        {
+          "file": "audio/voces/narradora_8.mp3",
+          "who": "narradora",
+          "start": 0.2,
+          "duration": 2.904,
+          "text": "Desde Escaparate de Tudela, feliz Navidad.",
+          "segments": [
+            [
+              0.26,
+              1.74
+            ],
+            [
+              1.86,
+              2.88
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "musicMp3": "audio/musica20_story.mp3",
+  "mixWav": "mezcla20_story.wav",
+  "audioOut": "tmp/story20_con_audio.mp4",
+  "srt": "subtitles20_story.srt",
+  "subtitledOut": "video20_story.mp4",
+  "tiktokOut": "video20_tiktok.mp4",
+  "burnCrf": 23,
+  "burnPreset": "slow",
+  "burnTune": "animation",
+  "_ayuda_voz": "Story (9:16): hook + encendido + cierre del vídeo 20. Zonas seguras: nada importante por encima de y=250 ni por debajo de y=1560; subtítulos en y=1250..1550.",
+  "story": true,
+  "boxY": 470,
+  "closeDy": -95,
+  "musicFrom": {
+    "0": 21.1,
+    "5": 23.6,
+    "7": 35.667
+  }
+}

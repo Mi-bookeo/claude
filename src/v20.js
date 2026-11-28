@@ -560,7 +560,7 @@ S[0] = (t, T, sc) => {
     g += sparkle(sx + 40, 96, 18, pop(t, c.spark + 0.1, 0.4) * (1 + 0.15 * Math.sin(t * 9 + 2)), '#FFFFFF');
     g += sparkle(sx + 34, 10, 14, pop(t, c.spark + 0.18, 0.4) * (1 + 0.15 * Math.sin(t * 11)), K20.gold);
   }
-  s += at(540, 352, kb, g, lerp(-6, -2, clamp(kb)));
+  s += at(540, CFG.boxY || 352, kb, g, lerp(-6, -2, clamp(kb)));
   return s;
 };
 
@@ -580,8 +580,9 @@ S[2] = (t, T, sc) => {
   let s = sky20(T);
   const L = { dim: 0.4, stage: 1, flashes: 1, performers: dancers20(t, T, pop(t, c.in, 0.45)) };
   const w = world20(t, T, L);
-  if (shot === 'a') s += cam(lerp(1.3, 1.36, seg(t, 0, 4.5)), 540, 1090, w, 0, -70);
-  else s += cam(lerp(1.62, 1.68, seg(t, 4.5, 9)), 540, 1100, w, 0, -110);
+  const B = sc.shots.b[0];
+  if (shot === 'a') s += cam(lerp(1.3, 1.36, seg(t, 0, B)), 540, 1090, w, 0, -70);
+  else s += cam(lerp(1.62, 1.68, seg(t, B, sc.duration)), 540, 1100, w, 0, -110);
   // destellos suaves por delante
   [[180, 520, 'g20pink'], [900, 600, 'g20cyan'], [540, 380, 'g20purple']].forEach(([x, y, g], i) => {
     s += glow(x, y, 300, g, (0.5 + 0.5 * Math.sin(T * 2.2 + i * 2.1)) * 0.35);
@@ -608,7 +609,7 @@ S[3] = (t, T, sc) => {
   let s = sky20(T);
   if (shot === 'zoom') {
     const u = easeOut(seg(t, c.zoom, c.zoom + c.zoomDur));
-    const z = lerp(1.0, 2.75, u) * (1 + 0.02 * seg(t, 1, 6.6));
+    const z = lerp(1.0, 2.75, u) * (1 + 0.02 * seg(t, 1, sc.shots.amplio[0]));
     const cy = lerp(1000, LY(278), u), dy = lerp(0, 820 - LY(278), u);
     s += cam(z, 540, cy, w, 0, dy);
     if (t >= c.notes) s += notes20(t - c.notes, 540, 640, 6, 420, 1.3);
@@ -675,16 +676,18 @@ S[6] = (t, T, sc) => {
 /* ---------- 7) CIERRE: pantalla roja, logo blanco con rebote, «Feliz Navidad», «Escaparate de Tudela» ---------- */
 S[7] = (t, T, sc) => {
   const c = cues(sc, { logo: 0.1, t1: 0.5, t2: 0.8 });
-  let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640, 16, t * 8, C.dred);
+  const dy = CFG.closeDy || 0;   // la story sube el cierre para dejar libre la franja de subtítulos
+  let s = `<rect width="${W}" height="${H}" fill="${C.red}"/>` + rays(540, 640 + dy, 16, t * 8, C.dred);
   s += snow20(T, 0.45);
+  let g = '';
   const pulse = 1 + 0.03 * Math.sin(t * 2 * PI * 1.1);
   const kl = pop(t, c.logo, 0.5);
-  s += logoBadge(540, 630 + 6 * Math.sin(t * 3), 640, lerp(-10, 0, clamp(kl)), kl * pulse, 'logoW');
+  g += logoBadge(540, 630 + 6 * Math.sin(t * 3), 640, lerp(-10, 0, clamp(kl)), kl * pulse, 'logoW');
   const t1 = TX('cierre1', 'Feliz Navidad'), t2 = TX('cierre2', 'Escaparate de Tudela');
-  s += at(540, 1085, pop(t, c.t1, 0.5) * pulse, text(t1, 0, 0, { size: fit(t1, 160, 980), sw: SW * 2.2, sd: 9 }), -2);
-  s += at(540, 1245, pop(t, c.t2, 0.5), text(t2, 0, 0, { size: fit(t2, 84, 940), sw: SW * 1.6, sd: 6 }));
-  [[150, 1010, 30], [930, 1000, 26], [190, 1290, 18], [900, 1300, 20]].forEach(([x, y, r], i) => { s += sparkle(x, y, r, pop(t, c.t1 + 0.1 * i, 0.4) * (0.75 + 0.25 * Math.sin(t * 8 + i)), i % 2 ? K20.gold : '#FFFFFF'); });
-  return s;
+  g += at(540, 1085, pop(t, c.t1, 0.5) * pulse, text(t1, 0, 0, { size: fit(t1, 160, 980), sw: SW * 2.2, sd: 9 }), -2);
+  g += at(540, 1245, pop(t, c.t2, 0.5), text(t2, 0, 0, { size: fit(t2, 84, 940), sw: SW * 1.6, sd: 6 }));
+  [[150, 1010, 30], [930, 1000, 26], [190, 1290, 18], [900, 1300, 20]].forEach(([x, y, r], i) => { g += sparkle(x, y, r, pop(t, c.t1 + 0.1 * i, 0.4) * (0.75 + 0.25 * Math.sin(t * 8 + i)), i % 2 ? K20.gold : '#FFFFFF'); });
+  return s + (dy ? `<g transform="translate(0 ${dy})">${g}</g>` : g);
 };
 
 /* ---------- API para el renderizador ---------- */

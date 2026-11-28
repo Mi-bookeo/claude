@@ -1,0 +1,15 @@
+Se encienden las luces de Navidad — timeline (1080x1920, 30 fps)
+escena/plano	inicio_s	fin_s	duracion_s	fotogramas	nombre
+00	0.000	2.500	2.500	75	HOOK: la casa del reloj de cerca, APAGADA y en penumbra (farolas apagadas, resplandor tenue); caja roja «AYER, TUDELA / SE ILUMINÓ ✨» con rebote (sin voz)
+01	2.500	6.467	3.967	119	LA PLAZA A OSCURAS: plano medio de la casa del reloj, escenario de madera con barandillas blancas y cuerdas de bombillas apagadas, siluetas de gente de espaldas; dolly-in lento
+02	6.467	12.467	6.000	180	LOS BAILARINES: dos cascanueces de chaqueta roja y, en el centro, chaqueta negra de lentejuelas y sombrero gris; coreografía sincronizada en bucle, destellos de colores, móviles levantados
+  02-a	6.467	9.467	3.000	90	plano a
+  02-b	9.467	12.467	3.000	90	plano b
+03	12.467	19.100	6.633	199	LOS CANTANTES EN EL BALCÓN: zoom rápido al balcón central, foco circular cálido, dos cantantes con micrófono y notas; vuelve el plano amplio
+  03-zoom	12.467	18.100	5.633	169	plano zoom
+  03-amplio	18.100	19.100	1.000	30	plano amplio
+04	19.100	23.600	4.500	135	EL CORO: plano amplio; detrás tres mujeres mayores de negro, delante tres niños (una niña) de sudadera y pantalón blancos con micrófono de pie; cabeceo y notas
+05	23.600	29.900	6.300	189	SE HIZO LA LUZ: un segundo a oscuras y de golpe se enciende todo (estrella, reloj, mariposas moradas, cortinas de luces, «Feliz Navidad», fuegos fríos); destello blanco
+06	29.900	35.667	5.767	173	VISTA AMPLIA: toda la plaza iluminada, farolas, soportales, guirnaldas, gente con los brazos en alto, nieve suave
+07	35.667	39.667	4.000	120	CIERRE: pantalla roja, logo blanco con rebote, «Feliz Navidad» y «Escaparate de Tudela»
+TOTAL	0.000	39.667
