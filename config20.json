@@ -1,0 +1,38 @@
+{
+  "title": "Se encienden las luces de Navidad",
+  "output": "video20_sin_audio.mp4",
+  "page": "index20.html",
+  "scenesDir": "scenes20",
+  "stillsDir": "stills20",
+  "timeline": "timeline20.txt",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
+  "_ayuda": "Tiempos en segundos. 'duration' = duración de la escena (ÚNICO sitio donde se fija). 'cues' = momentos de textos y acciones (tiempo local; se recolocan con el audio en la segunda pasada). 'shots' = planos dentro de una escena (cortes secos). 'still' = instante del PNG de stills20/. 'textos' = textos en pantalla. Figuras de cómic genéricas, sin caras ni personas reales, sin nombres.",
+  "textos": {
+    "h1": "AYER, TUDELA",
+    "h2": "SE ILUMINÓ ✨",
+    "letrero": "Feliz Navidad",
+    "cierre1": "Feliz Navidad",
+    "cierre2": "Escaparate de Tudela"
+  },
+  "scenes": [
+    { "id": 0, "name": "HOOK: la casa del reloj de cerca, APAGADA y en penumbra (farolas apagadas, resplandor tenue); caja roja «AYER, TUDELA / SE ILUMINÓ ✨» con rebote (sin voz)",
+      "duration": 2.5, "still": 1.6, "cues": { "box": 0.15, "l1": 0.3, "l2": 0.55, "spark": 0.8 } },
+    { "id": 1, "name": "LA PLAZA A OSCURAS: plano medio de la casa del reloj, escenario de madera con barandillas blancas y cuerdas de bombillas apagadas, siluetas de gente de espaldas; dolly-in lento",
+      "duration": 5.5, "still": 4.0 },
+    { "id": 2, "name": "LOS BAILARINES: dos cascanueces de chaqueta roja y, en el centro, chaqueta negra de lentejuelas y sombrero gris; coreografía sincronizada en bucle, destellos de colores, móviles levantados",
+      "duration": 9.0, "still": 5.9, "shots": { "a": [0, 4.5], "b": [4.5, 9.0] }, "cues": { "in": 0.1, "phones": 0.8 } },
+    { "id": 3, "name": "LOS CANTANTES EN EL BALCÓN: zoom rápido al balcón central, foco circular cálido, dos cantantes con micrófono y notas; vuelve el plano amplio",
+      "duration": 8.0, "still": 3.5, "shots": { "zoom": [0, 6.6], "amplio": [6.6, 8.0] }, "cues": { "zoom": 0.0, "zoomDur": 0.4, "spot": 0.8, "singers": 1.2, "notes": 1.7 } },
+    { "id": 4, "name": "EL CORO: plano amplio; detrás tres mujeres mayores de negro, delante tres niños (una niña) de sudadera y pantalón blancos con micrófono de pie; cabeceo y notas",
+      "duration": 8.0, "still": 4.5, "cues": { "ladies": 0.2, "kids": 0.5, "notes": 1.0 } },
+    { "id": 5, "name": "SE HIZO LA LUZ: un segundo a oscuras y de golpe se enciende todo (estrella, reloj, mariposas moradas, cortinas de luces, «Feliz Navidad», fuegos fríos); destello blanco",
+      "duration": 7.0, "still": 3.2, "cues": { "on": 1.2 } },
+    { "id": 6, "name": "VISTA AMPLIA: toda la plaza iluminada, farolas, soportales, guirnaldas, gente con los brazos en alto, nieve suave",
+      "duration": 6.0, "still": 3.0 },
+    { "id": 7, "name": "CIERRE: pantalla roja, logo blanco con rebote, «Feliz Navidad» y «Escaparate de Tudela»",
+      "duration": 4.0, "still": 2.2, "cues": { "logo": 0.1, "t1": 0.5, "t2": 0.8 } }
+  ]
+}
