@@ -28,3 +28,11 @@ python3 audio/make_audio.py     # (otra vez) -> carmen_y_maria_subtitulado.mp4 (
   suspiro, maullido, pajaro, persiana, percha, tecla, susurro_aire, ambiente_avenida, murmullo_calle, murmullo_tienda,
   trafico_lejano, viento); si no, se sintetizan (básicos) → `audio/efectos.wav`.
 - Música: `audio/musica.mp3` si existe (envolvente por escenas, ~17 dB bajo la voz, baja más en el susurro de María); si no, sin música.
+
+## Story de intriga (el día antes) — `story/`
+13,6 s, 1080x1920. `story/story_intriga.mp4` (sin audio) y `story/story_intriga_con_audio.mp4` (efectos sintetizados básicos, imagen con -c:v copy).
+Código: `src/story.js` (reutiliza las piezas del vídeo 10). Textos dentro de la zona segura de las stories (y≈270-1500).
+```
+CONFIG=story/config.json node render.js all
+python3 story/make_audio_story.py
+```

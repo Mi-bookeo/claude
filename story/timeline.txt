@@ -1,0 +1,7 @@
+Story de intriga — Carmen y María (el día antes) — timeline (1080x1920, 30 fps)
+escena	inicio_s	fin_s	duracion_s	fotogramas	nombre
+101	0.000	3.600	3.600	108	Carmen en la avenida llena: «Dicen que si no te ven… no te conoce nadie» -> sello «¿SEGURO?»
+102	3.600	7.200	3.600	108	María en la callejuela vacía: «Ella está donde no pasa nadie… y siempre la tiene llena» -> «¿Cómo lo hace?»
+103	7.200	10.800	3.600	108	Pregunta al aire: «¿Qué es mejor?» Que te vean… o que sepan que existes
+104	10.800	13.600	2.800	84	Cierre: «MAÑANA» · Carmen y María · logo
+TOTAL	0.000	13.600

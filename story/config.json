@@ -1,0 +1,14 @@
+{
+  "title": "Story de intriga — Carmen y María (el día antes)",
+  "output": "story_intriga.mp4",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "encoder": { "codec": "libx264", "crf": 18, "preset": "medium", "pix_fmt": "yuv420p" },
+  "scenes": [
+    { "id": 101, "name": "Carmen en la avenida llena: «Dicen que si no te ven… no te conoce nadie» -> sello «¿SEGURO?»", "duration": 3.6, "still": 3.0 },
+    { "id": 102, "name": "María en la callejuela vacía: «Ella está donde no pasa nadie… y siempre la tiene llena» -> «¿Cómo lo hace?»", "duration": 3.6, "still": 3.0 },
+    { "id": 103, "name": "Pregunta al aire: «¿Qué es mejor?» Que te vean… o que sepan que existes", "duration": 3.6, "still": 2.6 },
+    { "id": 104, "name": "Cierre: «MAÑANA» · Carmen y María · logo", "duration": 2.8, "still": 2.0 }
+  ]
+}
